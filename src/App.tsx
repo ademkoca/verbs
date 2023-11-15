@@ -1,7 +1,7 @@
-import SignUp from './components/sign-up';
-
+import Verbs from './pages/verbs';
+import './App.css';
 function App() {
-  return <SignUp />;
+  return <Verbs />;
 }
 
 export default App;
