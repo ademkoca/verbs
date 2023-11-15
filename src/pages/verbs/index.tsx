@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { verbsWithTranslation } from '../../../verbsWithtranslation';
+import { verbsWithTranslation } from '../../../verbsWithTranslation';
 import CustomSwitch from '../../components/switch';
 
 function Copyright(props: any) {
