@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import SignUp from './components/sign-up/index.tsx';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createHashRouter,
+} from 'react-router-dom';
 import Verbs from './pages/verbs/index.tsx';
 import Articles from './pages/articles/index.tsx';
 import Layout from './components/layout/index.tsx';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: (
