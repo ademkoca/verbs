@@ -13,24 +13,6 @@ import CustomSwitch from '../../components/switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link
-        color="inherit"
-        href="https://ademkoca.github.io/portfolio-react"
-        target="_blank"
-        {...props}
-      >
-        Adem Koca
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 export default function Articles() {
   const textRef = useRef();
   interface Noun {
@@ -51,6 +33,7 @@ export default function Articles() {
   // const [isHard, setIsHard] = useState<boolean>(false);
   const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -61,6 +44,7 @@ export default function Articles() {
 
   useEffect(() => {
     if (userInput) {
+      setIsLoading(true);
       //if correct guess
       if (activeNoun?.article.toLowerCase() === userInput?.toLowerCase()) {
         setMessageClass('success');
@@ -86,22 +70,23 @@ export default function Articles() {
   }, [userInput]);
 
   useEffect(() => {
-    generateNewVerb();
+    generateNewArticle();
   }, []);
-  const generateNewVerb = () => {
+  const generateNewArticle = () => {
     const random = Math.floor(Math.random() * totalNouns);
     if (!usedItems.includes(data[random].noun)) {
       setActiveNoun(data[random]);
       usedItems.push(data[random].noun);
-    } else generateNewVerb();
+    } else generateNewArticle();
   };
 
   const resetInputs = () => {
     setSuccessMsg(null);
-    generateNewVerb();
+    generateNewArticle();
     setMessageClass('success');
     setUserInput(null);
     textRef?.current?.focus();
+    setIsLoading(false);
   };
 
   const handleToggleIncludeTranslation = () => {
@@ -139,7 +124,7 @@ export default function Articles() {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <MarkChatReadOutlinedIcon />
         </Avatar>
-        <Box mb={2}>
+        <Box my={2}>
           <Typography>
             {correctGuesses}/{totalGuesses} correct
           </Typography>
@@ -187,9 +172,15 @@ export default function Articles() {
                 fullWidth
                 sx={{ mb: 3 }}
               >
-                <ToggleButton value="der">der</ToggleButton>
-                <ToggleButton value="die">die</ToggleButton>
-                <ToggleButton value="das">das</ToggleButton>
+                <ToggleButton disabled={isLoading} value="der">
+                  der
+                </ToggleButton>
+                <ToggleButton disabled={isLoading} value="die">
+                  die
+                </ToggleButton>
+                <ToggleButton disabled={isLoading} value="das">
+                  das
+                </ToggleButton>
               </ToggleButtonGroup>
             </Grid>
           </Grid>
@@ -207,12 +198,12 @@ export default function Articles() {
             variant="outlined"
             sx={{ mt: 0, mb: 2 }}
             onClick={resetInputs}
+            disabled={isLoading}
           >
             Skip
           </Button>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 5 }} />
     </Container>
   );
 }

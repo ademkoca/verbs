@@ -50,18 +50,25 @@ export default function Verbs() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [messageClass, setMessageClass] = useState('success');
   const [isHard, setIsHard] = useState<boolean>(false);
+  const [usedItems] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
   useEffect(() => {
     generateNewVerb();
   }, []);
   const generateNewVerb = () => {
-    const random = Math.floor(Math.random() * (totalVerbs - 1));
-    setActiveVerb(data[random]);
+    const random = Math.floor(Math.random() * totalVerbs);
+    if (!usedItems.includes(data[random].infinitive)) {
+      setActiveVerb(data[random]);
+      usedItems.push(data[random].infinitive);
+    } else generateNewVerb();
   };
+
   const resetInputs = () => {
     setSuccessMsg(null);
     generateNewVerb();
     setMessageClass('success');
+    setIsLoading(false);
     isHard
       ? preteriteTextRef?.current?.focus()
       : participleTextRef?.current?.focus();
@@ -71,6 +78,7 @@ export default function Verbs() {
     e.preventDefault();
     // easy mode
     if (userInputParticiple != '' && !isHard) {
+      setIsLoading(true);
       //if correct guess
       if (
         activeVerb?.pastParticiple.toLowerCase() ===
@@ -98,6 +106,7 @@ export default function Verbs() {
     }
     //hard mode
     if (userInputParticiple != '' && userInputPreterite !== '') {
+      setIsLoading(true);
       const _verb = data.find(
         (v: Verb) => v.infinitive === activeVerb?.infinitive
       );
@@ -147,10 +156,12 @@ export default function Verbs() {
 
       <Box
         sx={{
-          marginTop: 5,
+          marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          // minHeight: '80vh',
         }}
       >
         <Typography
@@ -173,7 +184,7 @@ export default function Verbs() {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <MarkChatReadOutlinedIcon />
         </Avatar>
-        <Box mb={2}>
+        <Box my={2}>
           <Typography>
             {correctGuesses}/{totalGuesses} correct
           </Typography>
@@ -192,7 +203,7 @@ export default function Verbs() {
           </Typography>
         )}
         {messageClass !== 'success' && (
-          <Typography color="green">
+          <Typography color="green" sx={{ mt: 2 }}>
             correct: {isHard && activeVerb?.preterite + ' > '}
             {activeVerb?.pastParticiple}
           </Typography>
@@ -233,7 +244,9 @@ export default function Verbs() {
                   name="preterite"
                   autoComplete="preterite"
                   value={userInputPreterite}
-                  onChange={(e) => setUserInputPreterite(e.target.value)}
+                  onChange={(e) =>
+                    setUserInputPreterite(e.target.value.toLowerCase())
+                  }
                 />
               </Grid>
             )}
@@ -248,7 +261,9 @@ export default function Verbs() {
                 name="particip"
                 autoComplete="particip"
                 value={userInputParticiple}
-                onChange={(e) => setUserInputParticiple(e.target.value)}
+                onChange={(e) =>
+                  setUserInputParticiple(e.target.value.toLowerCase())
+                }
               />
             </Grid>
           </Grid>
@@ -257,6 +272,7 @@ export default function Verbs() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={isLoading}
           >
             Check
           </Button>
@@ -266,12 +282,12 @@ export default function Verbs() {
             variant="outlined"
             sx={{ mt: 0, mb: 2 }}
             onClick={resetInputs}
+            disabled={isLoading}
           >
             Skip
           </Button>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 5 }} />
     </Container>
   );
 }
