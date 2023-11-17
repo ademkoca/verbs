@@ -60,12 +60,6 @@ export const verbsWithTranslation = [
     translation: 'to be able to',
   },
   {
-    infinitive: 'müssen',
-    preterite: 'musste',
-    pastParticiple: 'gemusst',
-    translation: 'must/have to',
-  },
-  {
     infinitive: 'dürfen',
     preterite: 'durfte',
     pastParticiple: 'gedurft',
@@ -154,12 +148,6 @@ export const verbsWithTranslation = [
     preterite: 'hörte',
     pastParticiple: 'gehört',
     translation: 'to hear',
-  },
-  {
-    infinitive: 'sehen',
-    preterite: 'sah',
-    pastParticiple: 'gesehen',
-    translation: 'to see',
   },
   {
     infinitive: 'fühlen',
@@ -282,28 +270,10 @@ export const verbsWithTranslation = [
     translation: 'to bake',
   },
   {
-    infinitive: 'essen',
-    preterite: 'aß',
-    pastParticiple: 'gegessen',
-    translation: 'to eat',
-  },
-  {
-    infinitive: 'trinken',
-    preterite: 'trank',
-    pastParticiple: 'getrunken',
-    translation: 'to drink',
-  },
-  {
     infinitive: 'schwimmen',
     preterite: 'schwamm',
     pastParticiple: 'geschwommen',
     translation: 'to swim',
-  },
-  {
-    infinitive: 'fahren',
-    preterite: 'fuhr',
-    pastParticiple: 'gefahren',
-    translation: 'to drive',
   },
   {
     infinitive: 'fliegen',
