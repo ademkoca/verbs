@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import LanguageIcon from '@mui/icons-material/Language';
 
 const pages = [
-  { name: 'Articles', url: '/#/articles' },
+  { name: 'Articles', url: '/articles' },
   { name: 'Verbs', url: '/' },
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
