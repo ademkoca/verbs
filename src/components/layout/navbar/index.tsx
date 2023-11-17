@@ -125,16 +125,25 @@ function Navbar() {
           >
             INSTA GERMAN
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              columnGap: 2,
+              marginLeft: 2,
+            }}
+          >
             {pages.map((page) => (
-              <Button
+              <Link
                 key={page.name}
-                href={page.url}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                to={page.url}
+                // onClick={handleCloseNavMenu}
+                // sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page.name}
-              </Button>
+                <Typography textAlign="center" color={'white'}>
+                  {page.name}
+                </Typography>
+              </Link>
             ))}
           </Box>
 
