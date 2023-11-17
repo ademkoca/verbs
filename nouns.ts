@@ -2,12 +2,10 @@ const nouns = [
   { article: 'der', noun: 'Mann', translation: 'Man' },
   { article: 'die', noun: 'Frau', translation: 'Woman' },
   { article: 'das', noun: 'Kind', translation: 'Child' },
-
   { article: 'die', noun: 'Katze', translation: 'Cat' },
   { article: 'das', noun: 'Auto', translation: 'Car' },
   { article: 'der', noun: 'Apfel', translation: 'Apple' },
   { article: 'das', noun: 'Buch', translation: 'Book' },
-
   { article: 'das', noun: 'Pferd', translation: 'Horse' },
   { article: 'der', noun: 'Weg', translation: 'Way' },
   { article: 'die', noun: 'Arbeit', translation: 'Work' },
@@ -17,7 +15,6 @@ const nouns = [
   { article: 'das', noun: 'Geld', translation: 'Money' },
   { article: 'der', noun: 'Mond', translation: 'Moon' },
   { article: 'die', noun: 'Zeit', translation: 'Time' },
-
   { article: 'die', noun: 'Erde', translation: 'Earth' },
   { article: 'das', noun: 'Feuer', translation: 'Fire' },
   { article: 'der', noun: 'Wald', translation: 'Forest' },
