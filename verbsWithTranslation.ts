@@ -378,12 +378,6 @@ export const verbsWithTranslation = [
     translation: 'to step',
   },
   {
-    infinitive: 'fallen',
-    preterite: 'fiel',
-    pastParticiple: 'gefallen',
-    translation: 'to fall',
-  },
-  {
     infinitive: 'halten',
     preterite: 'hielt',
     pastParticiple: 'gehalten',
@@ -784,12 +778,6 @@ export const verbsWithTranslation = [
     preterite: 'empfahl',
     pastParticiple: 'empfohlen',
     translation: 'to recommend',
-  },
-  {
-    infinitive: 'vergleichen',
-    preterite: 'verglich',
-    pastParticiple: 'verglichen',
-    translation: 'to compare',
   },
   {
     infinitive: 'entscheiden',
