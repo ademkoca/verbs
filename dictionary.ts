@@ -108,15 +108,6 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'die',
-    original: 'Blume',
-    translation: [
-      { possibleTranslation: 'Flower', isCorrectTranslation: true },
-      { possibleTranslation: 'Tree', isCorrectTranslation: false },
-      { possibleTranslation: 'Grass', isCorrectTranslation: false },
-    ],
-  },
-  {
     article: 'das',
     original: 'Kissen',
     translation: [
@@ -250,6 +241,78 @@ const nounsWithMultipleTranslations = [
       { possibleTranslation: 'Star', isCorrectTranslation: true },
       { possibleTranslation: 'Planet', isCorrectTranslation: false },
       { possibleTranslation: 'Galaxy', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Löwe',
+    translation: [
+      { possibleTranslation: 'Lion', isCorrectTranslation: true },
+      { possibleTranslation: 'Tiger', isCorrectTranslation: false },
+      { possibleTranslation: 'Leopard', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Eule',
+    translation: [
+      { possibleTranslation: 'Owl', isCorrectTranslation: true },
+      { possibleTranslation: 'Hawk', isCorrectTranslation: false },
+      { possibleTranslation: 'Crow', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Mikrofon',
+    translation: [
+      { possibleTranslation: 'Microphone', isCorrectTranslation: true },
+      { possibleTranslation: 'Speaker', isCorrectTranslation: false },
+      { possibleTranslation: 'Amplifier', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Schildkröte',
+    translation: [
+      { possibleTranslation: 'Turtle', isCorrectTranslation: true },
+      { possibleTranslation: 'Tortoise', isCorrectTranslation: false },
+      { possibleTranslation: 'Snake', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Fisch',
+    translation: [
+      { possibleTranslation: 'Fish', isCorrectTranslation: true },
+      { possibleTranslation: 'Shark', isCorrectTranslation: false },
+      { possibleTranslation: 'Whale', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Hose',
+    translation: [
+      { possibleTranslation: 'Pants', isCorrectTranslation: true },
+      { possibleTranslation: 'Skirt', isCorrectTranslation: false },
+      { possibleTranslation: 'Shorts', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Huhn',
+    translation: [
+      { possibleTranslation: 'Chicken', isCorrectTranslation: true },
+      { possibleTranslation: 'Duck', isCorrectTranslation: false },
+      { possibleTranslation: 'Turkey', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Teppich',
+    translation: [
+      { possibleTranslation: 'Carpet', isCorrectTranslation: true },
+      { possibleTranslation: 'Rug', isCorrectTranslation: false },
+      { possibleTranslation: 'Flooring', isCorrectTranslation: false },
     ],
   },
   {
@@ -595,6 +658,402 @@ const nounsWithMultipleTranslations = [
       { possibleTranslation: 'Instrument', isCorrectTranslation: true },
       { possibleTranslation: 'Tool', isCorrectTranslation: false },
       { possibleTranslation: 'Device', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Korb',
+    translation: [
+      { possibleTranslation: 'Basket', isCorrectTranslation: true },
+      { possibleTranslation: 'Bin', isCorrectTranslation: false },
+      { possibleTranslation: 'Bucket', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Rose',
+    translation: [
+      { possibleTranslation: 'Rose', isCorrectTranslation: true },
+      { possibleTranslation: 'Tulip', isCorrectTranslation: false },
+      { possibleTranslation: 'Lily', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Kino',
+    translation: [
+      { possibleTranslation: 'Cinema', isCorrectTranslation: true },
+      { possibleTranslation: 'Movie theater', isCorrectTranslation: false },
+      { possibleTranslation: 'Film', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Kaktus',
+    translation: [
+      { possibleTranslation: 'Cactus', isCorrectTranslation: true },
+      { possibleTranslation: 'Succulent', isCorrectTranslation: false },
+      { possibleTranslation: 'Plant', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Pflanze',
+    translation: [
+      { possibleTranslation: 'Plant', isCorrectTranslation: true },
+      { possibleTranslation: 'Flower', isCorrectTranslation: false },
+      { possibleTranslation: 'Tree', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Orchester',
+    translation: [
+      { possibleTranslation: 'Orchestra', isCorrectTranslation: true },
+      { possibleTranslation: 'Band', isCorrectTranslation: false },
+      { possibleTranslation: 'Music ensemble', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Sand',
+    translation: [
+      { possibleTranslation: 'Sand', isCorrectTranslation: true },
+      { possibleTranslation: 'Beach', isCorrectTranslation: false },
+      { possibleTranslation: 'Desert', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Krokodil',
+    translation: [
+      { possibleTranslation: 'Crocodile', isCorrectTranslation: true },
+      { possibleTranslation: 'Alligator', isCorrectTranslation: false },
+      { possibleTranslation: 'Lizard', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Sturm',
+    translation: [
+      { possibleTranslation: 'Storm', isCorrectTranslation: true },
+      { possibleTranslation: 'Wind', isCorrectTranslation: false },
+      { possibleTranslation: 'Hurricane', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Turm',
+    translation: [
+      { possibleTranslation: 'Tower', isCorrectTranslation: true },
+      { possibleTranslation: 'Castle', isCorrectTranslation: false },
+      { possibleTranslation: 'Skyscraper', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Teleskop',
+    translation: [
+      { possibleTranslation: 'Telescope', isCorrectTranslation: true },
+      { possibleTranslation: 'Microscope', isCorrectTranslation: false },
+      { possibleTranslation: 'Binoculars', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Kran',
+    translation: [
+      { possibleTranslation: 'Crane', isCorrectTranslation: true },
+      { possibleTranslation: 'Truck', isCorrectTranslation: false },
+      { possibleTranslation: 'Machine', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Perle',
+    translation: [
+      { possibleTranslation: 'Pearl', isCorrectTranslation: true },
+      { possibleTranslation: 'Gem', isCorrectTranslation: false },
+      { possibleTranslation: 'Jewel', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Gedicht',
+    translation: [
+      { possibleTranslation: 'Poem', isCorrectTranslation: true },
+      { possibleTranslation: 'Song', isCorrectTranslation: false },
+      { possibleTranslation: 'Prose', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Stimme',
+    translation: [
+      { possibleTranslation: 'Voice', isCorrectTranslation: true },
+      { possibleTranslation: 'Singing', isCorrectTranslation: false },
+      { possibleTranslation: 'Sound', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Versteck',
+    translation: [
+      { possibleTranslation: 'Hideout', isCorrectTranslation: true },
+      { possibleTranslation: 'Shelter', isCorrectTranslation: false },
+      { possibleTranslation: 'Secret place', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Papier',
+    translation: [
+      { possibleTranslation: 'Paper', isCorrectTranslation: true },
+      { possibleTranslation: 'Document', isCorrectTranslation: false },
+      { possibleTranslation: 'Note', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Hund',
+    translation: [
+      { possibleTranslation: 'Dog', isCorrectTranslation: true },
+      { possibleTranslation: 'Puppy', isCorrectTranslation: false },
+      { possibleTranslation: 'Hound', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Musik',
+    translation: [
+      { possibleTranslation: 'Music', isCorrectTranslation: true },
+      { possibleTranslation: 'Song', isCorrectTranslation: false },
+      { possibleTranslation: 'Melody', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Rätsel',
+    translation: [
+      { possibleTranslation: 'Riddle', isCorrectTranslation: true },
+      { possibleTranslation: 'Puzzle', isCorrectTranslation: false },
+      { possibleTranslation: 'Enigma', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Laterne',
+    translation: [
+      { possibleTranslation: 'Lantern', isCorrectTranslation: true },
+      { possibleTranslation: 'Streetlight', isCorrectTranslation: false },
+      { possibleTranslation: 'Flashlight', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Rennen',
+    translation: [
+      { possibleTranslation: 'Race', isCorrectTranslation: true },
+      { possibleTranslation: 'Sprint', isCorrectTranslation: false },
+      { possibleTranslation: 'Marathon', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Lupe',
+    translation: [
+      { possibleTranslation: 'Magnifying glass', isCorrectTranslation: true },
+      { possibleTranslation: 'Microscope', isCorrectTranslation: false },
+      { possibleTranslation: 'Binoculars', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Apfelbaum',
+    translation: [
+      { possibleTranslation: 'Apple tree', isCorrectTranslation: true },
+      { possibleTranslation: 'Cherry tree', isCorrectTranslation: false },
+      { possibleTranslation: 'Pine tree', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Berg',
+    translation: [
+      { possibleTranslation: 'Mountain', isCorrectTranslation: true },
+      { possibleTranslation: 'Hill', isCorrectTranslation: false },
+      { possibleTranslation: 'Cliff', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Lampe',
+    translation: [
+      { possibleTranslation: 'Lamp', isCorrectTranslation: true },
+      { possibleTranslation: 'Light', isCorrectTranslation: false },
+      { possibleTranslation: 'Bulb', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Messer',
+    translation: [
+      { possibleTranslation: 'Knife', isCorrectTranslation: true },
+      { possibleTranslation: 'Sword', isCorrectTranslation: false },
+      { possibleTranslation: 'Scissors', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Welle',
+    translation: [
+      { possibleTranslation: 'Wave', isCorrectTranslation: true },
+      { possibleTranslation: 'Surge', isCorrectTranslation: false },
+      { possibleTranslation: 'Ripple', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Hemd',
+    translation: [
+      { possibleTranslation: 'Shirt', isCorrectTranslation: true },
+      { possibleTranslation: 'Blouse', isCorrectTranslation: false },
+      { possibleTranslation: 'T-shirt', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Finger',
+    translation: [
+      { possibleTranslation: 'Finger', isCorrectTranslation: true },
+      { possibleTranslation: 'Thumb', isCorrectTranslation: false },
+      { possibleTranslation: 'Digit', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Karte',
+    translation: [
+      { possibleTranslation: 'Map', isCorrectTranslation: true },
+      { possibleTranslation: 'Card', isCorrectTranslation: false },
+      { possibleTranslation: 'Chart', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Puzzle',
+    translation: [
+      { possibleTranslation: 'Puzzle', isCorrectTranslation: true },
+      { possibleTranslation: 'Jigsaw', isCorrectTranslation: false },
+      { possibleTranslation: 'Enigma', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Frosch',
+    translation: [
+      { possibleTranslation: 'Frog', isCorrectTranslation: true },
+      { possibleTranslation: 'Toad', isCorrectTranslation: false },
+      { possibleTranslation: 'Amphibian', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Gesicht',
+    translation: [
+      { possibleTranslation: 'Face', isCorrectTranslation: true },
+      { possibleTranslation: 'Visage', isCorrectTranslation: false },
+      { possibleTranslation: 'Countenance', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Handtasche',
+    translation: [
+      { possibleTranslation: 'Handbag', isCorrectTranslation: true },
+      { possibleTranslation: 'Purse', isCorrectTranslation: false },
+      { possibleTranslation: 'Clutch', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Giraffe',
+    translation: [
+      { possibleTranslation: 'Giraffe', isCorrectTranslation: true },
+      { possibleTranslation: 'Neck horse', isCorrectTranslation: false },
+      { possibleTranslation: 'Tall mammal', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Hirsch',
+    translation: [
+      { possibleTranslation: 'Deer', isCorrectTranslation: true },
+      { possibleTranslation: 'Stag', isCorrectTranslation: false },
+      { possibleTranslation: 'Buck', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Wunderlampe',
+    translation: [
+      { possibleTranslation: 'Magic lamp', isCorrectTranslation: true },
+      { possibleTranslation: 'Genie lamp', isCorrectTranslation: false },
+      { possibleTranslation: 'Enchanted lamp', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Schlüssel',
+    translation: [
+      { possibleTranslation: 'Key', isCorrectTranslation: true },
+      { possibleTranslation: 'Lock', isCorrectTranslation: false },
+      { possibleTranslation: 'Code', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Brille',
+    translation: [
+      { possibleTranslation: 'Glasses', isCorrectTranslation: true },
+      { possibleTranslation: 'Eyewear', isCorrectTranslation: false },
+      { possibleTranslation: 'Spectacles', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'das',
+    original: 'Fahrrad',
+    translation: [
+      { possibleTranslation: 'Bicycle', isCorrectTranslation: true },
+      { possibleTranslation: 'Bike', isCorrectTranslation: false },
+      { possibleTranslation: 'Cycling', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Kirsche',
+    translation: [
+      { possibleTranslation: 'Cherry', isCorrectTranslation: true },
+      { possibleTranslation: 'Berry', isCorrectTranslation: false },
+      { possibleTranslation: 'Fruit', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'der',
+    original: 'Tiger',
+    translation: [
+      { possibleTranslation: 'Tiger', isCorrectTranslation: true },
+      { possibleTranslation: 'Wildcat', isCorrectTranslation: false },
+      { possibleTranslation: 'Feline', isCorrectTranslation: false },
+    ],
+  },
+  {
+    article: 'die',
+    original: 'Schulter',
+    translation: [
+      { possibleTranslation: 'Shoulder', isCorrectTranslation: true },
+      { possibleTranslation: 'Arm', isCorrectTranslation: false },
+      { possibleTranslation: 'Joint', isCorrectTranslation: false },
     ],
   },
 ];

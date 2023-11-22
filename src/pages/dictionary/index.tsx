@@ -188,7 +188,7 @@ export default function Dictionary() {
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">
-          {activeWord?.original}
+          {activeWord?.article + ' ' + activeWord?.original}
         </Typography>
         {successMsg && (
           <Typography
