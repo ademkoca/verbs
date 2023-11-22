@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
@@ -16,14 +15,18 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 export default function Articles() {
   const textRef = useRef();
   interface Noun {
-    article: 'der' | 'die' | 'das';
-    noun: string;
+    article: string;
+    original: string;
     translation?: string;
   }
   //   const data = verbs;
   const data = nouns;
   const totalNouns = data.length;
-  const [activeNoun, setActiveNoun] = useState<Noun>();
+  const [activeNoun, setActiveNoun] = useState<Noun>({
+    article: 'der',
+    original: '',
+    translation: '',
+  });
   // const [userInput, setUserInput] = useState<string>('');
   const [correctGuesses, setCorrectGuesses] = useState(0);
   const [totalGuesses, setTotalGuesses] = useState(0);
@@ -49,7 +52,7 @@ export default function Articles() {
       if (activeNoun?.article.toLowerCase() === userInput?.toLowerCase()) {
         setMessageClass('success');
         setCorrectGuesses((prev: number) => prev + 1);
-        setSuccessMsg(`${userInput} ${activeNoun?.noun} is correct`);
+        setSuccessMsg(`${userInput} ${activeNoun?.original} is correct`);
         // setUserInput(null);
         setTimeout(() => {
           resetInputs();
@@ -58,7 +61,7 @@ export default function Articles() {
       //if incorrect guess
       else {
         setMessageClass('error');
-        setSuccessMsg(`${userInput} ${activeNoun?.noun} is incorrect`);
+        setSuccessMsg(`${userInput} ${activeNoun?.original} is incorrect`);
         // setUserInput(null);
         setTimeout(() => {
           resetInputs();
@@ -74,9 +77,9 @@ export default function Articles() {
   }, []);
   const generateNewArticle = () => {
     const random = Math.floor(Math.random() * totalNouns);
-    if (!usedItems.includes(data[random].noun)) {
+    if (!usedItems.includes(data[random].original)) {
       setActiveNoun(data[random]);
-      usedItems.push(data[random].noun);
+      usedItems.push(data[random].original);
     } else generateNewArticle();
   };
 
@@ -130,7 +133,7 @@ export default function Articles() {
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">
-          {activeNoun?.noun}{' '}
+          {activeNoun?.original}{' '}
           {includeTranslation && `(${activeNoun?.translation})`}
         </Typography>
         {successMsg && (
@@ -144,7 +147,7 @@ export default function Articles() {
         )}
         {messageClass !== 'success' && (
           <Typography color="green">
-            correct: {activeNoun?.article + ' ' + activeNoun?.noun}
+            correct: {activeNoun?.article + ' ' + activeNoun?.original}
           </Typography>
         )}
         <Box
