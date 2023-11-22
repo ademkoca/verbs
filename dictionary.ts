@@ -597,24 +597,6 @@ const nounsWithMultipleTranslations = [
       { possibleTranslation: 'Device', isCorrectTranslation: false },
     ],
   },
-  {
-    article: 'der',
-    original: 'Regenschirm',
-    translation: [
-      { possibleTranslation: 'Umbrella', isCorrectTranslation: true },
-      { possibleTranslation: 'Parasol', isCorrectTranslation: false },
-      { possibleTranslation: 'Canopy', isCorrectTranslation: false },
-    ],
-  },
-  {
-    article: 'die',
-    original: 'Tasche',
-    translation: [
-      { possibleTranslation: 'Bag', isCorrectTranslation: true },
-      { possibleTranslation: 'Purse', isCorrectTranslation: false },
-      { possibleTranslation: 'Satchel', isCorrectTranslation: false },
-    ],
-  },
 ];
 
 export default nounsWithMultipleTranslations;

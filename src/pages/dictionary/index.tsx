@@ -77,6 +77,7 @@ export default function Dictionary() {
     generateNewWord();
     setMessageClass('success');
     setIsLoading(false);
+    setUserInput('');
     isHard ? preteriteTextRef?.current?.focus() : textRef?.current?.focus();
   };
 
