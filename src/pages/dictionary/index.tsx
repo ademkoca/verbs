@@ -266,15 +266,17 @@ export default function Dictionary() {
               </Grid>
             )}
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading || !isHard}
-          >
-            Check
-          </Button>
+          {isHard && (
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
+            >
+              Check
+            </Button>
+          )}
           <Button
             type="button"
             fullWidth
