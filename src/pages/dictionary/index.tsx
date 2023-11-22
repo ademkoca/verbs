@@ -3,91 +3,96 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import verbsWithTranslation from '../../../verbsWithTranslation';
+import nounsWithTranslation from '../../../nouns';
 import CustomSwitch from '../../components/switch';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import nounsWithMultipleTranslations from '../../../dictionary';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link
-        color="inherit"
-        href="https://ademkoca.github.io/portfolio-react"
-        target="_blank"
-        {...props}
-      >
-        Adem Koca
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-export default function Verbs() {
+export default function Dictionary() {
   const preteriteTextRef = useRef();
-  const participleTextRef = useRef();
-  interface Verb {
-    infinitive: string;
-    preterite: string;
-    pastParticiple: string;
-    translation?: string;
+  const textRef = useRef();
+
+  interface Word {
+    article: string;
+    original: string;
+    translation: Translation[];
   }
+
+  interface Translation {
+    possibleTranslation: string;
+    isCorrectTranslation: boolean;
+  }
+
   //   const data = verbs;
-  const data = verbsWithTranslation;
-  const totalVerbs = data.length;
-  const [activeVerb, setActiveVerb] = useState<Verb>();
-  const [userInputParticiple, setUserInputParticiple] = useState<string>('');
+  const _verbs = verbsWithTranslation;
+  const _nouns = nounsWithTranslation;
+  const verbs = _verbs.map((v) => ({
+    original: v.original,
+    translation: v.translation,
+  }));
+  const nouns = _nouns.map((n) => ({
+    original: n.original,
+    translation: n.translation,
+  }));
+
+  const words = nounsWithMultipleTranslations;
+  const totalWords = words.length;
+  const [activeWord, setActiveWord] = useState<Word>();
+  const [userInput, setUserInput] = useState<string>('');
   const [userInputPreterite, setUserInputPreterite] = useState<string>('');
   const [correctGuesses, setCorrectGuesses] = useState(0);
   const [totalGuesses, setTotalGuesses] = useState(0);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [messageClass, setMessageClass] = useState('success');
+  const [correctAnswer, setCorrectAnswer] = useState<string | null>();
   const [isHard, setIsHard] = useState<boolean>(false);
   const [usedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
   useEffect(() => {
-    generateNewVerb();
+    generateNewWord();
   }, []);
-  const generateNewVerb = () => {
-    const random = Math.floor(Math.random() * totalVerbs);
-    if (!usedItems.includes(data[random].infinitive)) {
-      setActiveVerb(data[random]);
-      usedItems.push(data[random].infinitive);
-    } else generateNewVerb();
+  const generateNewWord = () => {
+    const random = Math.floor(Math.random() * totalWords);
+    if (!usedItems.includes(words[random].original)) {
+      setActiveWord(words[random]);
+      usedItems.push(words[random].original);
+    } else generateNewWord();
   };
 
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newValue: string
+  ) => {
+    setUserInput(newValue);
+  };
   const resetInputs = () => {
     setSuccessMsg(null);
-    generateNewVerb();
+    generateNewWord();
     setMessageClass('success');
     setIsLoading(false);
-    isHard
-      ? preteriteTextRef?.current?.focus()
-      : participleTextRef?.current?.focus();
+    isHard ? preteriteTextRef?.current?.focus() : textRef?.current?.focus();
   };
 
-  const checkUserInput = (e: any) => {
-    e.preventDefault();
-    // easy mode
-    if (userInputParticiple != '' && !isHard) {
+  useEffect(() => {
+    if (userInput && !isHard) {
+      const correct: string | undefined = activeWord?.translation?.find(
+        (word) => word.isCorrectTranslation === true
+      )?.possibleTranslation;
+      setCorrectAnswer(correct);
       setIsLoading(true);
       //if correct guess
-      if (
-        activeVerb?.pastParticiple.toLowerCase() ===
-        userInputParticiple.toLowerCase()
-      ) {
+      if (correct?.toLowerCase() === userInput?.toLowerCase()) {
         setMessageClass('success');
         setCorrectGuesses((prev: number) => prev + 1);
-        setSuccessMsg(`${userInputParticiple} is correct`);
-        setUserInputParticiple('');
+        setSuccessMsg(`${userInput} is correct`);
+        // setUserInput(null);
         setTimeout(() => {
           resetInputs();
         }, 3000);
@@ -95,8 +100,8 @@ export default function Verbs() {
       //if incorrect guess
       else {
         setMessageClass('error');
-        setSuccessMsg(`${userInputParticiple} is incorrect`);
-        setUserInputParticiple('');
+        setSuccessMsg(`${userInput} is incorrect`);
+        // setUserInput(null);
         setTimeout(() => {
           resetInputs();
         }, 3000);
@@ -104,25 +109,23 @@ export default function Verbs() {
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
     }
-    //hard mode
-    if (userInputParticiple != '' && userInputPreterite !== '') {
+  }, [userInput]);
+
+  const checkUserInput = (e: any) => {
+    e.preventDefault();
+    const correct: string | undefined = activeWord?.translation?.find(
+      (word) => word.isCorrectTranslation === true
+    )?.possibleTranslation;
+    setCorrectAnswer(correct);
+    // easy mode
+    if (isHard) {
       setIsLoading(true);
-      const _verb = data.find(
-        (v: Verb) => v.infinitive === activeVerb?.infinitive
-      );
       //if correct guess
-      if (
-        _verb?.pastParticiple.toLowerCase() ===
-          userInputParticiple.toLowerCase() &&
-        _verb?.preterite.toLowerCase() === userInputPreterite.toLowerCase()
-      ) {
+      if (correct?.toLowerCase() === userInput.toLowerCase().trim()) {
         setMessageClass('success');
         setCorrectGuesses((prev: number) => prev + 1);
-        setSuccessMsg(
-          `${userInputPreterite} > ${userInputParticiple} is correct`
-        );
-        setUserInputParticiple('');
-        setUserInputPreterite('');
+        setSuccessMsg(`${userInput} is correct`);
+        setUserInput('');
         setTimeout(() => {
           resetInputs();
         }, 3000);
@@ -130,11 +133,8 @@ export default function Verbs() {
       //if incorrect guess
       else {
         setMessageClass('error');
-        setSuccessMsg(
-          `${userInputPreterite} > ${userInputParticiple} is incorrect`
-        );
-        setUserInputParticiple('');
-        setUserInputPreterite('');
+        setSuccessMsg(`${userInput} is incorrect`);
+        setUserInput('');
         setTimeout(() => {
           resetInputs();
         }, 3000);
@@ -145,9 +145,6 @@ export default function Verbs() {
   };
   const handleToggleLevel = () => {
     setIsHard((prev) => !prev);
-  };
-  const handleToggleIncludeTranslation = () => {
-    setIncludeTranslation((prev) => !prev);
   };
 
   return (
@@ -179,7 +176,7 @@ export default function Verbs() {
             textDecoration: 'none',
           }}
         >
-          VERBS
+          DICTIONARY
         </Typography>
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <MarkChatReadOutlinedIcon />
@@ -190,8 +187,7 @@ export default function Verbs() {
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">
-          {activeVerb?.infinitive}{' '}
-          {includeTranslation && `(${activeVerb?.translation})`}
+          {activeWord?.original}
         </Typography>
         {successMsg && (
           <Typography
@@ -204,8 +200,7 @@ export default function Verbs() {
         )}
         {messageClass !== 'success' && (
           <Typography color="green" sx={{ mt: 2 }}>
-            correct: {isHard && activeVerb?.preterite + ' > '}
-            {activeVerb?.pastParticiple}
+            correct: {correctAnswer}
           </Typography>
         )}
         <Box
@@ -224,55 +219,58 @@ export default function Verbs() {
                 tooltip
               />
             </Grid>
-            <Grid item xs={6} sm={6}>
-              <CustomSwitch
-                value={includeTranslation}
-                onChange={handleToggleIncludeTranslation}
-                left={'Translation'}
-              />
-            </Grid>
 
             {isHard && (
               <Grid item xs={12}>
                 <TextField
-                  inputRef={preteriteTextRef}
-                  autoFocus={isHard}
+                  inputRef={textRef}
+                  autoFocus={!isHard}
                   required
                   fullWidth
-                  id="preterite"
-                  label="Preterite"
-                  name="preterite"
-                  autoComplete="preterite"
-                  value={userInputPreterite}
-                  onChange={(e) =>
-                    setUserInputPreterite(e.target.value.toLowerCase())
-                  }
+                  id="translation"
+                  label="Translation"
+                  name="translation"
+                  autoComplete="translation"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value.toLowerCase())}
                 />
               </Grid>
             )}
-            <Grid item xs={12}>
-              <TextField
-                inputRef={participleTextRef}
-                autoFocus={!isHard}
-                required
-                fullWidth
-                id="particip"
-                label="Participle"
-                name="particip"
-                autoComplete="particip"
-                value={userInputParticiple}
-                onChange={(e) =>
-                  setUserInputParticiple(e.target.value.toLowerCase())
-                }
-              />
-            </Grid>
+            {!isHard && (
+              <Grid item xs={12}>
+                <ToggleButtonGroup
+                  color="primary"
+                  value={userInput}
+                  exclusive
+                  onChange={handleChange}
+                  aria-label="Platform"
+                  fullWidth
+                  sx={{ mb: 3 }}
+                >
+                  {activeWord?.translation.map((w) => (
+                    <ToggleButton
+                      disabled={isLoading}
+                      value={w.possibleTranslation}
+                    >
+                      {w.possibleTranslation}
+                    </ToggleButton>
+                  ))}
+                  {/* <ToggleButton disabled={isLoading} value="die">
+                    die
+                  </ToggleButton>
+                  <ToggleButton disabled={isLoading} value="das">
+                    das
+                  </ToggleButton> */}
+                </ToggleButtonGroup>
+              </Grid>
+            )}
           </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading}
+            disabled={isLoading || !isHard}
           >
             Check
           </Button>

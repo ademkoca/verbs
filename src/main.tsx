@@ -9,6 +9,7 @@ import {
 import Verbs from './pages/verbs/index.tsx';
 import Articles from './pages/articles/index.tsx';
 import Layout from './components/layout/index.tsx';
+import Dictionary from './pages/dictionary/index.tsx';
 
 const router = createHashRouter([
   {
@@ -34,14 +35,14 @@ const router = createHashRouter([
         <Articles />
       </Layout>
     ),
-    // loader: rootLoader,
-    children: [
-      // {
-      //   path: 'team',
-      //   element: <Team />,
-      //   // loader: teamLoader,
-      // },
-    ],
+  },
+  {
+    path: '/dictionary',
+    element: (
+      <Layout>
+        <Dictionary />
+      </Layout>
+    ),
   },
 ]);
 

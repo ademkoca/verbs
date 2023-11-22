@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 // import { verbs } from '../../../verbs';
-import { verbsWithTranslation } from '../../../verbsWithTranslation';
+import verbsWithTranslation from '../../../verbsWithTranslation';
 import CustomSwitch from '../switch';
 
 function Copyright(props: any) {
