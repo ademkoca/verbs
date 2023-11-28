@@ -142,8 +142,11 @@ export default function Sentences2() {
           variant="h5"
           noWrap
           component="a"
+          textAlign={'center'}
           // href="/"
+
           sx={{
+            // maxWidth: 400,
             mb: 2,
             flexGrow: 1,
             // fontFamily: 'monospace',
@@ -153,7 +156,7 @@ export default function Sentences2() {
             textDecoration: 'none',
           }}
         >
-          SENTENCE CONSTRUCTION
+          SENTENCE <br /> CONSTRUCTION
         </Typography>
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <MarkChatReadOutlinedIcon />
