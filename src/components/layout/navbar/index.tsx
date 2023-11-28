@@ -15,6 +15,7 @@ const pages = [
   { name: 'Articles', url: '/articles' },
   { name: 'Dictionary', url: '/dictionary' },
   { name: 'Verbs', url: '/' },
+  { name: 'Sentences', url: '/sentences' },
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 

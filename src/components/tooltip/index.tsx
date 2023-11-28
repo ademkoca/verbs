@@ -4,7 +4,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+const HtmlTooltip = styled(({ className, ...props }: ITooltip) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
@@ -16,19 +16,24 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-export default function CustomTooltip() {
+export default function CustomTooltip({ options }: { options: Option[] }) {
   return (
     <div>
       <HtmlTooltip
         title={
           <React.Fragment>
-            <Typography color="inherit">
+            {options?.map((option: Option) => (
+              <Typography color="inherit">
+                <b>{option.title}</b>: {option.description}
+              </Typography>
+            ))}
+            {/* <Typography color="inherit">
               <b>{'Easy'}</b>: Only past participle
             </Typography>
             <Typography color="inherit">
               {' '}
               <b>{'Hard'}</b>: Preterite and past participle
-            </Typography>
+            </Typography> */}
           </React.Fragment>
         }
       >

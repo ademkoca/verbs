@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <Container
         component="footer"
         maxWidth="xl"
-        sx={{ position: 'absolute', bottom: 0, marginBottom: 2 }}
+        sx={{ marginBottom: 2, marginTop: 5 }}
       >
         <Footer />
       </Container>

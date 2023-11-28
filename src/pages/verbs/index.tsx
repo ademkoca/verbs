@@ -3,7 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
@@ -11,24 +10,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import verbsWithTranslation from '../../../verbsWithTranslation';
 import CustomSwitch from '../../components/switch';
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link
-        color="inherit"
-        href="https://ademkoca.github.io/portfolio-react"
-        target="_blank"
-        {...props}
-      >
-        Adem Koca
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 export default function Verbs() {
   const preteriteTextRef = useRef();
@@ -221,7 +202,16 @@ export default function Verbs() {
                 onChange={handleToggleLevel}
                 left={'Easy'}
                 right={'Hard'}
-                tooltip
+                options={[
+                  {
+                    title: 'Easy',
+                    description: 'Only past participle',
+                  },
+                  {
+                    title: 'Hard',
+                    description: 'Preterite and past participle',
+                  },
+                ]}
               />
             </Grid>
             <Grid item xs={6} sm={6}>

@@ -217,7 +217,17 @@ export default function Dictionary() {
                 onChange={handleToggleLevel}
                 left={'Easy'}
                 right={'Hard'}
-                tooltip
+                options={[
+                  {
+                    title: 'Easy',
+                    description:
+                      'Pick the translation from the 3 possible options',
+                  },
+                  {
+                    title: 'Hard',
+                    description: 'Enter the translation manually',
+                  },
+                ]}
               />
             </Grid>
 
