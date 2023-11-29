@@ -15,7 +15,7 @@ export default function Verbs() {
   const preteriteTextRef = useRef();
   const participleTextRef = useRef();
   interface Verb {
-    infinitive: string;
+    original: string;
     preterite: string;
     pastParticiple: string;
     translation?: string;
@@ -23,6 +23,7 @@ export default function Verbs() {
   //   const data = verbs;
   const data = verbsWithTranslation;
   const totalVerbs = data.length;
+  console.log(totalVerbs);
   const [activeVerb, setActiveVerb] = useState<Verb>();
   const [userInputParticiple, setUserInputParticiple] = useState<string>('');
   const [userInputPreterite, setUserInputPreterite] = useState<string>('');
@@ -39,9 +40,9 @@ export default function Verbs() {
   }, []);
   const generateNewVerb = () => {
     const random = Math.floor(Math.random() * totalVerbs);
-    if (!usedItems.includes(data[random].infinitive)) {
+    if (!usedItems.includes(data[random].original)) {
       setActiveVerb(data[random]);
-      usedItems.push(data[random].infinitive);
+      usedItems.push(data[random].original);
     } else generateNewVerb();
   };
 
@@ -88,9 +89,7 @@ export default function Verbs() {
     //hard mode
     if (userInputParticiple != '' && userInputPreterite !== '') {
       setIsLoading(true);
-      const _verb = data.find(
-        (v: Verb) => v.infinitive === activeVerb?.infinitive
-      );
+      const _verb = data.find((v: Verb) => v.original === activeVerb?.original);
       //if correct guess
       if (
         _verb?.pastParticiple.toLowerCase() ===
@@ -171,13 +170,14 @@ export default function Verbs() {
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">
-          {activeVerb?.infinitive}{' '}
+          {activeVerb?.original}{' '}
           {includeTranslation && `(${activeVerb?.translation})`}
         </Typography>
         {successMsg && (
           <Typography
             component="h6"
             variant="h6"
+            mt={2}
             color={messageClass === 'success' ? 'green' : 'red'}
           >
             {successMsg}
