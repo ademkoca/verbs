@@ -9,7 +9,7 @@ interface GermanStore {
   debugLogin: () => void;
 }
 
-const useStore = create<GermanStore>()(
+const useGermanStore = create<GermanStore>()(
   devtools(
     persist(
       (set) => ({
@@ -22,4 +22,4 @@ const useStore = create<GermanStore>()(
   )
 );
 
-export default useStore;
+export default useGermanStore;

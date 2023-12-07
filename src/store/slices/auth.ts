@@ -7,13 +7,7 @@ export type IUser = {
 } | null;
 
 const initialAuthState = {
-  user: {
-    id: null,
-    firstName: null,
-    lastName: null,
-    username: null,
-    email: null,
-  },
+  user: null,
 };
 
 interface IState {
