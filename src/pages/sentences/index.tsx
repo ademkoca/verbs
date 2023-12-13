@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,24 +7,19 @@ import Box from '@mui/material/Box';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import sentences from '../../../sentences';
+import { sentencesWithoutParts } from '../../../sentences';
 import CustomSwitch from '../../components/switch';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 export default function Sentences() {
-  const textRef = useRef();
   interface Sentence {
-    parts: string[];
     original: string;
     translation?: string;
   }
   //   const data = verbs;
-  const data = sentences;
+  const data = sentencesWithoutParts;
   const totalSentences = data.length;
   const [activeSentence, setActiveSentence] = useState<Sentence>({
-    parts: [],
     original: '',
     translation: '',
   });
@@ -41,16 +36,10 @@ export default function Sentences() {
   const [userInput, setUserInput] = useState<string[] | null>(null);
   const [shuffled, setShuffled] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newValue: string
-  ) => {
-    setUserInput(newValue);
-  };
+  const [isWrongAnswer, setIsWrongAnswer] = useState<boolean>(false);
 
   const checkUserInput = () => {
-    if (shuffled.length === 0) {
+    if (shuffled?.length === 0) {
       if (userInput?.join(' ') === activeSentence.original) {
         setMessageClass('success');
         setCorrectGuesses((prev: number) => prev + 1);
@@ -63,45 +52,21 @@ export default function Sentences() {
         setMessageClass('error');
         setSuccessMsg(`${userInput?.join(' ')} is incorrect`);
         // setUserInput(null);
-        setTimeout(() => {
-          resetInputs();
-        }, 3000);
+        setIsWrongAnswer(true);
+
+        // setTimeout(() => {
+        //   resetInputs();
+        // }, 3000);
       }
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
     }
   };
 
-  // useEffect(() => {
-  //   if (userInput) {
-  //     setIsLoading(true);
-  //     //if correct guess
-  //     if (activeSentence?.article.toLowerCase() === userInput?.toLowerCase()) {
-  //       setMessageClass('success');
-  //       setCorrectGuesses((prev: number) => prev + 1);
-  //       setSuccessMsg(`${userInput} ${activeSentence?.original} is correct`);
-  //       // setUserInput(null);
-  //       setTimeout(() => {
-  //         resetInputs();
-  //       }, 3000);
-  //     }
-  //     //if incorrect guess
-  //     else {
-  //       setMessageClass('error');
-  //       setSuccessMsg(`${userInput} ${activeSentence?.original} is incorrect`);
-  //       // setUserInput(null);
-  //       setTimeout(() => {
-  //         resetInputs();
-  //       }, 3000);
-  //     }
-  //     //anyway
-  //     setTotalGuesses((prev: number) => prev + 1);
-  //   }
-  // }, [userInput]);
-
-  // useEffect(() => {
-
-  // }, [activeSentenceCopy]);
+  const proceed = () => {
+    setIsWrongAnswer(false);
+    resetInputs();
+  };
 
   useEffect(() => {
     generateNewArticle();
@@ -111,7 +76,7 @@ export default function Sentences() {
     if (!usedItems.includes(data[random].original)) {
       setActiveSentence(data[random]);
       setActiveSentenceCopy(data[random]);
-      setShuffled(shuffleArray(data[random].parts));
+      setShuffled(shuffleArray(data[random].original.split(' ')));
 
       usedItems.push(data[random].original);
     } else generateNewArticle();
@@ -122,13 +87,13 @@ export default function Sentences() {
     generateNewArticle();
     setMessageClass('success');
     setUserInput(null);
-    textRef?.current?.focus();
+    // textRef?.current?.focus();
     setIsLoading(false);
   };
 
   const reset = (): void => {
     setActiveSentenceCopy(activeSentence);
-    setShuffled(shuffleArray(activeSentenceCopy.parts));
+    setShuffled(shuffleArray(activeSentenceCopy.original.split(' ')));
     setUserInput([]);
   };
 
@@ -143,33 +108,12 @@ export default function Sentences() {
   const handleToggleIncludeTranslation = () => {
     setIncludeTranslation((prev) => !prev);
   };
-  console.log(userInput?.length);
   const handleUserInputClick = (i: string) => {
-    console.log(userInput);
-    console.log(activeSentenceCopy);
-
     const _userInput = userInput ? [...userInput] : [];
     setUserInput(_userInput.filter((u) => u !== i));
     const _shuffled = shuffled ? [...shuffled] : [];
     _shuffled.push(i);
     setShuffled(_shuffled);
-    //     ? [...activeSentenceCopy.parts]
-    //     : [];
-
-    // console.log(i);
-    // e.preventDefault();
-    // if (userInput?.length > 0) {
-    //   const _activeSentence = activeSentenceCopy.parts
-    //     ? [...activeSentenceCopy.parts]
-    //     : [];
-
-    //   // const _userInput = userInput ? [...userInput] : [];
-    //   _activeSentence.push(i);
-    //   setActiveSentenceCopy(_activeSentence);
-    //   // const { parts, ...rest } = activeSentenceCopy;
-    //   const _userInput = userInput ? [...userInput] : [];
-    //   setUserInput(_userInput.filter((s) => s !== i));
-    // }
   };
   const handleActiveSentenceClick = (e: string) => {
     // e.preventDefault();
@@ -198,8 +142,11 @@ export default function Sentences() {
           variant="h5"
           noWrap
           component="a"
+          textAlign={'center'}
           // href="/"
+
           sx={{
+            // maxWidth: 400,
             mb: 2,
             flexGrow: 1,
             // fontFamily: 'monospace',
@@ -209,7 +156,7 @@ export default function Sentences() {
             textDecoration: 'none',
           }}
         >
-          SENTENCE CONSTRUCTION
+          SENTENCE <br /> CONSTRUCTION
         </Typography>
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <MarkChatReadOutlinedIcon />
@@ -222,16 +169,23 @@ export default function Sentences() {
         <Typography component="h5" variant="h5">
           {activeSentence?.translation}
         </Typography>
-        <Box flexDirection={'column'} rowGap={5} minWidth={'100%'}>
+        <Box
+          maxWidth={'sm'}
+          flexDirection={'column'}
+          rowGap={5}
+          minWidth={'100%'}
+        >
           <Box
             display={'flex'}
             flexDirection={'row'}
             justifyContent={'center'}
+            flexWrap={'wrap'}
             my={5}
+            gap={2}
           >
             {userInput?.map((i) => (
               <Button
-                style={{ marginRight: 10 }}
+                style={{ textTransform: 'none' }}
                 key={i}
                 variant="contained"
                 onClick={() => handleUserInputClick(i)}
@@ -245,11 +199,12 @@ export default function Sentences() {
             flexDirection={'row'}
             gap={2}
             justifyContent={'center'}
+            flexWrap={'wrap'}
             mb={2}
           >
             {shuffled?.map((p) => (
               <Button
-                // style={{ marginRight: 10 }}
+                style={{ textTransform: 'none' }}
                 key={p}
                 variant="outlined"
                 onClick={() => handleActiveSentenceClick(p)}
@@ -262,6 +217,7 @@ export default function Sentences() {
 
         {successMsg && (
           <Typography
+            mb={2}
             component="h6"
             variant="h6"
             color={messageClass === 'success' ? 'green' : 'red'}
@@ -270,7 +226,7 @@ export default function Sentences() {
           </Typography>
         )}
         {messageClass !== 'success' && (
-          <Typography color="green">
+          <Typography component="h6" variant="h6" color="green">
             correct: {activeSentence?.original}
           </Typography>
         )}
@@ -280,7 +236,7 @@ export default function Sentences() {
           // onSubmit={checkUserInput}
           sx={{ mt: 3 }}
         >
-          <Grid container spacing={2}>
+          {/* <Grid container spacing={2}>
             <Grid item xs={6} sm={6}>
               <CustomSwitch
                 value={includeTranslation}
@@ -288,39 +244,30 @@ export default function Sentences() {
                 left={'Translation'}
               />
             </Grid>
-
-            {/* <Grid item xs={12}>
-              <ToggleButtonGroup
-                color="primary"
-                value={userInput}
-                exclusive
-                onChange={handleChange}
-                aria-label="Platform"
-                fullWidth
-                sx={{ mb: 3 }}
-              >
-                <ToggleButton disabled={isLoading} value="der">
-                  der
-                </ToggleButton>
-                <ToggleButton disabled={isLoading} value="die">
-                  die
-                </ToggleButton>
-                <ToggleButton disabled={isLoading} value="das">
-                  das
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Grid> */}
-          </Grid>
-          <Button
-            type="button"
-            onClick={checkUserInput}
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={shuffled?.length > 0}
-          >
-            Check
-          </Button>
+          </Grid> */}
+          {!isWrongAnswer && (
+            <Button
+              type="button"
+              onClick={checkUserInput}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={shuffled?.length > 0}
+            >
+              Check
+            </Button>
+          )}
+          {isWrongAnswer && (
+            <Button
+              type="button"
+              onClick={proceed}
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Continue
+            </Button>
+          )}
           <Button
             startIcon={<RefreshIcon />}
             type="button"

@@ -1,10 +1,4 @@
-import {
-  Box,
-  Container,
-  ThemeProvider,
-  Typography,
-  createTheme,
-} from '@mui/material';
+import { Container, ThemeProvider, createTheme } from '@mui/material';
 import { ReactNode } from 'react';
 import Navbar from './navbar';
 import Footer from './footer';

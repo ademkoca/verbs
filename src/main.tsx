@@ -4,7 +4,9 @@ import Verbs from './pages/verbs/index.tsx';
 import Articles from './pages/articles/index.tsx';
 import Layout from './components/layout/index.tsx';
 import Dictionary from './pages/dictionary/index.tsx';
-import Sentences2 from './pages/sentences2/index.tsx';
+import SignUp from './pages/auth/sign-up/index.tsx';
+import SignIn from './pages/auth/sign-in/index.tsx';
+import Sentences from './pages/sentences/index.tsx';
 
 const router = createHashRouter([
   {
@@ -22,6 +24,22 @@ const router = createHashRouter([
       //   // loader: teamLoader,
       // },
     ],
+  },
+  {
+    path: '/sign-up',
+    element: (
+      <Layout>
+        <SignUp />
+      </Layout>
+    ),
+  },
+  {
+    path: '/sign-in',
+    element: (
+      <Layout>
+        <SignIn />
+      </Layout>
+    ),
   },
   {
     path: '/articles',
@@ -43,7 +61,7 @@ const router = createHashRouter([
     path: '/sentences',
     element: (
       <Layout>
-        <Sentences2 />
+        <Sentences />
       </Layout>
     ),
   },

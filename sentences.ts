@@ -399,12 +399,6 @@ export const sentencesWithoutParts = [
   },
   {
     original:
-      'Die Aussicht vom Gipfel des Berges ist atemberaubend und belohnt die Anstrengungen des Aufstiegs.',
-    translation:
-      'The view from the summit of the mountain is breathtaking and rewards the efforts of the climb.',
-  },
-  {
-    original:
       'Im Herbst färben sich die Blätter der Bäume in warmen Farbtönen, was eine malerische Atmosphäre schafft.',
     translation:
       'In autumn, the leaves of the trees change to warm hues, creating a picturesque atmosphere.',

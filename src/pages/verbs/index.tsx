@@ -10,8 +10,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import verbsWithTranslation from '../../../verbsWithTranslation';
 import CustomSwitch from '../../components/switch';
+import useGermanStore from '../../store';
 
 export default function Verbs() {
+  const store = useGermanStore();
+  console.log('store: ', !!store.user);
   const preteriteTextRef = useRef();
   const participleTextRef = useRef();
   interface Verb {
@@ -23,7 +26,6 @@ export default function Verbs() {
   //   const data = verbs;
   const data = verbsWithTranslation;
   const totalVerbs = data.length;
-  console.log(totalVerbs);
   const [activeVerb, setActiveVerb] = useState<Verb>();
   const [userInputParticiple, setUserInputParticiple] = useState<string>('');
   const [userInputPreterite, setUserInputPreterite] = useState<string>('');

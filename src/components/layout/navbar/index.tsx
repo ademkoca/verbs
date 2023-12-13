@@ -42,7 +42,6 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-  console.log(anchorElUser);
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -165,7 +164,10 @@ function Navbar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Adem Koca" src="/static/images/avatar/2.jpg" />
+                  <Avatar
+                    alt={store.user.firstName + '' + store.user.lastName}
+                    src="/static/images/avatar/2.jpg"
+                  />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -194,11 +196,7 @@ function Navbar() {
           )}
           {store.user === null && (
             <Box sx={{ flexGrow: 0 }}>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => store.debugLogin()}
-              >
+              <Button variant="contained" color="success" href="/#/sign-in">
                 Login
               </Button>
             </Box>
