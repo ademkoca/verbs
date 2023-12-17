@@ -45,8 +45,8 @@ export default function SignUp() {
       });
       if (res.status === 200) {
         const response = await res.json();
-        console.log(response.data);
-        window.location.href = '/#/login';
+        // console.log(response.data);
+        window.location.href = '/#/sign-in';
       }
     } catch (err) {
       console.log(err);

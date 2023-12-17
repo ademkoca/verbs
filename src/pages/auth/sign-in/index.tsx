@@ -40,7 +40,7 @@ export default function SignIn() {
       const user = (await firebaseLogin).user;
       console.log('logged in user: ', user);
       const { accessToken } = user;
-      console.log(accessToken);
+      // console.log(accessToken);
       if (accessToken) {
         try {
           const res = await fetch(`${apiUrl}/auth/signin`, {

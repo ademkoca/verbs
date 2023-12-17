@@ -61,7 +61,7 @@ function Navbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <LanguageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          {/* <LanguageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -78,7 +78,10 @@ function Navbar() {
             }}
           >
             INSTA GERMAN
-          </Typography>
+          </Typography> */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
+            <img src="logo-clear-white-1.png" alt="Logo" width={150} />
+          </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -119,7 +122,7 @@ function Navbar() {
             </Menu>
           </Box>
 
-          <LanguageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          {/* <LanguageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -137,7 +140,10 @@ function Navbar() {
             }}
           >
             INSTA GERMAN
-          </Typography>
+          </Typography> */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 1 }}>
+            <img src="logo-clear-white-1.png" alt="Logo" width={150} />
+          </Box>
           <Box
             sx={{
               flexGrow: 1,
@@ -153,7 +159,7 @@ function Navbar() {
                 // onClick={handleCloseNavMenu}
                 // sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                <Typography textAlign="center" color={'white'}>
+                <Typography textAlign="center" color={'white'} mt={1}>
                   {page.name}
                 </Typography>
               </Link>
