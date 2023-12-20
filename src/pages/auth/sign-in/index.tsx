@@ -35,7 +35,6 @@ export default function SignIn() {
       const { accessToken } = user;
       const token = await auth.currentUser?.getIdToken(true);
 
-      console.log('accessToken: ', accessToken);
       if (accessToken) {
         try {
           const res = await fetch(`${apiUrl}/auth/signin`, {
