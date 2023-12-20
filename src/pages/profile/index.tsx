@@ -8,22 +8,51 @@ import {
 } from '@mui/material';
 import useGermanStore from '../../store';
 import { Grid } from '@mui/material';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { IUser } from '../../store/slices/auth';
-import { auth } from '../../utils/firebase';
+import { auth, storage } from '../../utils/firebase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ref, uploadBytes } from 'firebase/storage';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Profile = () => {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState<IUser>(store.user);
+  const [image, setImage] = useState(null);
+  const [imageUploaded, setImageUploaded] = useState<boolean>(false);
+  const uploadButtonRef = useRef();
   const notify = (message: string) => toast(message);
+  const handleUploadImage = async () => {
+    if (!image) return;
+    const imageRef = ref(storage, image.name + new Date().getTime());
+    const res = await uploadBytes(imageRef, image);
+
+    if (res.metadata.name && user) {
+      setUser({
+        ...user,
+        profilePicture:
+          'https://firebasestorage.googleapis.com/v0/b/consistency-12769.appspot.com/o/' +
+          res.metadata.name +
+          '?alt=media',
+      });
+      setImageUploaded(true);
+    }
+  };
+  const handleRemoveImage = () => {
+    if (user) {
+      setUser({
+        ...user,
+        profilePicture: '',
+      });
+      setImageUploaded(true);
+    }
+  };
   const handleUpdateProfile = async () => {
-    if (user)
+    if (user) {
       try {
         const response = await fetch(`${apiUrl}/users/${user._id}`, {
           method: 'PUT',
@@ -42,7 +71,15 @@ const Profile = () => {
       } catch (error) {
         notify('Error updating user');
       }
+    }
   };
+
+  useEffect(() => {
+    imageUploaded && handleUpdateProfile();
+    setImageUploaded(false);
+    setImage(null);
+  }, [imageUploaded]);
+
   if (!user) return null;
   return (
     <Container component="main" maxWidth="xs">
@@ -51,6 +88,7 @@ const Profile = () => {
       <Box
         sx={{
           marginTop: 8,
+
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -77,8 +115,79 @@ const Profile = () => {
       </Box>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} display={'flex'} justifyContent={'center'}>
-          <Avatar alt={user?.firstName} src="/static/images/avatar/1.jpg" />
+        <Grid
+          item
+          xs={12}
+          gap={{ xs: 2, md: 0 }}
+          display={'flex'}
+          flexDirection={{ xs: 'column', md: 'row' }}
+          alignItems={{ xs: 'space-between', md: 'space-between' }}
+          justifyContent={{ xs: 'space-between', md: 'space-between' }}
+          my={3}
+        >
+          <Grid
+            item
+            xs={12}
+            display={'flex'}
+            flex={2}
+            justifyContent={'center'}
+            alignItems={'center'}
+          >
+            <Avatar
+              sx={{ width: 120, height: 120 }}
+              alt={user?.firstName}
+              src={image ? URL.createObjectURL(image) : user?.profilePicture}
+            />
+          </Grid>
+          <Grid
+            flex={1}
+            gap={{ xs: 2, md: 0 }}
+            item
+            xs={12}
+            display={'flex'}
+            flexDirection={'column'}
+            justifyContent={'space-around'}
+          >
+            {!image ? (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CloudUploadIcon />}
+                onClick={() => uploadButtonRef?.current?.click()}
+              >
+                CHOOSE IMAGE
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<CloudUploadIcon />}
+                onClick={handleUploadImage}
+              >
+                Click to upload
+              </Button>
+            )}
+            {!image && user.profilePicture !== '' && (
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<DeleteIcon />}
+                onClick={handleRemoveImage}
+              >
+                Remove
+              </Button>
+            )}
+            <input
+              accept="image/png, image/gif, image/jpeg"
+              ref={uploadButtonRef}
+              style={{ display: 'none' }}
+              type="file"
+              onChange={(e) => setImage(e.target.files[0])}
+            />
+            {/* <button type="button" onClick={handleUpload}>
+              Upload
+            </button> */}
+          </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField

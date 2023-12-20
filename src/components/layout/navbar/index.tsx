@@ -146,7 +146,7 @@ function Navbar() {
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
                     alt={store.user.firstName + '' + store.user.lastName}
-                    src="/static/images/avatar/2.jpg"
+                    src={store.user?.profilePicture}
                   />
                 </IconButton>
               </Tooltip>
