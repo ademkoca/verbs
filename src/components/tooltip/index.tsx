@@ -3,8 +3,9 @@ import { styled } from '@mui/material/styles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { Option } from '../../types/interfaces';
 
-const HtmlTooltip = styled(({ className, ...props }: ITooltip) => (
+const HtmlTooltip = styled(({ className, ...props }: any) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
@@ -23,7 +24,7 @@ export default function CustomTooltip({ options }: { options: Option[] }) {
         title={
           <React.Fragment>
             {options?.map((option: Option) => (
-              <Typography color="inherit">
+              <Typography color="inherit" key={option.title}>
                 <b>{option.title}</b>: {option.description}
               </Typography>
             ))}
