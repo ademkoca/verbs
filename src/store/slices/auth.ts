@@ -1,9 +1,22 @@
+import { Progress } from '../../types/interfaces';
+
 export type IUser = {
-  id: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  username: string | null;
-  email: string | null;
+  _id: string;
+  username: string;
+  email: string;
+  profilePicture: string;
+  isAdmin: boolean;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  address: string;
+  country: string;
+  state: string;
+  zip: string;
+  progress: Progress[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 } | null;
 
 const initialAuthState = {
@@ -32,15 +45,15 @@ export const authSlice = (set: SetFunction<IState>) => ({
   updateUser: (user: IUser) => {
     set((state: IState) => ({ ...state, user }));
   },
-  debugLogin: () =>
-    set((state: IState) => ({
-      ...state,
-      user: {
-        id: '1',
-        firstName: 'Adem',
-        lastName: 'Koca',
-        username: 'ademkoca',
-        email: 'aademkocaa@gmail.com',
-      },
-    })),
+  // debugLogin: () =>
+  //   set((state: IState) => ({
+  //     ...state,
+  //     user: {
+  //       id: '1',
+  //       firstName: 'Adem',
+  //       lastName: 'Koca',
+  //       username: 'ademkoca',
+  //       email: 'aademkocaa@gmail.com',
+  //     },
+  //   })),
 });

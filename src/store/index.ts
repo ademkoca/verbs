@@ -6,7 +6,8 @@ interface GermanStore {
   user: IUser;
   login: (user: IUser) => void;
   logout: () => void;
-  debugLogin: () => void;
+  // debugLogin: () => void;
+  updateUser: (user: IUser) => void;
 }
 
 const useGermanStore = create<GermanStore>()(
