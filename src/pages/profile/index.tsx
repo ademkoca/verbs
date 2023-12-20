@@ -14,11 +14,14 @@ import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
 import { IUser } from '../../store/slices/auth';
 import { auth } from '../../utils/firebase';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState<IUser>(store.user);
+  const notify = (message: string) => toast(message);
   const handleUpdateProfile = async () => {
     if (user)
       try {
@@ -32,11 +35,11 @@ const Profile = () => {
         });
         if (response.status === 200) {
           const res = await response.json();
-          console.log('User successfully updated');
+          notify('User successfully updated');
           store.updateUser(res.data);
-        }
+        } else notify('Error updating user');
       } catch (error) {
-        console.log(error);
+        notify('Error updating user');
       }
   };
   if (!user) return null;
@@ -180,6 +183,7 @@ const Profile = () => {
           >
             Update
           </Button>
+          <ToastContainer />
         </Grid>
       </Grid>
     </Container>

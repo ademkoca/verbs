@@ -38,7 +38,6 @@ export default function SignIn() {
     try {
       const firebaseLogin = signInWithEmailAndPassword(auth, email, password);
       const user = (await firebaseLogin).user;
-      console.log('logged in user: ', user);
       const { accessToken } = user;
       // console.log(accessToken);
       if (accessToken) {

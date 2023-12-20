@@ -321,6 +321,7 @@ export default function Dictionary() {
                 >
                   {activeWord?.translation.map((w) => (
                     <ToggleButton
+                      key={w.possibleTranslation}
                       disabled={isLoading}
                       value={w.possibleTranslation}
                     >

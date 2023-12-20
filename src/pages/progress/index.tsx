@@ -76,8 +76,13 @@ const Progress = () => {
 
       <Box sx={{ minHeight: '80vh' }}>
         {store.user?.progress.map((p) => (
-          <Box marginY={2} display={'flex'} justifyContent={'space-between'}>
-            <Typography variant="h6" key={p.name}>
+          <Box
+            key={p.name}
+            marginY={2}
+            display={'flex'}
+            justifyContent={'space-between'}
+          >
+            <Typography variant="h6">
               {getFirstLetterCapitalized(p.name)}:{' '}
               <strong>{p.correctGuesses}</strong> /{' '}
               <strong>{p.totalGuesses}</strong>

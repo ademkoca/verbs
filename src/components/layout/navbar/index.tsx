@@ -11,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import { Avatar, Button, Tooltip } from '@mui/material';
 import useGermanStore from '../../../store';
+import { auth } from '../../../utils/firebase';
+import { signOut } from 'firebase/auth';
 
 const pages = [
   { name: 'Articles', url: '/articles' },
@@ -27,7 +29,15 @@ interface ISettings {
 function Navbar() {
   const store = useGermanStore();
   const logoutHandler = () => {
-    store.logout();
+    signOut(auth)
+      .then(() => {
+        store.logout();
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        console.log('Sign out error: ', error);
+        // An error happened.
+      });
   };
   const routeHandler = (route: string) => {
     window.location.href = `/#/${route}`;

@@ -33,7 +33,6 @@ export default function Sentences() {
     ? removeItemsInSecondArray(sentencesWithoutParts, sentencesProgress?.used)
     : sentencesWithoutParts;
   const totalSentences = data.length;
-  console.log(totalSentences);
   const [activeSentence, setActiveSentence] = useState<Sentence>({
     original: '',
     translation: '',
