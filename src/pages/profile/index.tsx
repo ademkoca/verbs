@@ -30,7 +30,8 @@ const Profile = () => {
           body: JSON.stringify(user),
           headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken()),
+            Authorization:
+              'Bearer ' + (await auth.currentUser?.getIdToken(true)),
           },
         });
         if (response.status === 200) {

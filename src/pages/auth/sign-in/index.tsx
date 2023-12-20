@@ -25,25 +25,21 @@ export default function SignIn() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
 
     const email = data.get('email');
     const password = data.get('password');
-
-    const userData = { email, password };
 
     try {
       const firebaseLogin = signInWithEmailAndPassword(auth, email, password);
       const user = (await firebaseLogin).user;
       const { accessToken } = user;
-      // console.log(accessToken);
+      const token = await auth.currentUser?.getIdToken(true);
+
+      console.log('accessToken: ', accessToken);
       if (accessToken) {
         try {
           const res = await fetch(`${apiUrl}/auth/signin`, {
-            headers: { Authorization: 'Bearer ' + accessToken },
+            headers: { Authorization: 'Bearer ' + accessToken ?? token },
           });
           const response = await res.json();
           store.login(response.data);
