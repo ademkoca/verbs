@@ -11,10 +11,13 @@ import Container from '@mui/material/Container';
 import verbsWithTranslation from '../../../verbsWithTranslation';
 import CustomSwitch from '../../components/switch';
 import useGermanStore from '../../store';
+import { auth } from '../../utils/firebase';
 
 export default function Verbs() {
   const store = useGermanStore();
-  console.log('store: ', !!store.user);
+  const verbsProgress = store.user?.progress?.find((p) => p.name === 'verbs');
+  // console.log('user: ', store.user);
+  const apiUrl = import.meta.env.VITE_API_URL;
   const preteriteTextRef = useRef();
   const participleTextRef = useRef();
   interface Verb {
@@ -24,7 +27,16 @@ export default function Verbs() {
     translation?: string;
   }
   //   const data = verbs;
-  const data = verbsWithTranslation;
+  const removeItemsInSecondArray = (arr1: Verb[], arr2: string[]) => {
+    if (arr2?.length > 0) {
+      // Use filter to create a new array with items from arr1 that are not in arr2
+      const result = arr1.filter((item) => arr2.indexOf(item.original) === -1);
+      return result;
+    } else return arr1;
+  };
+  const data = verbsProgress
+    ? removeItemsInSecondArray(verbsWithTranslation, verbsProgress?.used)
+    : verbsWithTranslation;
   const totalVerbs = data.length;
   const [activeVerb, setActiveVerb] = useState<Verb>();
   const [userInputParticiple, setUserInputParticiple] = useState<string>('');
@@ -87,11 +99,26 @@ export default function Verbs() {
       }
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
+
+      //if user is logged in
+      if (store.user) {
+        // const progress = store.user?.progress?.find(
+        //   (p: Progress) => p.name === 'verbs'
+        // );
+        updateProgress(
+          'verbs',
+          activeVerb?.original,
+          activeVerb?.pastParticiple.toLowerCase() ===
+            userInputParticiple.toLowerCase()
+        );
+      }
     }
     //hard mode
     if (userInputParticiple != '' && userInputPreterite !== '') {
       setIsLoading(true);
-      const _verb = data.find((v: Verb) => v.original === activeVerb?.original);
+      const _verb = data?.find(
+        (v: Verb) => v.original === activeVerb?.original
+      );
       //if correct guess
       if (
         _verb?.pastParticiple.toLowerCase() ===
@@ -123,6 +150,49 @@ export default function Verbs() {
       }
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
+      //if user is logged in
+      if (store.user) {
+        // const progress = store.user?.progress?.find(
+        //   (p: Progress) => p.name === 'verbs'
+        // );
+        updateProgress(
+          'verbs',
+          activeVerb?.original,
+          activeVerb?.pastParticiple.toLowerCase() ===
+            userInputParticiple.toLowerCase()
+        );
+      }
+    }
+  };
+  const updateProgress = (name: string, guess: string, correct: boolean) => {
+    const updatedProgress = store.user?.progress.map((item) => {
+      if (item.name === name) {
+        return {
+          ...item,
+          used: [...item.used, guess],
+          totalGuesses: item.totalGuesses + 1,
+          correctGuesses: correct
+            ? item.correctGuesses + 1
+            : item.correctGuesses,
+        };
+      }
+      return item;
+    });
+    const _user = { ...store.user, progress: updatedProgress };
+    store.updateUser(_user);
+  };
+  const updateUser = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(store?.user),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken(true)),
+        },
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleToggleLevel = () => {
@@ -131,6 +201,10 @@ export default function Verbs() {
   const handleToggleIncludeTranslation = () => {
     setIncludeTranslation((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (store.user) updateUser();
+  }, [verbsProgress?.used.length]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -168,7 +242,8 @@ export default function Verbs() {
         </Avatar>
         <Box my={2}>
           <Typography>
-            {correctGuesses}/{totalGuesses} correct
+            {verbsProgress?.correctGuesses ?? correctGuesses}/
+            {verbsProgress?.totalGuesses ?? totalGuesses} correct
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">

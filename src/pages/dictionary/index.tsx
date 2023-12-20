@@ -13,10 +13,17 @@ import nounsWithTranslation from '../../../nouns';
 import CustomSwitch from '../../components/switch';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import nounsWithMultipleTranslations from '../../../dictionary';
+import useGermanStore from '../../store';
+import { auth } from '../../utils/firebase';
 
 export default function Dictionary() {
+  const store = useGermanStore();
   const preteriteTextRef = useRef();
   const textRef = useRef();
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const dictionaryProgress = store.user?.progress?.find(
+    (p) => p.name === 'dictionary'
+  );
 
   interface Word {
     article: string;
@@ -29,19 +36,21 @@ export default function Dictionary() {
     isCorrectTranslation: boolean;
   }
 
-  //   const data = verbs;
-  const _verbs = verbsWithTranslation;
-  const _nouns = nounsWithTranslation;
-  const verbs = _verbs.map((v) => ({
-    original: v.original,
-    translation: v.translation,
-  }));
-  const nouns = _nouns.map((n) => ({
-    original: n.original,
-    translation: n.translation,
-  }));
+  const removeItemsInSecondArray = (arr1: Word[], arr2: string[]) => {
+    if (arr2?.length > 0) {
+      // Use filter to create a new array with items from arr1 that are not in arr2
+      const result = arr1.filter((item) => arr2.indexOf(item.original) === -1);
+      return result;
+    } else return arr1;
+  };
+  const words = dictionaryProgress
+    ? removeItemsInSecondArray(
+        nounsWithMultipleTranslations,
+        dictionaryProgress?.used
+      )
+    : nounsWithMultipleTranslations;
 
-  const words = nounsWithMultipleTranslations;
+  // const words = nounsWithMultipleTranslations;
   const totalWords = words.length;
   const [activeWord, setActiveWord] = useState<Word>();
   const [userInput, setUserInput] = useState<string>('');
@@ -109,6 +118,14 @@ export default function Dictionary() {
       }
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
+      //if user is logged in
+      if (store.user) {
+        updateProgress(
+          'dictionary',
+          activeWord?.original,
+          correct?.toLowerCase() === userInput?.toLowerCase()
+        );
+      }
     }
   }, [userInput]);
 
@@ -142,11 +159,54 @@ export default function Dictionary() {
       }
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
+      //if user is logged in
+      if (store.user) {
+        updateProgress(
+          'dictionary',
+          activeWord?.original,
+          correct?.toLowerCase() === userInput?.toLowerCase().trim()
+        );
+      }
+    }
+  };
+  const updateProgress = (name: string, guess: string, correct: boolean) => {
+    const updatedProgress = store.user?.progress.map((item) => {
+      if (item.name === name) {
+        return {
+          ...item,
+          used: [...item.used, guess],
+          totalGuesses: item.totalGuesses + 1,
+          correctGuesses: correct
+            ? item.correctGuesses + 1
+            : item.correctGuesses,
+        };
+      }
+      return item;
+    });
+    const _user = { ...store.user, progress: updatedProgress };
+    store.updateUser(_user);
+  };
+  const updateUser = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(store?.user),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken(true)),
+        },
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleToggleLevel = () => {
     setIsHard((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (store.user) updateUser();
+  }, [dictionaryProgress?.used.length]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -184,7 +244,8 @@ export default function Dictionary() {
         </Avatar>
         <Box my={2}>
           <Typography>
-            {correctGuesses}/{totalGuesses} correct
+            {dictionaryProgress?.correctGuesses ?? correctGuesses}/
+            {dictionaryProgress?.totalGuesses ?? totalGuesses} correct
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">

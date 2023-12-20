@@ -11,16 +11,32 @@ import nouns from '../../../nouns';
 import CustomSwitch from '../../components/switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { auth } from '../../utils/firebase';
+import useGermanStore from '../../store';
 
 export default function Articles() {
+  const store = useGermanStore();
   const textRef = useRef();
   interface Noun {
     article: string;
     original: string;
     translation?: string;
   }
+  const articlesProgress = store.user?.progress?.find(
+    (p) => p.name === 'articles'
+  );
+  const apiUrl = import.meta.env.VITE_API_URL;
   //   const data = verbs;
-  const data = nouns;
+  const removeItemsInSecondArray = (arr1: Noun[], arr2: string[]) => {
+    if (arr2?.length > 0) {
+      // Use filter to create a new array with items from arr1 that are not in arr2
+      const result = arr1.filter((item) => arr2.indexOf(item.original) === -1);
+      return result;
+    } else return arr1;
+  };
+  const data = articlesProgress
+    ? removeItemsInSecondArray(nouns, articlesProgress?.used)
+    : nouns;
   const totalNouns = data.length;
   const [activeNoun, setActiveNoun] = useState<Noun>({
     article: 'der',
@@ -69,12 +85,55 @@ export default function Articles() {
       }
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
+      if (store.user) {
+        // const progress = store.user?.progress?.find(
+        //   (p: Progress) => p.name === 'verbs'
+        // );
+        updateProgress(
+          'articles',
+          activeNoun?.original,
+          activeNoun?.article.toLowerCase() === userInput?.toLowerCase()
+        );
+      }
     }
   }, [userInput]);
-
+  const updateProgress = (name: string, guess: string, correct: boolean) => {
+    const updatedProgress = store.user?.progress.map((item) => {
+      if (item.name === name) {
+        return {
+          ...item,
+          used: [...item.used, guess],
+          totalGuesses: item.totalGuesses + 1,
+          correctGuesses: correct
+            ? item.correctGuesses + 1
+            : item.correctGuesses,
+        };
+      }
+      return item;
+    });
+    const _user = { ...store.user, progress: updatedProgress };
+    store.updateUser(_user);
+  };
+  const updateUser = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(store?.user),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken(true)),
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     generateNewArticle();
   }, []);
+  useEffect(() => {
+    if (store.user) updateUser();
+  }, [articlesProgress?.used.length]);
   const generateNewArticle = () => {
     const random = Math.floor(Math.random() * totalNouns);
     if (!usedItems.includes(data[random].original)) {
@@ -129,7 +188,8 @@ export default function Articles() {
         </Avatar>
         <Box my={2}>
           <Typography>
-            {correctGuesses}/{totalGuesses} correct
+            {articlesProgress?.correctGuesses ?? correctGuesses}/
+            {articlesProgress?.totalGuesses ?? totalGuesses} correct
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">

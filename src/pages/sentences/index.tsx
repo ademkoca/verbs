@@ -2,23 +2,38 @@ import { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { sentencesWithoutParts } from '../../../sentences';
-import CustomSwitch from '../../components/switch';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import useGermanStore from '../../store';
+import { auth } from '../../utils/firebase';
 
 export default function Sentences() {
+  const store = useGermanStore();
+  const apiUrl = import.meta.env.VITE_API_URL;
   interface Sentence {
     original: string;
     translation?: string;
   }
   //   const data = verbs;
-  const data = sentencesWithoutParts;
+  const sentencesProgress = store.user?.progress?.find(
+    (p) => p.name === 'sentences'
+  );
+  const removeItemsInSecondArray = (arr1: Sentence[], arr2: string[]) => {
+    if (arr2?.length > 0) {
+      // Use filter to create a new array with items from arr1 that are not in arr2
+      const result = arr1.filter((item) => arr2.indexOf(item.original) === -1);
+      return result;
+    } else return arr1;
+  };
+  const data = sentencesProgress
+    ? removeItemsInSecondArray(sentencesWithoutParts, sentencesProgress?.used)
+    : sentencesWithoutParts;
   const totalSentences = data.length;
+  console.log(totalSentences);
   const [activeSentence, setActiveSentence] = useState<Sentence>({
     original: '',
     translation: '',
@@ -60,6 +75,48 @@ export default function Sentences() {
       }
       //anyway
       setTotalGuesses((prev: number) => prev + 1);
+      //if user is logged in
+      if (store.user) {
+        // const progress = store.user?.progress?.find(
+        //   (p: Progress) => p.name === 'verbs'
+        // );
+        updateProgress(
+          'sentences',
+          activeSentence?.original,
+          userInput?.join(' ') === activeSentence.original
+        );
+      }
+    }
+  };
+  const updateProgress = (name: string, guess: string, correct: boolean) => {
+    const updatedProgress = store.user?.progress.map((item) => {
+      if (item.name === name) {
+        return {
+          ...item,
+          used: [...item.used, guess],
+          totalGuesses: item.totalGuesses + 1,
+          correctGuesses: correct
+            ? item.correctGuesses + 1
+            : item.correctGuesses,
+        };
+      }
+      return item;
+    });
+    const _user = { ...store.user, progress: updatedProgress };
+    store.updateUser(_user);
+  };
+  const updateUser = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(store?.user),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken(true)),
+        },
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -81,6 +138,10 @@ export default function Sentences() {
       usedItems.push(data[random].original);
     } else generateNewArticle();
   };
+
+  useEffect(() => {
+    if (store.user) updateUser();
+  }, [sentencesProgress?.used.length]);
 
   const resetInputs = () => {
     setSuccessMsg(null);
@@ -105,9 +166,6 @@ export default function Sentences() {
     return arr;
   };
 
-  const handleToggleIncludeTranslation = () => {
-    setIncludeTranslation((prev) => !prev);
-  };
   const handleUserInputClick = (i: string) => {
     const _userInput = userInput ? [...userInput] : [];
     setUserInput(_userInput.filter((u) => u !== i));
@@ -163,7 +221,8 @@ export default function Sentences() {
         </Avatar>
         <Box my={2}>
           <Typography>
-            {correctGuesses}/{totalGuesses} correct
+            {sentencesProgress?.correctGuesses ?? correctGuesses}/
+            {sentencesProgress?.totalGuesses ?? totalGuesses} correct
           </Typography>
         </Box>
         <Typography component="h5" variant="h5">
