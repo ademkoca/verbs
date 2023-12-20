@@ -7,6 +7,8 @@ import Dictionary from './pages/dictionary/index.tsx';
 import SignUp from './pages/auth/sign-up/index.tsx';
 import SignIn from './pages/auth/sign-in/index.tsx';
 import Sentences from './pages/sentences/index.tsx';
+import Progress from './pages/progress/index.tsx';
+import Profile from './pages/profile/index.tsx';
 
 const router = createHashRouter([
   {
@@ -62,6 +64,22 @@ const router = createHashRouter([
     element: (
       <Layout>
         <Sentences />
+      </Layout>
+    ),
+  },
+  {
+    path: '/progress',
+    element: (
+      <Layout>
+        <Progress />
+      </Layout>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <Layout>
+        <Profile />
       </Layout>
     ),
   },
