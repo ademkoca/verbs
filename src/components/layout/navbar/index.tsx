@@ -9,7 +9,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
-import LanguageIcon from '@mui/icons-material/Language';
 import { Avatar, Button, Tooltip } from '@mui/material';
 import useGermanStore from '../../../store';
 
@@ -30,10 +29,13 @@ function Navbar() {
   const logoutHandler = () => {
     store.logout();
   };
+  const routeHandler = (route: string) => {
+    window.location.href = `/#/${route}`;
+  };
   const settings: ISettings[] = [
-    { label: 'Profile' },
-    { label: 'Account' },
-    { label: 'Dashboard' },
+    { label: 'Profile', handler: () => routeHandler('profile') },
+    { label: 'Progress', handler: () => routeHandler('progress') },
+    // { label: 'Dashboard' },
     { label: 'Logout', handler: logoutHandler },
   ];
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -61,24 +63,6 @@ function Navbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <LanguageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            // href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            INSTA GERMAN
-          </Typography> */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
             <img src="logo-clear-white-1.png" alt="Logo" width={150} />
           </Box>
@@ -121,26 +105,6 @@ function Navbar() {
               ))}
             </Menu>
           </Box>
-
-          {/* <LanguageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            // href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            INSTA GERMAN
-          </Typography> */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 1 }}>
             <img src="logo-clear-white-1.png" alt="Logo" width={150} />
           </Box>
