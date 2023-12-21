@@ -16,8 +16,8 @@ import { signOut } from 'firebase/auth';
 
 const pages = [
   { name: 'Articles', url: '/articles' },
-  { name: 'Dictionary', url: '/dictionary' },
   { name: 'Verbs', url: '/' },
+  { name: 'Dictionary', url: '/dictionary' },
   { name: 'Sentences', url: '/sentences' },
 ];
 
