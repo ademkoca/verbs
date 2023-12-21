@@ -21,24 +21,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const Profile = () => {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const [user, setUser] = useState<IUser>(store.user);
+  const [user, setUser] = useState<IUser>(null);
   const [image, setImage] = useState(null);
+  const [jwt, setJwt] = useState<string | null>(null);
   const [imageUploaded, setImageUploaded] = useState<boolean>(false);
   const uploadButtonRef = useRef();
   const notify = (message: string) => toast(message);
   const getUser = async () => {
-    const token = await auth.currentUser?.getIdToken(true);
-    console.log(token);
-    if (token) {
-      const response = await fetch(`${apiUrl}/users/${store.user?._id}`, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-          'Content-Type': 'application/json',
-        },
-      });
-      const res = await response.json();
-      setUser(res.data);
-    }
+    const response = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+      headers: {
+        Authorization: 'Bearer ' + jwt,
+        'Content-Type': 'application/json',
+      },
+    });
+    const res = await response.json();
+    setUser(res);
   };
   const handleUploadImage = async () => {
     if (!image) return;
@@ -93,9 +90,17 @@ const Profile = () => {
     setImageUploaded(false);
     setImage(null);
   }, [imageUploaded]);
+  const getToken = async () => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        user.getIdToken().then((token) => setJwt(token));
+      }
+    });
+  };
   useEffect(() => {
-    getUser();
-  }, []);
+    getToken();
+    if (jwt) getUser();
+  }, [jwt]);
 
   // useEffect(() => {
   //   if (!user) window.location.href = '/sign-in';
@@ -217,7 +222,7 @@ const Profile = () => {
             fullWidth
             autoComplete="cc-name"
             variant="standard"
-            value={user?.email}
+            value={user?.email || ''}
             disabled
           />
         </Grid>
@@ -229,7 +234,7 @@ const Profile = () => {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
-            value={user?.username}
+            value={user?.username || ''}
             onChange={(e) => setUser({ ...user, username: e.target.value })}
           />
         </Grid>
@@ -241,7 +246,7 @@ const Profile = () => {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
-            value={user?.firstName}
+            value={user?.firstName || ''}
             onChange={(e) => setUser({ ...user, firstName: e.target.value })}
           />
         </Grid>
@@ -253,7 +258,7 @@ const Profile = () => {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
-            value={user?.lastName}
+            value={user?.lastName || ''}
             onChange={(e) => setUser({ ...user, lastName: e.target.value })}
           />
         </Grid>
@@ -264,7 +269,7 @@ const Profile = () => {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
-            value={user?.address}
+            value={user?.address || ''}
             onChange={(e) => setUser({ ...user, address: e.target.value })}
           />
         </Grid>
@@ -275,7 +280,7 @@ const Profile = () => {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
-            value={user?.country}
+            value={user?.country || ''}
             onChange={(e) => setUser({ ...user, country: e.target.value })}
           />
         </Grid>
@@ -286,7 +291,7 @@ const Profile = () => {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
-            value={user?.zip}
+            value={user?.zip || ''}
             onChange={(e) => setUser({ ...user, zip: e.target.value })}
           />
         </Grid>
