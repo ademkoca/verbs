@@ -24,6 +24,7 @@ export default function SignIn() {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
   const notify = (message: string) => toast(message);
+  const [isLoading, setIsLoading] = React.useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -32,6 +33,7 @@ export default function SignIn() {
     const password = data.get('password');
 
     try {
+      setIsLoading(true);
       const firebaseLogin = signInWithEmailAndPassword(auth, email, password);
       const user = (await firebaseLogin).user;
       const { accessToken } = user;
@@ -52,6 +54,8 @@ export default function SignIn() {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -113,8 +117,9 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
             >
-              Sign In
+              {isLoading ? 'Please wait...' : 'Sign In'}
             </Button>
             <Grid container>
               <Grid item xs>
