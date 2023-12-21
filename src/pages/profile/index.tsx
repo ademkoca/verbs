@@ -36,6 +36,7 @@ const Profile = () => {
     });
     const res = await response.json();
     setUser(res);
+    store.updateUser(res);
   };
   const handleUploadImage = async () => {
     if (!image) return;
