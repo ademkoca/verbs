@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { auth } from '../../../utils/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import useGermanStore from '../../../store';
+import { ToastContainer, toast } from 'react-toastify';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -22,6 +23,7 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const notify = (message: string) => toast(message);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -38,13 +40,14 @@ export default function SignIn() {
       if (accessToken) {
         try {
           const res = await fetch(`${apiUrl}/auth/signin`, {
-            headers: { Authorization: 'Bearer ' + accessToken ?? token },
+            headers: { Authorization: 'Bearer ' + token },
           });
           const response = await res.json();
           store.login(response.data);
           window.location.href = '/';
         } catch (err) {
           console.log(err);
+          notify('Error occurred: ' + err.message);
         }
       }
     } catch (err) {
@@ -121,6 +124,17 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
+            <ToastContainer
+              autoClose={3000}
+              hideProgressBar={true}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable={false}
+              pauseOnHover
+              theme="light"
+            />
           </Box>
         </Box>
       </Container>

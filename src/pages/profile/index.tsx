@@ -26,6 +26,20 @@ const Profile = () => {
   const [imageUploaded, setImageUploaded] = useState<boolean>(false);
   const uploadButtonRef = useRef();
   const notify = (message: string) => toast(message);
+  const getUser = async () => {
+    const token = await auth.currentUser?.getIdToken(true);
+    console.log(token);
+    if (token) {
+      const response = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
+      });
+      const res = await response.json();
+      setUser(res.data);
+    }
+  };
   const handleUploadImage = async () => {
     if (!image) return;
     const imageRef = ref(storage, image.name + new Date().getTime());
@@ -73,12 +87,15 @@ const Profile = () => {
       }
     }
   };
-
+  // const { data, isLoading, error } = useQuery('user', getUser);
   useEffect(() => {
     imageUploaded && handleUpdateProfile();
     setImageUploaded(false);
     setImage(null);
   }, [imageUploaded]);
+  useEffect(() => {
+    getUser();
+  }, []);
 
   if (!user) return null;
   return (
