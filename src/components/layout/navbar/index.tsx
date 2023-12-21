@@ -32,6 +32,7 @@ function Navbar() {
     signOut(auth)
       .then(() => {
         store.logout();
+        window.location.href = '/#/sign-in';
         // Sign-out successful.
       })
       .catch((error) => {
@@ -177,7 +178,7 @@ function Navbar() {
           {store.user === null && (
             <Box sx={{ flexGrow: 0 }}>
               <Button variant="contained" color="success" href="/#/sign-in">
-                Login
+                Sign in
               </Button>
             </Box>
           )}

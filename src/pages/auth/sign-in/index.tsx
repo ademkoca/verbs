@@ -55,6 +55,10 @@ export default function SignIn() {
     }
   };
 
+  React.useEffect(() => {
+    if (store.user) window.location.href = '/';
+  }, []);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

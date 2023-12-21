@@ -97,7 +97,10 @@ const Profile = () => {
     getUser();
   }, []);
 
-  if (!user) return null;
+  // useEffect(() => {
+  //   if (!user) window.location.href = '/sign-in';
+  // }, [user]);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -184,7 +187,7 @@ const Profile = () => {
                 Click to upload
               </Button>
             )}
-            {!image && user.profilePicture !== '' && (
+            {!image && user?.profilePicture !== '' && (
               <Button
                 variant="contained"
                 color="error"
