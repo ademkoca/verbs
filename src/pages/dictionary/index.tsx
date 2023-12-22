@@ -209,7 +209,7 @@ export default function Dictionary() {
   }, [dictionaryProgress?.used.length]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
       <CssBaseline />
 
       <Box

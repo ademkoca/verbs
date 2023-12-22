@@ -156,7 +156,7 @@ export default function SignUp() {
           Check your German verbs knowledge
         </Typography>
       </Container>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
         <CssBaseline />
         <Box
           sx={{

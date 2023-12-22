@@ -156,7 +156,7 @@ export default function Articles() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
       <CssBaseline />
       <Box
         sx={{
