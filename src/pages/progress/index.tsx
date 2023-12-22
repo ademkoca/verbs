@@ -1,22 +1,24 @@
 import { Box, Container, CssBaseline, Typography, Button } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useGermanStore from '../../store';
 import { getFirstLetterCapitalized } from '../../utils/helpers';
 import { auth } from '../../utils/firebase';
 import { useQuery } from 'react-query';
 import { Progress as ProgressType } from '../../types/interfaces';
+import { IUser } from '../../store/slices/auth';
 
 const Progress = () => {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const [user, setUser] = useState<IUser | null>(null);
   const getUser = async () => {
     const response = await fetch(`${apiUrl}/users/${store.user?._id}`);
     const res = await response.json();
-    console.log(res.data);
+    setUser(res);
     return res;
   };
   const resetProgress = (name: string) => {
-    const updatedProgress = store.user?.progress.map((item) => {
+    const updatedProgress = user?.progress.map((item) => {
       if (item.name === name) {
         return {
           ...item,
@@ -28,18 +30,24 @@ const Progress = () => {
       return item;
     });
     const _user = { ...store.user, progress: updatedProgress };
-    store.updateUser(_user);
+    setUser(_user);
+    // store.updateUser(_user);
   };
   const updateUser = async () => {
     try {
       const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
         method: 'PUT',
-        body: JSON.stringify(store?.user),
+        body: JSON.stringify(user),
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken(true)),
         },
       });
+      if (res.ok) {
+        const _user = await res.json();
+
+        store.updateUser(_user.data);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -49,17 +57,70 @@ const Progress = () => {
     queryFn: getUser,
     // enabled: !!id,
   });
-  console.log(data);
 
   useEffect(() => {
     if (!store.user) window.location.href = '/';
   }, [store]);
-  // useEffect(() => {
-  //   updateUser();
-  // }, [store.user?.progress]);
+  useEffect(() => {
+    updateUser();
+  }, [user?.progress]);
   useEffect(() => {
     // getUser();
   }, []);
+
+  if (!data)
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '80vh',
+          }}
+        >
+          No data.
+        </Box>
+      </Container>
+    );
+  if (isLoading)
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '80vh',
+          }}
+        >
+          Loading ...
+        </Box>
+      </Container>
+    );
+  if (error)
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          An error occurred.
+        </Box>
+      </Container>
+    );
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -93,7 +154,7 @@ const Progress = () => {
       </Box>
 
       <Box sx={{ minHeight: '80vh' }}>
-        {store.user?.progress.map((p: ProgressType) => (
+        {user?.progress?.map((p: ProgressType) => (
           <Box
             key={p.name}
             marginY={2}
