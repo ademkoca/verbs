@@ -59,7 +59,7 @@ const Progress = () => {
   });
 
   useEffect(() => {
-    if (!store.user) window.location.href = '/';
+    if (!store.user) window.location.href = '/#/sign-in';
   }, [store]);
   useEffect(() => {
     updateUser();

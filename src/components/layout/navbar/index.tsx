@@ -178,7 +178,7 @@ function Navbar() {
           )}
           {store.user === null && (
             <Box sx={{ flexGrow: 0 }}>
-              <Button variant="contained" color="success" href="/#/sign-in">
+              <Button variant="outlined" color="inherit" href="/#/sign-in">
                 Sign in
               </Button>
             </Box>

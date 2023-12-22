@@ -103,6 +103,10 @@ const Profile = () => {
     if (jwt) getUser();
   }, [jwt]);
 
+  if (!store.user) {
+    window.location.href = '/#/sign-in';
+  }
+
   // useEffect(() => {
   //   if (!user) window.location.href = '/sign-in';
   // }, [user]);
