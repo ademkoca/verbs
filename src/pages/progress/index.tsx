@@ -54,9 +54,9 @@ const Progress = () => {
   useEffect(() => {
     if (!store.user) window.location.href = '/';
   }, [store]);
-  useEffect(() => {
-    updateUser();
-  }, [store.user?.progress]);
+  // useEffect(() => {
+  //   updateUser();
+  // }, [store.user?.progress]);
   useEffect(() => {
     // getUser();
   }, []);
@@ -93,7 +93,7 @@ const Progress = () => {
       </Box>
 
       <Box sx={{ minHeight: '80vh' }}>
-        {data?.progress.map((p: ProgressType) => (
+        {store.user?.progress.map((p: ProgressType) => (
           <Box
             key={p.name}
             marginY={2}
