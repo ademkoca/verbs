@@ -42,6 +42,7 @@ function Navbar() {
   };
   const routeHandler = (route: string) => {
     window.location.href = `/#/${route}`;
+    handleCloseUserMenu();
   };
   const settings: ISettings[] = [
     { label: 'Profile', handler: () => routeHandler('profile') },
@@ -69,7 +70,7 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  console.log(!!anchorElUser);
   return (
     <AppBar position="static">
       <Container maxWidth="xl">

@@ -10,7 +10,7 @@ import { IUser } from '../../store/slices/auth';
 const Progress = () => {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<IUser>(null);
   const getUser = async () => {
     const response = await fetch(`${apiUrl}/users/${store.user?._id}`);
     const res = await response.json();
