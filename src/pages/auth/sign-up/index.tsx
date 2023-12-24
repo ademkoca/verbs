@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ToastContainer, toast } from 'react-toastify';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -29,21 +30,30 @@ export default function SignUp() {
     const password = data.get('password');
 
     const userData = { firstName, lastName, username, email, password };
-
-    try {
-      const res = await fetch(`${apiUrl}/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-      if (res.status === 200) {
-        const response = await res.json();
-        // console.log(response.data);
-        window.location.href = '/#/sign-in';
+    if (
+      firstName !== '' &&
+      lastName !== '' &&
+      username !== '' &&
+      email !== '' &&
+      password !== ''
+    ) {
+      try {
+        const res = await fetch(`${apiUrl}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData),
+        });
+        if (res.status === 200) {
+          // const response = await res.json();
+          // console.log(response.data);
+          window.location.href = '/#/sign-in';
+        } else if (res.status === 403) {
+          toast.error('User already exists');
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } else toast.error('Please enter all required fields');
   };
 
   return (
@@ -148,6 +158,17 @@ export default function SignUp() {
                 </Link>
               </Grid>
             </Grid>
+            <ToastContainer
+              autoClose={3000}
+              hideProgressBar={true}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable={false}
+              pauseOnHover
+              theme="light"
+            />
           </Box>
         </Box>
       </Container>
