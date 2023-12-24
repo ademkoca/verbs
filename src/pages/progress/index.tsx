@@ -6,6 +6,7 @@ import { auth } from '../../utils/firebase';
 import { useQuery } from 'react-query';
 import { Progress as ProgressType } from '../../types/interfaces';
 import { IUser } from '../../store/slices/auth';
+import BasicTable from '../../components/table';
 
 const Progress = () => {
   const store = useGermanStore();
@@ -122,7 +123,7 @@ const Progress = () => {
       </Container>
     );
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <CssBaseline />
 
       <Box
@@ -154,7 +155,7 @@ const Progress = () => {
       </Box>
 
       <Box sx={{ minHeight: '80vh' }}>
-        {user?.progress?.map((p: ProgressType) => (
+        {/* {user?.progress?.map((p: ProgressType) => (
           <Box
             key={p.name}
             marginY={2}
@@ -170,7 +171,11 @@ const Progress = () => {
               Reset
             </Button>
           </Box>
-        ))}
+        ))} */}
+
+        {user?.progress && (
+          <BasicTable progress={user?.progress} onReset={resetProgress} />
+        )}
       </Box>
     </Container>
   );
