@@ -23,7 +23,7 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const notify = (message: string) => toast(message);
+  const notify = (message: string, options?: any) => toast(message, options);
   const [isLoading, setIsLoading] = React.useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,32 +31,38 @@ export default function SignIn() {
 
     const email = data.get('email');
     const password = data.get('password');
+    if (email !== '' && password !== '') {
+      try {
+        setIsLoading(true);
+        const firebaseLogin = signInWithEmailAndPassword(auth, email, password);
+        const user = (await firebaseLogin).user;
+        const { accessToken } = user;
+        const token = await auth.currentUser?.getIdToken(true);
 
-    try {
-      setIsLoading(true);
-      const firebaseLogin = signInWithEmailAndPassword(auth, email, password);
-      const user = (await firebaseLogin).user;
-      const { accessToken } = user;
-      const token = await auth.currentUser?.getIdToken(true);
-
-      if (accessToken) {
-        try {
-          const res = await fetch(`${apiUrl}/auth/signin`, {
-            headers: { Authorization: 'Bearer ' + token },
-          });
-          const response = await res.json();
-          store.login(response.data);
-          window.location.href = '/';
-        } catch (err) {
-          console.log(err);
-          notify('Error occurred: ' + err.message);
+        if (accessToken) {
+          try {
+            const res = await fetch(`${apiUrl}/auth/signin`, {
+              headers: { Authorization: 'Bearer ' + token },
+            });
+            const response = await res.json();
+            store.login(response.data);
+            window.location.href = '/';
+          } catch (err) {
+            console.log(err);
+            notify('Error occurred: ' + err.message);
+          }
         }
+      } catch (err) {
+        if (err.code === 'auth/wrong-password') {
+          toast.error('Wrong password');
+        }
+        if (err.code === 'auth/user-not-found') {
+          toast.error('User not found');
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
+    } else toast.error('Please enter email and password');
   };
 
   React.useEffect(() => {
