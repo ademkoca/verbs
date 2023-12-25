@@ -26,7 +26,6 @@ const Profile = () => {
   const [jwt, setJwt] = useState<string | null>(null);
   const [imageUploaded, setImageUploaded] = useState<boolean>(false);
   const uploadButtonRef = useRef();
-  const notify = (message: string) => toast(message);
   const getUser = async () => {
     const response = await fetch(`${apiUrl}/users/${store.user?._id}`, {
       headers: {
@@ -77,11 +76,11 @@ const Profile = () => {
         });
         if (response.status === 200) {
           const res = await response.json();
-          notify('User successfully updated');
+          toast.success('User successfully updated');
           store.updateUser(res.data);
-        } else notify('Error updating user');
+        } else toast.error('Error updating user');
       } catch (error) {
-        notify('Error updating user');
+        toast.error('Error updating user');
       }
     }
   };

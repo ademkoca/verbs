@@ -23,7 +23,6 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const notify = (message: string, options?: any) => toast(message, options);
   const [isLoading, setIsLoading] = React.useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,7 +48,7 @@ export default function SignIn() {
             window.location.href = '/';
           } catch (err) {
             console.log(err);
-            notify('Error occurred: ' + err.message);
+            toast.error('Error occurred: ' + err.message);
           }
         }
       } catch (err) {
