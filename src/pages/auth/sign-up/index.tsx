@@ -44,11 +44,17 @@ export default function SignUp() {
           body: JSON.stringify(userData),
         });
         if (res.status === 200) {
+          toast.success(
+            'Signup successful! You will be redirected to the sign in page'
+          );
+          setTimeout(() => {
+            window.location.href = '/#/sign-in';
+          }, 3000);
           // const response = await res.json();
           // console.log(response.data);
-          window.location.href = '/#/sign-in';
         } else if (res.status === 403) {
-          toast.error('User already exists');
+          const response = await res.text();
+          toast.error(response);
         }
       } catch (err) {
         console.log(err);
