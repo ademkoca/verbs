@@ -19,6 +19,15 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const isStrongPassword = (password: FormDataEntryValue) => {
+    const regex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,}$/;
+    return regex.test(password as string);
+  };
+  const isValidEmail = (email: FormDataEntryValue) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email as string);
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -37,28 +46,35 @@ export default function SignUp() {
       email !== '' &&
       password !== ''
     ) {
-      try {
-        const res = await fetch(`${apiUrl}/auth/signup`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(userData),
-        });
-        if (res.status === 200) {
-          toast.success(
-            'Signup successful! You will be redirected to the sign in page'
+      if (isValidEmail(email)) {
+        if (password && isStrongPassword(password)) {
+          try {
+            const res = await fetch(`${apiUrl}/auth/signup`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(userData),
+            });
+            if (res.status === 200) {
+              toast.success(
+                'Signup successful! You will be redirected to the sign in page'
+              );
+              setTimeout(() => {
+                window.location.href = '/#/sign-in';
+              }, 3000);
+              // const response = await res.json();
+              // console.log(response.data);
+            } else if (res.status === 403) {
+              const response = await res.text();
+              toast.error(response);
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        } else
+          toast.error(
+            'The password should be at least 8 characters long and include at least: 1 letter, 1 number, 1 uppercase and 1 special character'
           );
-          setTimeout(() => {
-            window.location.href = '/#/sign-in';
-          }, 3000);
-          // const response = await res.json();
-          // console.log(response.data);
-        } else if (res.status === 403) {
-          const response = await res.text();
-          toast.error(response);
-        }
-      } catch (err) {
-        console.log(err);
-      }
+      } else toast.error('Invalid email format');
     } else toast.error('Please enter all required fields');
   };
 
