@@ -16,6 +16,7 @@ import { IUser } from '../../store/slices/auth';
 export default function Chat() {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const socketUrl = import.meta.env.VITE_SOCKET_URL;
 
   const socket = useRef();
 
@@ -61,7 +62,7 @@ export default function Chat() {
   }, [store?.user?._id]);
   // Connect to Socket.io
   useEffect(() => {
-    socket.current = io('https://socket-io-chat-uoju.onrender.com');
+    socket.current = io(socketUrl);
     socket?.current?.emit('new-user-add', store?.user?._id);
     socket?.current?.on('get-users', (users: string[]) => {
       setOnlineUsers(users);
