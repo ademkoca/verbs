@@ -61,7 +61,7 @@ export default function Chat() {
   }, [store?.user?._id]);
   // Connect to Socket.io
   useEffect(() => {
-    socket.current = io('ws://localhost:8800');
+    socket.current = io('https://socket-io-chat-uoju.onrender.com');
     socket?.current?.emit('new-user-add', store?.user?._id);
     socket?.current?.on('get-users', (users: string[]) => {
       setOnlineUsers(users);
