@@ -9,6 +9,7 @@ import SignIn from './pages/auth/sign-in/index.tsx';
 import Sentences from './pages/sentences/index.tsx';
 import Progress from './pages/progress/index.tsx';
 import Profile from './pages/profile/index.tsx';
+import Chat from './pages/chat/index.tsx';
 
 const router = createHashRouter([
   {
@@ -80,6 +81,14 @@ const router = createHashRouter([
     element: (
       <Layout>
         <Profile />
+      </Layout>
+    ),
+  },
+  {
+    path: '/chat',
+    element: (
+      <Layout>
+        <Chat />
       </Layout>
     ),
   },

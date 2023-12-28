@@ -9,3 +9,21 @@ export interface Progress {
   totalGuesses: number;
   correctGuesses: number;
 }
+
+export interface IChat {
+  _id: string;
+  members: string[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface IMessage {
+  chatId: string;
+  senderId: string;
+  text: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
