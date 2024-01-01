@@ -40,6 +40,19 @@ export default function Chat() {
   const handleResize = () => {
     setScreenWidth(window.innerWidth);
   };
+  const handleOpenChat = (chat: IChat) => {
+    setCurrentChat(chat);
+    markChatAsRead(chat);
+  };
+
+  const markChatAsRead = async (chat: IChat) => {
+    try {
+      await fetch(`${apiUrl}/chat/markAsRead/${chat._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     // Attach the event listener when the component mounts
     window.addEventListener('resize', handleResize);
@@ -69,19 +82,7 @@ export default function Chat() {
       }
     }
   };
-  // // Get the most recent message in a chat
-  // const getLatestMessage = async (chatId: string) => {
-  //   if (store?.user?._id) {
-  //     try {
-  //       const res = await fetch(`${apiUrl}/message/latest-message/${chatId}`);
-  //       const response = await res.json();
-  //       console.log(response.data[0]);
-  //       return response.data[0];
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
+
   // Get all users
   const getUsers = async () => {
     try {
@@ -181,6 +182,11 @@ export default function Chat() {
     //   setisDrawerOpen(false);
     // }
   };
+
+  if (!store.user) {
+    window.location.href = '/#/sign-in';
+  }
+
   return (
     <Container
       component={'main'}
@@ -240,7 +246,7 @@ export default function Chat() {
                   return (
                     <MenuItem
                       key={chat._id}
-                      onClick={() => setCurrentChat(chat)}
+                      onClick={() => handleOpenChat(chat)}
                       sx={{
                         backgroundColor:
                           chat._id === currentChat?._id ? 'lightgrey' : 'white',
@@ -252,6 +258,7 @@ export default function Chat() {
                         data={chat}
                         currentUser={store?.user?._id}
                         online={checkOnlineStatus(chat)}
+                        currentChat={currentChat}
                       />
                     </MenuItem>
                   );

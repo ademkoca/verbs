@@ -1,11 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Container, Box, Avatar, Typography, Button } from '@mui/material';
+import React, { useState, useEffect, useRef, MouseEvent } from 'react';
+import {
+  Container,
+  Box,
+  Avatar,
+  Typography,
+  Button,
+  Menu,
+  Tooltip,
+  IconButton,
+  MenuItem,
+} from '@mui/material';
 import { IChat, IMessage } from '../../types/interfaces';
 import { IUser } from '../../store/slices/auth';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import InputEmoji from 'react-input-emoji';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const ChatBox = ({
   chat,
@@ -33,9 +44,44 @@ const ChatBox = ({
   const [userData, setUserData] = useState<IUser | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
+  const [chatMenu, setChatMenu] = useState<null | HTMLElement>(null);
+  interface IChatOptions {
+    label: string;
+    handler?: (arg0: string) => void | null;
+  }
 
+  const chatOptions: IChatOptions[] = [
+    { label: 'Delete', handler: (id: string) => handleDeleteChat(id) },
+  ];
   const handleChange = (newMessage: string) => {
     setNewMessage(newMessage);
+  };
+  const handleOpenChatMenu = (event: MouseEvent<HTMLElement>) => {
+    setChatMenu(event.currentTarget);
+  };
+  const handleCloseChatMenu = () => {
+    setChatMenu(null);
+  };
+  //delete chat
+  const handleDeleteChat = async (id: string) => {
+    try {
+      const res = await fetch(
+        `${apiUrl}/message/${id}`,
+
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.status === 200) {
+        alert('Chat deleted successfully');
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // fetching data for header
@@ -112,29 +158,71 @@ const ChatBox = ({
   return (
     <Container>
       {/* chat header */}
-      <Box display={'flex'} alignItems={'center'}>
-        {mobile && (
-          <Button
-            onClick={() => setIsDrawerOpen(true)}
-            sx={{ marginTop: 3, marginX: 0 }}
+      <Box display={'flex'} justifyContent={'space-between'}>
+        <Box display={'flex'} alignItems={'center'}>
+          {mobile && (
+            <Button
+              onClick={() => setIsDrawerOpen(true)}
+              sx={{ marginTop: 3, marginX: 0 }}
+            >
+              <KeyboardArrowLeftIcon />{' '}
+            </Button>
+          )}
+          <Box
+            display={'flex'}
+            alignItems={'center'}
+            gap={mobile ? 2 : 3}
+            mt={mobile ? 3 : 0}
           >
-            <KeyboardArrowLeftIcon />{' '}
-          </Button>
-        )}
-        <Box
-          display={'flex'}
-          alignItems={'center'}
-          gap={mobile ? 2 : 3}
-          mt={mobile ? 3 : 0}
-        >
-          <Avatar
-            alt={userData?.firstName + ' ' + userData?.lastName}
-            src={userData?.profilePicture}
-            sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
-          />
-          <Typography variant={mobile ? 'h6' : 'h5'}>
-            {userData?.username}
-          </Typography>
+            <Avatar
+              alt={userData?.firstName + ' ' + userData?.lastName}
+              src={userData?.profilePicture}
+              sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
+            />
+            <Typography variant={mobile ? 'h6' : 'h5'}>
+              {userData?.username}
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ flexGrow: 0, marginTop: 4 }}>
+          <Tooltip title="Chat options">
+            <IconButton
+              size="large"
+              aria-label="chat options"
+              aria-controls="chat-options"
+              aria-haspopup="true"
+              onClick={handleOpenChatMenu}
+              sx={{ p: 0 }}
+              color="inherit"
+            >
+              <MoreVertIcon />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="chat-options"
+            anchorEl={chatMenu}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(chatMenu)}
+            onClose={handleCloseChatMenu}
+          >
+            {chatOptions?.map((setting: IChatOptions) => (
+              <MenuItem
+                key={setting.label}
+                onClick={() => setting.handler(chat._id)}
+              >
+                <Typography textAlign="center">{setting.label}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
         </Box>
       </Box>
       {/* messages body */}
@@ -161,6 +249,7 @@ const ChatBox = ({
               p={2}
               maxWidth={'sm'}
               borderRadius={3}
+              sx={{ whiteSpace: 'normal' }}
               bgcolor={isMyMessage ? '#1976d2' : 'lightgrey'}
               color={isMyMessage ? 'white' : 'black'}
               alignSelf={`flex-${isMyMessage ? 'end' : 'start'}`}
