@@ -169,10 +169,19 @@ export default function Chat() {
     // }
   };
   return (
-    <Container component="main" maxWidth="xl" sx={{ minHeight: '73dvh' }}>
+    <Container
+      component={'main'}
+      maxWidth="xl"
+      sx={{
+        minHeight: '73dvh',
+        paddingRight: screenWidth > 1200 ? 2 : 0,
+        paddingLeft: screenWidth > 1200 ? 2 : 0,
+      }}
+    >
       <CssBaseline />
 
       {screenWidth < 1200 ? (
+        //mobile view
         <>
           <Drawer
             anchor={'left'}
@@ -258,6 +267,7 @@ export default function Chat() {
           </Box>
         </>
       ) : (
+        // desktop view
         <Box
           sx={{
             marginTop: 8,

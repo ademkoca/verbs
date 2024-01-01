@@ -112,18 +112,23 @@ const ChatBox = ({
   return (
     <Container>
       {/* chat header */}
-      <Box display={'flex'} alignItems={'center'} gap={3} mt={mobile ? 3 : 0}>
+      <Box display={'flex'} alignItems={'center'}>
         {mobile && (
-          <Button onClick={() => setIsDrawerOpen(true)}>
+          <Button
+            onClick={() => setIsDrawerOpen(true)}
+            sx={{ marginTop: 3, marginX: 0 }}
+          >
             <KeyboardArrowLeftIcon />{' '}
           </Button>
         )}
-        <Avatar
-          alt={userData?.firstName + ' ' + userData?.lastName}
-          src={userData?.profilePicture}
-          sx={{ width: 75, height: 75 }}
-        />
-        <Typography variant="h5">{userData?.username}</Typography>
+        <Box display={'flex'} alignItems={'center'} gap={3} mt={mobile ? 3 : 0}>
+          <Avatar
+            alt={userData?.firstName + ' ' + userData?.lastName}
+            src={userData?.profilePicture}
+            sx={{ width: 75, height: 75 }}
+          />
+          <Typography variant="h5">{userData?.username}</Typography>
+        </Box>
       </Box>
       {/* messages body */}
       <Box
@@ -132,7 +137,12 @@ const ChatBox = ({
         // justifyContent={'flex-end'}
         mt={2}
         justifyItems={'flex-end'}
-        sx={{ height: '60vh', overflowY: 'scroll' }}
+        sx={{
+          height: '60vh',
+          overflowY: 'scroll',
+          paddingLeft: '0 !important',
+          paddingRight: '0 !important',
+        }}
       >
         {messages?.map((message) => {
           const isMyMessage = message.senderId === currentUser;
