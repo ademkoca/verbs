@@ -69,6 +69,19 @@ export default function Chat() {
       }
     }
   };
+  // // Get the most recent message in a chat
+  // const getLatestMessage = async (chatId: string) => {
+  //   if (store?.user?._id) {
+  //     try {
+  //       const res = await fetch(`${apiUrl}/message/latest-message/${chatId}`);
+  //       const response = await res.json();
+  //       console.log(response.data[0]);
+  //       return response.data[0];
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
   // Get all users
   const getUsers = async () => {
     try {
@@ -223,23 +236,26 @@ export default function Chat() {
                 )}
               />
               {store.user &&
-                chats?.map((chat) => (
-                  <MenuItem
-                    key={chat._id}
-                    onClick={() => setCurrentChat(chat)}
-                    sx={{
-                      backgroundColor:
-                        chat._id === currentChat?._id ? 'lightgrey' : 'white',
-                    }}
-                  >
-                    <Conversation
+                chats?.map((chat) => {
+                  return (
+                    <MenuItem
                       key={chat._id}
-                      data={chat}
-                      currentUser={store?.user?._id}
-                      online={checkOnlineStatus(chat)}
-                    />
-                  </MenuItem>
-                ))}
+                      onClick={() => setCurrentChat(chat)}
+                      sx={{
+                        backgroundColor:
+                          chat._id === currentChat?._id ? 'lightgrey' : 'white',
+                      }}
+                    >
+                      <Conversation
+                        // preview={getLatestMessage(chat._id) ?? ''}
+                        key={chat._id}
+                        data={chat}
+                        currentUser={store?.user?._id}
+                        online={checkOnlineStatus(chat)}
+                      />
+                    </MenuItem>
+                  );
+                })}
             </Box>
           </Drawer>
           <Box>
