@@ -5,6 +5,7 @@ import { IUser } from '../../store/slices/auth';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import InputEmoji from 'react-input-emoji';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 const ChatBox = ({
   chat,
@@ -14,6 +15,8 @@ const ChatBox = ({
   setIsTyping,
   showIsTyping,
   users,
+  mobile,
+  setIsDrawerOpen,
 }: {
   chat: IChat;
   currentUser: string;
@@ -22,6 +25,8 @@ const ChatBox = ({
   setIsTyping: (arg0: boolean) => void;
   showIsTyping: boolean;
   users: IUser[];
+  mobile?: boolean;
+  setIsDrawerOpen?: (arg0: boolean) => void;
 }) => {
   dayjs.extend(relativeTime);
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -107,7 +112,12 @@ const ChatBox = ({
   return (
     <Container>
       {/* chat header */}
-      <Box display={'flex'} alignItems={'center'} gap={2}>
+      <Box display={'flex'} alignItems={'center'} gap={3} mt={mobile ? 3 : 0}>
+        {mobile && (
+          <Button onClick={() => setIsDrawerOpen(true)}>
+            <KeyboardArrowLeftIcon />{' '}
+          </Button>
+        )}
         <Avatar
           alt={userData?.firstName + ' ' + userData?.lastName}
           src={userData?.profilePicture}
@@ -119,31 +129,30 @@ const ChatBox = ({
       <Box
         display={'flex'}
         flexDirection={'column'}
-        justifyContent={'flex-end'}
+        // justifyContent={'flex-end'}
         mt={2}
-        sx={{ height: '65vh', overflowY: 'scroll' }}
         justifyItems={'flex-end'}
+        sx={{ height: '60vh', overflowY: 'scroll' }}
       >
         {messages?.map((message) => {
           const isMyMessage = message.senderId === currentUser;
           return (
-            <>
-              <Box
-                ref={scroll}
-                my={1}
-                p={2}
-                maxWidth={'sm'}
-                borderRadius={3}
-                bgcolor={isMyMessage ? '#1976d2' : 'lightgrey'}
-                color={isMyMessage ? 'white' : 'black'}
-                alignSelf={`flex-${isMyMessage ? 'end' : 'start'}`}
-              >
-                <Typography variant="body1">{message.text}</Typography>{' '}
-                <Typography variant="body2">
-                  {dayjs(message.createdAt).fromNow()}
-                </Typography>
-              </Box>
-            </>
+            <Box
+              key={message._id}
+              ref={scroll}
+              my={1}
+              p={2}
+              maxWidth={'sm'}
+              borderRadius={3}
+              bgcolor={isMyMessage ? '#1976d2' : 'lightgrey'}
+              color={isMyMessage ? 'white' : 'black'}
+              alignSelf={`flex-${isMyMessage ? 'end' : 'start'}`}
+            >
+              <Typography variant="body1">{message.text}</Typography>{' '}
+              <Typography variant="body2">
+                {dayjs(message.createdAt).fromNow()}
+              </Typography>
+            </Box>
           );
         })}
         {showIsTyping && (

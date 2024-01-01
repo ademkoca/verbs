@@ -10,7 +10,7 @@ import Conversation from '../../components/conversation';
 import { io } from 'socket.io-client';
 import { IChat, IMessage } from '../../types/interfaces';
 import ChatBox from '../../components/chat-box';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, Drawer, TextField } from '@mui/material';
 import { IUser } from '../../store/slices/auth';
 
 export default function Chat() {
@@ -34,6 +34,29 @@ export default function Chat() {
   const [receiver, setReceiver] = useState<IUser | null>(null);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [showIsTyping, setShowIsTyping] = useState<boolean>(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const handleResize = () => {
+    setScreenWidth(window.innerWidth);
+  };
+  useEffect(() => {
+    // Attach the event listener when the component mounts
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  useEffect(() => {
+    if (Boolean(!currentChat) && screenWidth < 1200) {
+      setIsDrawerOpen(true);
+    }
+    if (Boolean(currentChat) && screenWidth < 1200) {
+      setIsDrawerOpen(false);
+    }
+  }, [currentChat, screenWidth]);
   // Get the chat in chat section
   const getChats = async () => {
     if (store?.user?._id) {
@@ -122,6 +145,7 @@ export default function Chat() {
       const chat = await chatRes.json();
 
       setCurrentChat(chat.data);
+      //if not, create a new chat and set it as current
     } else if (chatRes.status === 404) {
       const newChat = {
         senderId: store.user?._id,
@@ -140,95 +164,184 @@ export default function Chat() {
         }
       }
     }
-    //if not, create a new chat and set it as current
+    // if (isDrawerOpen) {
+    //   setisDrawerOpen(false);
+    // }
   };
   return (
     <Container component="main" maxWidth="xl" sx={{ minHeight: '73dvh' }}>
       <CssBaseline />
 
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'left',
-          justifyContent: 'center',
-          // minHeight: '80vh',
-        }}
-      >
-        <Box flex={1}>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            // href="/"
-
-            sx={{
-              mb: 2,
-              flexGrow: 1,
-              // fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
+      {screenWidth < 1200 ? (
+        <>
+          <Drawer
+            anchor={'left'}
+            open={isDrawerOpen}
+            onClose={() => setIsDrawerOpen(false)}
           >
-            MESSAGES
-          </Typography>
-          <Autocomplete
-            fullWidth
-            disablePortal
-            id="combo-box-demo"
-            value={receiver}
-            onChange={(event: any, newValue: IUser | null) => {
-              handleSelectUser(newValue);
-            }}
-            options={users} // Assuming users is an array of objects with a 'username' property
-            getOptionLabel={(user: IUser) => user?.username} // Specify how to get the display label for each option
-            sx={{ width: 300, mt: 2, mb: 3 }}
-            renderInput={(params) => (
-              <TextField {...params} label="Search users.." />
-            )}
-          />
-          {store.user &&
-            chats?.map((chat) => (
-              <MenuItem
-                onClick={() => setCurrentChat(chat)}
+            <Box p={3}>
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                // href="/"
+
                 sx={{
-                  backgroundColor:
-                    chat._id === currentChat?._id ? 'lightgrey' : 'white',
+                  mb: 2,
+                  flexGrow: 1,
+                  // fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.3rem',
+                  color: 'inherit',
+                  textDecoration: 'none',
                 }}
               >
-                <Conversation
-                  key={chat._id}
-                  data={chat}
-                  currentUser={store?.user?._id}
-                  online={checkOnlineStatus(chat)}
-                />
-              </MenuItem>
-            ))}
-        </Box>
-
-        <Box flex={3}>
-          <Box>
-            {currentChat && store?.user?._id ? (
-              <ChatBox
-                chat={currentChat}
-                currentUser={store?.user?._id}
-                setSendMessage={setSendMessage}
-                receivedMessage={receivedMessage}
-                setIsTyping={setIsTyping}
-                showIsTyping={showIsTyping}
-                users={users}
-              />
-            ) : (
-              <Typography variant="h5">
-                Click on a chat to start conversation...
+                MESSAGES
               </Typography>
-            )}
+              <Autocomplete
+                fullWidth
+                disablePortal
+                id="combo-box-demo"
+                value={receiver}
+                onChange={(event: any, newValue: IUser | null) => {
+                  handleSelectUser(newValue);
+                }}
+                options={users} // Assuming users is an array of objects with a 'username' property
+                getOptionLabel={(user: IUser) => user?.username} // Specify how to get the display label for each option
+                sx={{ width: 300, mt: 2, mb: 3 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Search users.." />
+                )}
+              />
+              {store.user &&
+                chats?.map((chat) => (
+                  <MenuItem
+                    key={chat._id}
+                    onClick={() => setCurrentChat(chat)}
+                    sx={{
+                      backgroundColor:
+                        chat._id === currentChat?._id ? 'lightgrey' : 'white',
+                    }}
+                  >
+                    <Conversation
+                      key={chat._id}
+                      data={chat}
+                      currentUser={store?.user?._id}
+                      online={checkOnlineStatus(chat)}
+                    />
+                  </MenuItem>
+                ))}
+            </Box>
+          </Drawer>
+          <Box>
+            <Box>
+              {currentChat && store?.user?._id ? (
+                <ChatBox
+                  mobile
+                  setIsDrawerOpen={setIsDrawerOpen}
+                  chat={currentChat}
+                  currentUser={store?.user?._id}
+                  setSendMessage={setSendMessage}
+                  receivedMessage={receivedMessage}
+                  setIsTyping={setIsTyping}
+                  showIsTyping={showIsTyping}
+                  users={users}
+                />
+              ) : (
+                <Box m={10}>
+                  <Button variant="text" onClick={() => setIsDrawerOpen(true)}>
+                    Start a conversation
+                  </Button>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'left',
+            justifyContent: 'center',
+            // minHeight: '80vh',
+          }}
+        >
+          <Box flex={1}>
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              // href="/"
+
+              sx={{
+                mb: 2,
+                flexGrow: 1,
+                // fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              MESSAGES
+            </Typography>
+            <Autocomplete
+              fullWidth
+              disablePortal
+              id="combo-box-demo"
+              value={receiver}
+              onChange={(event: any, newValue: IUser | null) => {
+                handleSelectUser(newValue);
+              }}
+              options={users} // Assuming users is an array of objects with a 'username' property
+              getOptionLabel={(user: IUser) => user?.username} // Specify how to get the display label for each option
+              sx={{ width: 300, mt: 2, mb: 3 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Search users.." />
+              )}
+            />
+            {store.user &&
+              chats?.map((chat) => (
+                <MenuItem
+                  onClick={() => setCurrentChat(chat)}
+                  sx={{
+                    backgroundColor:
+                      chat._id === currentChat?._id ? 'lightgrey' : 'white',
+                  }}
+                >
+                  <Conversation
+                    key={chat._id}
+                    data={chat}
+                    currentUser={store?.user?._id}
+                    online={checkOnlineStatus(chat)}
+                  />
+                </MenuItem>
+              ))}
+          </Box>
+
+          <Box flex={3}>
+            <Box>
+              {currentChat && store?.user?._id ? (
+                <ChatBox
+                  chat={currentChat}
+                  currentUser={store?.user?._id}
+                  setSendMessage={setSendMessage}
+                  receivedMessage={receivedMessage}
+                  setIsTyping={setIsTyping}
+                  showIsTyping={showIsTyping}
+                  users={users}
+                />
+              ) : (
+                <Typography variant="h5">
+                  Click on a chat to start conversation...
+                </Typography>
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
     </Container>
   );
 }
