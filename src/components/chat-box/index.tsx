@@ -125,9 +125,11 @@ const ChatBox = ({
           <Avatar
             alt={userData?.firstName + ' ' + userData?.lastName}
             src={userData?.profilePicture}
-            sx={{ width: 75, height: 75 }}
+            sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
           />
-          <Typography variant="h5">{userData?.username}</Typography>
+          <Typography variant={mobile ? 'h6' : 'h5'}>
+            {userData?.username}
+          </Typography>
         </Box>
       </Box>
       {/* messages body */}
