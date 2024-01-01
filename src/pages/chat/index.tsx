@@ -257,8 +257,12 @@ export default function Chat() {
                   users={users}
                 />
               ) : (
-                <Box m={10}>
-                  <Button variant="text" onClick={() => setIsDrawerOpen(true)}>
+                <Box m={10} display={'flex'} justifyContent={'center'}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setIsDrawerOpen(true)}
+                  >
                     Start a conversation
                   </Button>
                 </Box>
