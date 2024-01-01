@@ -121,7 +121,12 @@ const ChatBox = ({
             <KeyboardArrowLeftIcon />{' '}
           </Button>
         )}
-        <Box display={'flex'} alignItems={'center'} gap={3} mt={mobile ? 3 : 0}>
+        <Box
+          display={'flex'}
+          alignItems={'center'}
+          gap={mobile ? 2 : 3}
+          mt={mobile ? 3 : 0}
+        >
           <Avatar
             alt={userData?.firstName + ' ' + userData?.lastName}
             src={userData?.profilePicture}
