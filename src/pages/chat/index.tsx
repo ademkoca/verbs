@@ -30,8 +30,10 @@ export default function Chat() {
   const [users, setUsers] = useState<IUser[]>([]);
   const [currentChat, setCurrentChat] = useState<IChat | null>(null);
   const [sendMessage, setSendMessage] = useState<any>(null);
-  const [receivedMessage, setReceivedMessage] = useState<string | null>(null);
+  const [receivedMessage, setReceivedMessage] = useState<IMessage | null>(null);
   const [receiver, setReceiver] = useState<IUser | null>(null);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [showIsTyping, setShowIsTyping] = useState<boolean>(false);
   // Get the chat in chat section
   const getChats = async () => {
     if (store?.user?._id) {
@@ -51,6 +53,7 @@ export default function Chat() {
       const response = await res.json();
       setUsers(
         response.data.filter((user: IUser) => user?._id !== store.user?._id)
+        // response.data
       );
     } catch (error) {
       console.log(error);
@@ -60,6 +63,10 @@ export default function Chat() {
   useEffect(() => {
     getChats();
   }, [store?.user?._id]);
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   // Connect to Socket.io
   useEffect(() => {
     socket.current = io(socketUrl);
@@ -76,6 +83,14 @@ export default function Chat() {
     }
   }, [sendMessage]);
 
+  useEffect(() => {
+    socket?.current?.emit('is-typing', {
+      senderId: store.user?._id,
+      receiverId: currentChat?.members.find((u) => u !== store.user?._id),
+      isTyping: isTyping,
+    });
+  }, [isTyping]);
+
   // Get the message from socket server
   useEffect(() => {
     socket?.current?.on('recieve-message', (data) => {
@@ -84,7 +99,9 @@ export default function Chat() {
     });
   }, []);
   useEffect(() => {
-    getUsers();
+    socket?.current?.on('receive-is-typing', (data) => {
+      setShowIsTyping(data);
+    });
   }, []);
 
   const checkOnlineStatus = (chat: IChat) => {
@@ -200,6 +217,9 @@ export default function Chat() {
                 currentUser={store?.user?._id}
                 setSendMessage={setSendMessage}
                 receivedMessage={receivedMessage}
+                setIsTyping={setIsTyping}
+                showIsTyping={showIsTyping}
+                users={users}
               />
             ) : (
               <Typography variant="h5">

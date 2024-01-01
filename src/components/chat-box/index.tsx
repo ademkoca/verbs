@@ -11,18 +11,24 @@ const ChatBox = ({
   currentUser,
   setSendMessage,
   receivedMessage,
+  setIsTyping,
+  showIsTyping,
+  users,
 }: {
   chat: IChat;
   currentUser: string;
-  setSendMessage: (any) => void;
-  receivedMessage: any;
+  setSendMessage: (arg0: any) => void;
+  receivedMessage: IMessage | null;
+  setIsTyping: (arg0: boolean) => void;
+  showIsTyping: boolean;
+  users: IUser[];
 }) => {
   dayjs.extend(relativeTime);
   const apiUrl = import.meta.env.VITE_API_URL;
   const [userData, setUserData] = useState<IUser | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
-  console.log(newMessage);
+
   const handleChange = (newMessage: string) => {
     setNewMessage(newMessage);
   };
@@ -49,7 +55,6 @@ const ChatBox = ({
       try {
         const res = await fetch(`${apiUrl}/message/${chat._id}`);
         const response = await res.json();
-        console.log(response);
         setMessages(response);
       } catch (error) {
         console.log(error);
@@ -75,7 +80,6 @@ const ChatBox = ({
     const receiverId = chat.members.find((id) => id !== currentUser);
     // send message to socket server
     setSendMessage({ ...message, receiverId });
-    console.log('stringified message: ', console.log(JSON.stringify(message)));
     // send message to database
     if (message)
       try {
@@ -85,7 +89,6 @@ const ChatBox = ({
           body: JSON.stringify(message),
         });
         const response = await res.json();
-        console.log(response);
         setMessages([...messages, response]);
         setNewMessage('');
       } catch {
@@ -95,7 +98,6 @@ const ChatBox = ({
 
   // Receive Message from parent component
   useEffect(() => {
-    console.log('Message Arrived: ', receivedMessage);
     if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
       setMessages([...messages, receivedMessage]);
     }
@@ -124,7 +126,6 @@ const ChatBox = ({
       >
         {messages?.map((message) => {
           const isMyMessage = message.senderId === currentUser;
-          console.log(message.text + ': ' + isMyMessage);
           return (
             <>
               <Box
@@ -145,6 +146,16 @@ const ChatBox = ({
             </>
           );
         })}
+        {showIsTyping && (
+          <Typography variant="body2" color="GrayText">
+            {
+              users.find(
+                (u) => u?._id === chat.members.find((m) => m !== currentUser)
+              )?.username
+            }{' '}
+            is typing
+          </Typography>
+        )}
       </Box>
       {/* message input */}
       <Box display={'flex'}>
@@ -154,7 +165,12 @@ const ChatBox = ({
           onChange={handleChange}
           onKeyDown={(e) => {
             e.key === 'Enter' && handleSend();
+            setIsTyping(true);
+            setTimeout(() => {
+              setIsTyping(false);
+            }, 2000);
           }}
+          //   onBlur={() => setIsTyping(false)}
         />
         <Button onClick={handleSend}>Send</Button>
       </Box>
