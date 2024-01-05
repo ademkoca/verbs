@@ -106,7 +106,7 @@ export default function Chat() {
 
   // Connect to Socket.io
   useEffect(() => {
-    socket.current = io(socketUrl);
+    socket.current = io(socketUrl, { transports: ['websockets'] });
     socket?.current?.emit('new-user-add', store?.user?._id);
     socket?.current?.on('get-users', (users: string[]) => {
       setOnlineUsers(users);
