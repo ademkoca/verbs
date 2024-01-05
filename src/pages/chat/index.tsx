@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
 import useGermanStore from '../../store';
 import Conversation from '../../components/conversation';
 import { io } from 'socket.io-client';
@@ -236,6 +237,20 @@ export default function Chat() {
                 }}
                 options={users} // Assuming users is an array of objects with a 'username' property
                 getOptionLabel={(user: IUser) => user?.username} // Specify how to get the display label for each option
+                renderOption={(props, option) => (
+                  <Box
+                    component="li"
+                    sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                    display={'flex'}
+                    {...props}
+                  >
+                    <Avatar
+                      src={option?.profilePicture}
+                      sx={{ width: 30, height: 30, marginRight: 1 }}
+                    />
+                    {option?.username}
+                  </Box>
+                )}
                 sx={{ width: 300, mt: 2, mb: 3 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search users.." />
@@ -334,6 +349,20 @@ export default function Chat() {
               }}
               options={users} // Assuming users is an array of objects with a 'username' property
               getOptionLabel={(user: IUser) => user?.username} // Specify how to get the display label for each option
+              renderOption={(props, option) => (
+                <Box
+                  component="li"
+                  sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                  display={'flex'}
+                  {...props}
+                >
+                  <Avatar
+                    src={option?.profilePicture}
+                    sx={{ width: 30, height: 30, marginRight: 1 }}
+                  />
+                  {option?.username}
+                </Box>
+              )}
               sx={{ width: 300, mt: 2, mb: 3 }}
               renderInput={(params) => (
                 <TextField {...params} label="Search users.." />
