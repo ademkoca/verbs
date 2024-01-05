@@ -40,7 +40,9 @@ const ChatBox = ({
   setIsDrawerOpen?: (arg0: boolean) => void;
 }) => {
   dayjs.extend(relativeTime);
+
   const apiUrl = import.meta.env.VITE_API_URL;
+
   const [userData, setUserData] = useState<IUser | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
@@ -123,28 +125,30 @@ const ChatBox = ({
   // Send Message
   const handleSend = async () => {
     // e.preventDefault();
-    const message = {
-      senderId: currentUser,
-      text: newMessage,
-      chatId: chat._id,
-    };
-    const receiverId = chat.members.find((id) => id !== currentUser);
-    // send message to socket server
-    setSendMessage({ ...message, receiverId });
-    // send message to database
-    if (message)
-      try {
-        const res = await fetch(`${apiUrl}/message`, {
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-          body: JSON.stringify(message),
-        });
-        const response = await res.json();
-        setMessages([...messages, response]);
-        setNewMessage('');
-      } catch {
-        console.log('error');
-      }
+    if (newMessage !== '') {
+      const message = {
+        senderId: currentUser,
+        text: newMessage,
+        chatId: chat._id,
+      };
+      const receiverId = chat.members.find((id) => id !== currentUser);
+      // send message to socket server
+      setSendMessage({ ...message, receiverId });
+      // send message to database
+      if (message)
+        try {
+          const res = await fetch(`${apiUrl}/message`, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+            body: JSON.stringify(message),
+          });
+          const response = await res.json();
+          setMessages([...messages, response]);
+          setNewMessage('');
+        } catch {
+          console.log('error');
+        }
+    }
   };
 
   // Receive Message from parent component
@@ -179,9 +183,20 @@ const ChatBox = ({
               src={userData?.profilePicture}
               sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
             />
-            <Typography variant={mobile ? 'h6' : 'h5'}>
-              {userData?.username}
-            </Typography>
+            <Box
+              display={'flex'}
+              flexDirection={'column'}
+              justifyContent={'center'}
+            >
+              <Typography variant={mobile ? 'h6' : 'h5'}>
+                {userData?.username}
+              </Typography>
+              {showIsTyping && (
+                <Typography variant="body2" color="GrayText">
+                  Typing...
+                </Typography>
+              )}
+            </Box>
           </Box>
         </Box>
         <Box sx={{ flexGrow: 0, marginTop: 4 }}>
@@ -261,16 +276,16 @@ const ChatBox = ({
             </Box>
           );
         })}
-        {showIsTyping && (
+        {/* {showIsTyping && (
           <Typography variant="body2" color="GrayText">
             {
               users.find(
                 (u) => u?._id === chat.members.find((m) => m !== currentUser)
               )?.username
             }{' '}
-            is typing
+            is typing...
           </Typography>
-        )}
+        )} */}
       </Box>
       {/* message input */}
       <Box display={'flex'}>
@@ -287,7 +302,9 @@ const ChatBox = ({
           }}
           //   onBlur={() => setIsTyping(false)}
         />
-        <Button onClick={handleSend}>Send</Button>
+        <Button onClick={handleSend} disabled={newMessage === ''}>
+          Send
+        </Button>
       </Box>
     </Container>
   );
