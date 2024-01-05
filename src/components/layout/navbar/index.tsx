@@ -13,6 +13,7 @@ import { Avatar, Button, Tooltip } from '@mui/material';
 import useGermanStore from '../../../store';
 import { auth } from '../../../utils/firebase';
 import { signOut } from 'firebase/auth';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const pages = [
   { name: 'Articles', url: '/articles' },
@@ -47,6 +48,7 @@ function Navbar() {
   const settings: ISettings[] = [
     { label: 'Profile', handler: () => routeHandler('profile') },
     { label: 'Progress', handler: () => routeHandler('progress') },
+    { label: 'Messages', handler: () => routeHandler('chat') },
     // { label: 'Dashboard' },
     { label: 'Logout', handler: logoutHandler },
   ];
@@ -140,48 +142,56 @@ function Navbar() {
               </Link>
             ))}
           </Box>
-
-          {store.user && (
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt={store.user.firstName + '' + store.user.lastName}
-                    src={store.user?.profilePicture}
-                  />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting: ISettings) => (
-                  <MenuItem key={setting.label} onClick={setting.handler}>
-                    <Typography textAlign="center">{setting.label}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+          <Box display={'flex'} alignItems={'center'}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }} mr={2} mt={1}>
+              <Link to={'/chat'} style={{ color: 'white' }}>
+                <ChatIcon />
+              </Link>
             </Box>
-          )}
-          {store.user === null && (
-            <Box sx={{ flexGrow: 0 }}>
-              <Button variant="outlined" color="inherit" href="/#/sign-in">
-                Sign in
-              </Button>
-            </Box>
-          )}
+            {store.user && (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt={store.user.firstName + '' + store.user.lastName}
+                      src={store.user?.profilePicture}
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting: ISettings) => (
+                    <MenuItem key={setting.label} onClick={setting.handler}>
+                      <Typography textAlign="center">
+                        {setting.label}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            )}
+            {store.user === null && (
+              <Box sx={{ flexGrow: 0 }}>
+                <Button variant="outlined" color="inherit" href="/#/sign-in">
+                  Sign in
+                </Button>
+              </Box>
+            )}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
