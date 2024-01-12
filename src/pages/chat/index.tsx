@@ -229,6 +229,7 @@ export default function Chat() {
               </Typography>
               <Autocomplete
                 fullWidth
+                sx={{ width: '100%', mt: 2, mb: 3 }}
                 disablePortal
                 id="combo-box-demo"
                 value={receiver}
@@ -251,7 +252,7 @@ export default function Chat() {
                     {option?.username}
                   </Box>
                 )}
-                sx={{ width: 300, mt: 2, mb: 3 }}
+                // sx={{ width: 300, mt: 2, mb: 3 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search users.." />
                 )}
@@ -340,6 +341,7 @@ export default function Chat() {
               MESSAGES
             </Typography>
             <Autocomplete
+              sx={{ width: '100%', mt: 2, mb: 3 }}
               fullWidth
               disablePortal
               id="combo-box-demo"
@@ -363,7 +365,7 @@ export default function Chat() {
                   {option?.username}
                 </Box>
               )}
-              sx={{ width: 300, mt: 2, mb: 3 }}
+              // sx={{ width: 300, mt: 2, mb: 3 }}
               renderInput={(params) => (
                 <TextField {...params} label="Search users.." />
               )}

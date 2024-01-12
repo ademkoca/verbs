@@ -21,21 +21,23 @@ export type IUser = {
 
 const initialAuthState = {
   user: null,
+  token: null,
 };
 
 interface IState {
   user: IUser;
+  token: string | null;
 }
 type SetFunction<T> = (updater: (prev: T) => T) => void;
 export const authSlice = (set: SetFunction<IState>) => ({
   ...initialAuthState,
-  login: (user: IUser) =>
+  login: (user: IUser, token: string) =>
     set(() => {
-      return { ...initialAuthState, user };
+      return { ...initialAuthState, user, token };
     }),
-  // updateToken: (token: string) => {
-  //   set((state: IState) => ({ ...state, token: token }));
-  // },
+  updateToken: (token: string) => {
+    set((state: IState) => ({ ...state, token: token }));
+  },
 
   logout: () =>
     set((state: IState) => {

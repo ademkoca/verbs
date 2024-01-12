@@ -44,7 +44,7 @@ export default function SignIn() {
               headers: { Authorization: 'Bearer ' + token },
             });
             const response = await res.json();
-            store.login(response.data);
+            token && store.login(response.data, token);
             window.location.href = '/';
           } catch (err) {
             console.log(err);

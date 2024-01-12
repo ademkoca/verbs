@@ -4,10 +4,12 @@ import { IUser, authSlice } from './slices/auth';
 
 interface GermanStore {
   user: IUser;
-  login: (user: IUser) => void;
+  token: string | null;
+  login: (user: IUser, token: string) => void;
   logout: () => void;
   // debugLogin: () => void;
   updateUser: (user: IUser) => void;
+  updateToken: (token: string) => void;
 }
 
 const useGermanStore = create<GermanStore>()(
