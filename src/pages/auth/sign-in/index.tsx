@@ -45,7 +45,7 @@ export default function SignIn() {
             });
             const response = await res.json();
             token && store.login(response.data, token);
-            window.location.href = '/';
+            window.location.href = '/#/progress';
           } catch (err) {
             console.log(err);
             toast.error('Error occurred: ' + err.message);
@@ -65,7 +65,7 @@ export default function SignIn() {
   };
 
   React.useEffect(() => {
-    if (store.user) window.location.href = '/';
+    if (store.user) window.location.href = '/#/progress';
   }, []);
 
   return (

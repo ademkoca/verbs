@@ -29,7 +29,7 @@ const Profile = () => {
   const getUser = async () => {
     const response = await fetch(`${apiUrl}/users/${store.user?._id}`, {
       headers: {
-        Authorization: 'Bearer ' + jwt,
+        Authorization: 'Bearer ' + jwt ?? store.token,
         'Content-Type': 'application/json',
       },
     });
@@ -65,19 +65,20 @@ const Profile = () => {
   const handleUpdateProfile = async () => {
     if (user) {
       try {
+        const token = await auth.currentUser?.getIdToken(true);
         const response = await fetch(`${apiUrl}/users/${user._id}`, {
           method: 'PUT',
           body: JSON.stringify(user),
           headers: {
             'Content-Type': 'application/json',
-            Authorization:
-              'Bearer ' + (await auth.currentUser?.getIdToken(true)),
+            Authorization: 'Bearer ' + token ?? store.token,
           },
         });
         if (response.status === 200) {
           const res = await response.json();
           toast.success('User successfully updated');
           store.updateUser(res.data);
+          token && store.updateToken(token);
         } else toast.error('Error updating user');
       } catch (error) {
         toast.error('Error updating user');
@@ -99,7 +100,10 @@ const Profile = () => {
   };
   useEffect(() => {
     getToken();
-    if (jwt) getUser();
+    if (jwt) {
+      getUser();
+      store.updateToken(jwt);
+    }
   }, [jwt]);
 
   if (!store.user) {

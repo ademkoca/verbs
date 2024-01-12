@@ -13,10 +13,26 @@ const Progress = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState<IUser>(null);
   const getUser = async () => {
-    const response = await fetch(`${apiUrl}/users/${store.user?._id}`);
-    const res = await response.json();
-    setUser(res);
-    return res;
+    const token = await auth.currentUser?.getIdToken(true);
+    console.log(token);
+    console.log(store.token);
+    const jwt = token ? token : store.token;
+    try {
+      const response = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + jwt,
+        },
+      });
+      if (response.ok) {
+        const res = await response.json();
+        setUser(res);
+        token && store.updateToken(token);
+        return res;
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
   const resetProgress = (name: string) => {
     const updatedProgress = user?.progress.map((item) => {
@@ -36,18 +52,20 @@ const Progress = () => {
   };
   const updateUser = async () => {
     try {
+      const token = await auth.currentUser?.getIdToken(true);
       const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
         method: 'PUT',
         body: JSON.stringify(user),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken(true)),
+          Authorization: 'Bearer ' + token ?? store.token,
         },
       });
       if (res.ok) {
         const _user = await res.json();
 
         store.updateUser(_user.data);
+        token && store.updateToken(token);
       }
     } catch (error) {
       console.log(error);
@@ -56,7 +74,7 @@ const Progress = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['user'],
     queryFn: getUser,
-    // enabled: !!id,
+    enabled: !!store.token,
   });
 
   useEffect(() => {
@@ -65,9 +83,6 @@ const Progress = () => {
   useEffect(() => {
     updateUser();
   }, [user?.progress]);
-  useEffect(() => {
-    // getUser();
-  }, []);
 
   if (!data)
     return (
@@ -122,63 +137,47 @@ const Progress = () => {
         </Box>
       </Container>
     );
-  return (
-    <Container component="main" maxWidth="sm">
-      <CssBaseline />
+  console.log(data);
+  if (data)
+    return (
+      <Container component="main" maxWidth="sm">
+        <CssBaseline />
 
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Typography
-          variant="h5"
-          noWrap
-          component="a"
-          // href="/"
+        <Box
           sx={{
-            mb: 2,
-            flexGrow: 1,
-            // fontFamily: 'monospace',
-            fontWeight: 700,
-            letterSpacing: '.3rem',
-            color: 'inherit',
-            textDecoration: 'none',
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          MY PROGRESS
-        </Typography>
-      </Box>
-
-      <Box sx={{ minHeight: '80vh' }}>
-        {/* {user?.progress?.map((p: ProgressType) => (
-          <Box
-            key={p.name}
-            marginY={2}
-            display={'flex'}
-            justifyContent={'space-between'}
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            // href="/"
+            sx={{
+              mb: 2,
+              flexGrow: 1,
+              // fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
           >
-            <Typography variant="h6">
-              {getFirstLetterCapitalized(p.name)}:{' '}
-              <strong>{p.correctGuesses}</strong> /{' '}
-              <strong>{p.totalGuesses}</strong>
-            </Typography>
-            <Button variant="contained" onClick={() => resetProgress(p.name)}>
-              Reset
-            </Button>
-          </Box>
-        ))} */}
+            MY PROGRESS
+          </Typography>
+        </Box>
 
-        {user?.progress && (
-          <BasicTable progress={user?.progress} onReset={resetProgress} />
-        )}
-      </Box>
-    </Container>
-  );
+        <Box sx={{ minHeight: '80vh' }}>
+          {user?.progress && (
+            <BasicTable progress={user?.progress} onReset={resetProgress} />
+          )}
+        </Box>
+      </Container>
+    );
 };
 
 export default Progress;
