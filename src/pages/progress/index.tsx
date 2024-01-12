@@ -14,8 +14,6 @@ const Progress = () => {
   const [user, setUser] = useState<IUser>(null);
   const getUser = async () => {
     const token = await auth.currentUser?.getIdToken(true);
-    console.log(token);
-    console.log(store.token);
     const jwt = token ? token : store.token;
     try {
       const response = await fetch(`${apiUrl}/users/${store.user?._id}`, {
@@ -137,7 +135,6 @@ const Progress = () => {
         </Box>
       </Container>
     );
-  console.log(data);
   if (data)
     return (
       <Container component="main" maxWidth="sm">
