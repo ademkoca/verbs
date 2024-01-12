@@ -17,6 +17,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import InputEmoji from 'react-input-emoji';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { auth } from '../../utils/firebase';
+import useGermanStore from '../../store';
 
 const ChatBox = ({
   chat,
@@ -42,6 +44,7 @@ const ChatBox = ({
   dayjs.extend(relativeTime);
 
   const apiUrl = import.meta.env.VITE_API_URL;
+  const store = useGermanStore();
 
   const [userData, setUserData] = useState<IUser | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -91,7 +94,11 @@ const ChatBox = ({
     const userId = chat?.members?.find((id: string) => id !== currentUser);
     const getUserData = async () => {
       try {
-        const res = await fetch(`${apiUrl}/users/${userId}`);
+        const token = await auth.currentUser?.getIdToken(true);
+        const jwt = token ? token : store.token;
+        const res = await fetch(`${apiUrl}/users/${userId}`, {
+          headers: { Authorization: 'Bearer ' + jwt },
+        });
         const response = await res.json();
         setUserData(response);
       } catch (error) {

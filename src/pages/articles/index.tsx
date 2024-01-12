@@ -115,13 +115,15 @@ export default function Articles() {
     store.updateUser(_user);
   };
   const updateUser = async () => {
+    const token = await auth.currentUser?.getIdToken(true);
+    const jwt = token ? token : store.token;
     try {
       const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
         method: 'PUT',
         body: JSON.stringify(store?.user),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + (await auth.currentUser?.getIdToken(true)),
+          Authorization: 'Bearer ' + jwt,
         },
       });
     } catch (error) {

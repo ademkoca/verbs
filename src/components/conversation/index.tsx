@@ -5,6 +5,7 @@ import useGermanStore from '../../store';
 import Typography from '@mui/material/Typography';
 import ChatAvatar from '../chat-avatar';
 import { IChat, IMessage } from '../../types/interfaces';
+import { auth } from '../../utils/firebase';
 
 const Conversation = ({
   data,
@@ -51,8 +52,12 @@ const Conversation = ({
   useEffect(() => {
     const getUserData = async () => {
       const userId = data.members.find((id: string) => id !== currentUser);
+      const token = await auth.currentUser?.getIdToken(true);
+      const jwt = token ? token : store.token;
       try {
-        const res = await fetch(`${apiUrl}/users/${userId}`);
+        const res = await fetch(`${apiUrl}/users/${userId}`, {
+          headers: { Authorization: 'Bearer ' + jwt },
+        });
         const response = await res.json();
         setUserData(response);
         // store.updateUser(data);

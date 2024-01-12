@@ -13,6 +13,7 @@ import { IChat, IMessage } from '../../types/interfaces';
 import ChatBox from '../../components/chat-box';
 import { Autocomplete, Drawer, TextField } from '@mui/material';
 import { IUser } from '../../store/slices/auth';
+import { auth } from '../../utils/firebase';
 
 export default function Chat() {
   const store = useGermanStore();
@@ -86,8 +87,12 @@ export default function Chat() {
 
   // Get all users
   const getUsers = async () => {
+    const token = await auth.currentUser?.getIdToken(true);
+    const jwt = token ? token : store.token;
     try {
-      const res = await fetch(`${apiUrl}/users/all`);
+      const res = await fetch(`${apiUrl}/users/all`, {
+        headers: { Authorization: 'Bearer ' + jwt },
+      });
       const response = await res.json();
       setUsers(
         response.data.filter((user: IUser) => user?._id !== store.user?._id)
