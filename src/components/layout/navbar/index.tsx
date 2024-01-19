@@ -14,6 +14,7 @@ import useGermanStore from '../../../store';
 import { auth } from '../../../utils/firebase';
 import { signOut } from 'firebase/auth';
 import ChatIcon from '@mui/icons-material/Chat';
+import Divider from '@mui/material/Divider';
 
 const pages = [
   { name: 'Articles', url: '/articles' },
@@ -174,13 +175,30 @@ function Navbar() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting: ISettings) => (
-                    <MenuItem key={setting.label} onClick={setting.handler}>
-                      <Typography textAlign="center">
-                        {setting.label}
-                      </Typography>
-                    </MenuItem>
-                  ))}
+                  {settings.map((setting: ISettings) => {
+                    if (setting.label !== 'Logout')
+                      return (
+                        <MenuItem key={setting.label} onClick={setting.handler}>
+                          <Typography textAlign="center">
+                            {setting.label}
+                          </Typography>
+                        </MenuItem>
+                      );
+                    if (setting.label === 'Logout')
+                      return (
+                        <>
+                          <Divider />
+                          <MenuItem
+                            key={setting.label}
+                            onClick={setting.handler}
+                          >
+                            <Typography textAlign="center">
+                              {setting.label}
+                            </Typography>
+                          </MenuItem>
+                        </>
+                      );
+                  })}
                 </Menu>
               </Box>
             )}
