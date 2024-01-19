@@ -11,7 +11,7 @@ import Conversation from '../../components/conversation';
 import { io } from 'socket.io-client';
 import { IChat, IMessage } from '../../types/interfaces';
 import ChatBox from '../../components/chat-box';
-import { Autocomplete, Drawer, TextField } from '@mui/material';
+import { Autocomplete, Drawer, Menu, TextField } from '@mui/material';
 import { IUser } from '../../store/slices/auth';
 import { auth } from '../../utils/firebase';
 
@@ -262,16 +262,19 @@ export default function Chat() {
                   <TextField {...params} label="Search users.." />
                 )}
               />
+
               {store.user &&
                 chats?.map((chat) => {
                   return (
                     <MenuItem
                       key={chat._id}
                       onClick={() => handleOpenChat(chat)}
-                      sx={{
-                        backgroundColor:
-                          chat._id === currentChat?._id ? 'lightgrey' : 'white',
-                      }}
+                      // sx={{
+                      //   backgroundColor:
+                      //     chat._id === currentChat?._id ? '#FF0000' : '#FF0000',
+                      //   color:
+                      //     chat._id === currentChat?._id ? '#FF0000' : '#FF0000',
+                      // }}
                     >
                       <Conversation
                         // preview={getLatestMessage(chat._id) ?? ''}
@@ -381,7 +384,7 @@ export default function Chat() {
                   onClick={() => setCurrentChat(chat)}
                   sx={{
                     backgroundColor:
-                      chat._id === currentChat?._id ? 'lightgrey' : 'white',
+                      chat._id === currentChat?._id ? 'primary' : 'dark',
                   }}
                 >
                   <Conversation
