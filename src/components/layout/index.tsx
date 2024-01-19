@@ -32,7 +32,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
         contrastText: '#47008F',
       },
       error: {
-        main: '#d90429',
+        // main: '#d90429',
+        main: '#f95738',
       },
     },
   });
