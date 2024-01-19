@@ -150,7 +150,7 @@ export default function SignUp() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <>
       <Container component="header" maxWidth="xl" sx={{ marginTop: 10 }}>
         <Typography component="h1" variant="h4" align="center">
           Check your German verbs knowledge
@@ -269,6 +269,6 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
-    </ThemeProvider>
+    </>
   );
 }

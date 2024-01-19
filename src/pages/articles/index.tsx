@@ -165,108 +165,119 @@ export default function Articles() {
           marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          // alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '70dvh',
         }}
       >
-        <Typography
-          variant="h5"
-          noWrap
-          component="a"
-          // href="/"
-          sx={{
-            mb: 2,
-            flexGrow: 1,
-            // fontFamily: 'monospace',
-            fontWeight: 700,
-            letterSpacing: '.3rem',
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
+        <Box
+          display={'flex'}
+          flexDirection={'column'}
+          alignItems={'center'}
+          // mb={10}
         >
-          ARTICLES
-        </Typography>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <MarkChatReadOutlinedIcon />
-        </Avatar>
-        <Box my={2}>
-          <Typography>
-            {articlesProgress?.correctGuesses ?? correctGuesses}/
-            {articlesProgress?.totalGuesses ?? totalGuesses} correct
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            // href="/"
+            sx={{
+              mb: 2,
+              flexGrow: 1,
+              // fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            ARTICLES
+          </Typography>
+          <Typography variant="body" component="p">
+            Select the appropriate article for the given word:
           </Typography>
         </Box>
-        <Typography component="h5" variant="h5">
-          {activeNoun?.original}{' '}
-          {includeTranslation && `(${activeNoun?.translation})`}
-        </Typography>
-        {successMsg && (
-          <Typography
-            component="h6"
-            variant="h6"
-            color={messageClass === 'success' ? 'green' : 'red'}
-          >
-            {successMsg}
-          </Typography>
-        )}
-        {messageClass !== 'success' && (
-          <Typography color="green">
-            correct: {activeNoun?.article + ' ' + activeNoun?.original}
-          </Typography>
-        )}
-        <Box
-          component="form"
-          noValidate
-          // onSubmit={checkUserInput}
-          sx={{ mt: 3 }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={6} sm={6}>
-              <CustomSwitch
-                value={includeTranslation}
-                onChange={handleToggleIncludeTranslation}
-                left={'Translation'}
-              />
-            </Grid>
 
-            <Grid item xs={12}>
-              <ToggleButtonGroup
-                color="primary"
-                value={userInput}
-                exclusive
-                onChange={handleChange}
-                aria-label="Platform"
-                fullWidth
-                sx={{ mb: 3 }}
-              >
-                <ToggleButton disabled={isLoading} value="der">
-                  der
-                </ToggleButton>
-                <ToggleButton disabled={isLoading} value="die">
-                  die
-                </ToggleButton>
-                <ToggleButton disabled={isLoading} value="das">
-                  das
-                </ToggleButton>
-              </ToggleButtonGroup>
+        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+          <Box my={2}>
+            <Typography>
+              {articlesProgress?.correctGuesses ?? correctGuesses}/
+              {articlesProgress?.totalGuesses ?? totalGuesses} correct
+            </Typography>
+          </Box>
+          <Typography component="h5" variant="h5">
+            {activeNoun?.original}{' '}
+            {includeTranslation && `(${activeNoun?.translation})`}
+          </Typography>
+          {successMsg && (
+            <Typography
+              component="h6"
+              variant="h6"
+              color={messageClass === 'success' ? 'green' : 'error'}
+            >
+              {successMsg}
+            </Typography>
+          )}
+          {messageClass !== 'success' && (
+            <Typography color="green">
+              correct: {activeNoun?.article + ' ' + activeNoun?.original}
+            </Typography>
+          )}
+          <Box
+            component="form"
+            noValidate
+            // onSubmit={checkUserInput}
+            sx={{ mt: 3 }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={6} sm={6}>
+                <CustomSwitch
+                  value={includeTranslation}
+                  onChange={handleToggleIncludeTranslation}
+                  left={'Translation'}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <ToggleButtonGroup
+                  color="primary"
+                  value={userInput}
+                  exclusive
+                  onChange={handleChange}
+                  aria-label="Platform"
+                  fullWidth
+                  sx={{ mb: 3 }}
+                >
+                  <ToggleButton disabled={isLoading} value="der">
+                    der
+                  </ToggleButton>
+                  <ToggleButton disabled={isLoading} value="die">
+                    die
+                  </ToggleButton>
+                  <ToggleButton disabled={isLoading} value="das">
+                    das
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Grid>
             </Grid>
-          </Grid>
-          {/* <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Check
-          </Button> */}
-          <Button
-            type="button"
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 0, mb: 2 }}
-            onClick={resetInputs}
-            disabled={isLoading}
-          >
-            Skip
-          </Button>
+            {/* <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Check
+            </Button> */}
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              sx={{ mt: 0, mb: 2 }}
+              onClick={resetInputs}
+              disabled={isLoading}
+            >
+              Skip
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Container>
