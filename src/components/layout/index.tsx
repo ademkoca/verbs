@@ -1,10 +1,17 @@
 import { Container, ThemeProvider, createTheme } from '@mui/material';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Navbar from './navbar';
 import Footer from './footer';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import useGermanStore from '../../store';
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const store = useGermanStore();
+  const [darkMode, setDarkMode] = useState<boolean>(store.darkMode);
+
+  useEffect(() => {
+    setDarkMode(store.darkMode);
+  }, [store.darkMode]);
   const defaultTheme = createTheme({
     components: {
       // Name of the component
@@ -19,6 +26,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       },
     },
     palette: {
+      mode: darkMode ? 'dark' : 'light',
       primary: {
         main: '#006d77',
         // light: will be calculated from palette.primary.main,

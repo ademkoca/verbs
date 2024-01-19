@@ -47,15 +47,4 @@ export const authSlice = (set: SetFunction<IState>) => ({
   updateUser: (user: IUser) => {
     set((state: IState) => ({ ...state, user }));
   },
-  // debugLogin: () =>
-  //   set((state: IState) => ({
-  //     ...state,
-  //     user: {
-  //       id: '1',
-  //       firstName: 'Adem',
-  //       lastName: 'Koca',
-  //       username: 'ademkoca',
-  //       email: 'aademkocaa@gmail.com',
-  //     },
-  //   })),
 });

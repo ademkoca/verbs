@@ -14,6 +14,13 @@ import useGermanStore from '../../../store';
 import { auth } from '../../../utils/firebase';
 import { signOut } from 'firebase/auth';
 import ChatIcon from '@mui/icons-material/Chat';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
+import NightlightOutlinedIcon from '@mui/icons-material/NightlightOutlined';
+import Person2Icon from '@mui/icons-material/Person2';
+import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Divider from '@mui/material/Divider';
 
 const pages = [
@@ -26,10 +33,13 @@ const pages = [
 interface ISettings {
   label: string;
   handler?: () => void | null;
+  icon: React.ReactElement;
 }
 
 function Navbar() {
   const store = useGermanStore();
+  const [darkMode, setDarkMode] = React.useState<boolean>(store.darkMode);
+
   const logoutHandler = () => {
     signOut(auth)
       .then(() => {
@@ -47,11 +57,35 @@ function Navbar() {
     handleCloseUserMenu();
   };
   const settings: ISettings[] = [
-    { label: 'Profile', handler: () => routeHandler('profile') },
-    { label: 'Progress', handler: () => routeHandler('progress') },
-    { label: 'Messages', handler: () => routeHandler('chat') },
+    {
+      label: 'Profile',
+      handler: () => routeHandler('profile'),
+      icon: darkMode ? (
+        <Person2Icon sx={{ marginRight: 1 }} />
+      ) : (
+        <Person2OutlinedIcon sx={{ marginRight: 1 }} />
+      ),
+    },
+    {
+      label: 'Progress',
+      handler: () => routeHandler('progress'),
+      icon: <TrendingUpIcon sx={{ marginRight: 1 }} />,
+    },
+    {
+      label: 'Messages',
+      handler: () => routeHandler('chat'),
+      icon: darkMode ? (
+        <ChatIcon sx={{ marginRight: 1 }} />
+      ) : (
+        <ChatOutlinedIcon sx={{ marginRight: 1 }} />
+      ),
+    },
     // { label: 'Dashboard' },
-    { label: 'Logout', handler: logoutHandler },
+    {
+      label: 'Logout',
+      handler: logoutHandler,
+      icon: <LogoutIcon sx={{ marginRight: 1 }} />,
+    },
   ];
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -73,6 +107,12 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleToggleDarkMode = () => {
+    setDarkMode((prev) => !prev);
+  };
+  React.useEffect(() => {
+    store.setDarkMode(darkMode);
+  }, [darkMode]);
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -175,10 +215,21 @@ function Navbar() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
+                  <MenuItem key={'Toogle mode'} onClick={handleToggleDarkMode}>
+                    {darkMode ? (
+                      <NightlightRoundIcon sx={{ marginRight: 1 }} />
+                    ) : (
+                      <NightlightOutlinedIcon sx={{ marginRight: 1 }} />
+                    )}
+                    <Typography textAlign="center">
+                      {darkMode ? 'Light' : 'Dark'} Mode
+                    </Typography>
+                  </MenuItem>
                   {settings.map((setting: ISettings) => {
                     if (setting.label !== 'Logout')
                       return (
                         <MenuItem key={setting.label} onClick={setting.handler}>
+                          {setting.icon}
                           <Typography textAlign="center">
                             {setting.label}
                           </Typography>
@@ -192,6 +243,7 @@ function Navbar() {
                             key={setting.label}
                             onClick={setting.handler}
                           >
+                            {setting.icon}
                             <Typography textAlign="center">
                               {setting.label}
                             </Typography>
