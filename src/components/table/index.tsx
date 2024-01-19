@@ -28,7 +28,6 @@ export default function BasicTable({
   progress: Progress[];
   onReset: (name: string) => void;
 }) {
-  console.log(progress);
   const rows = progress?.map((p) =>
     createData(
       p.name,

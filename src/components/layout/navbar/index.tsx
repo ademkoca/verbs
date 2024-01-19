@@ -184,11 +184,13 @@ function Navbar() {
             ))}
           </Box>
           <Box display={'flex'} alignItems={'center'}>
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }} mr={2} mt={1}>
-              <Link to={'/chat'} style={{ color: 'white' }}>
-                <ChatIcon />
-              </Link>
-            </Box>
+            {store.user && (
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }} mr={2} mt={1}>
+                <Link to={'/chat'} style={{ color: 'white' }}>
+                  <ChatIcon />
+                </Link>
+              </Box>
+            )}
             {store.user && (
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
