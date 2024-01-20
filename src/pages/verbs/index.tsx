@@ -218,143 +218,146 @@ export default function Verbs() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          // minHeight: '80vh',
+          justifyContent: 'space-between',
+          height: '70dvh',
         }}
       >
-        <Typography
-          variant="h5"
-          noWrap
-          component="a"
-          // href="/"
-          sx={{
-            mb: 2,
-            flexGrow: 1,
-            // fontFamily: 'monospace',
-            fontWeight: 700,
-            letterSpacing: '.3rem',
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
-        >
-          VERBS
-        </Typography>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <MarkChatReadOutlinedIcon />
-        </Avatar>
-        <Box my={2}>
-          <Typography>
-            {verbsProgress?.correctGuesses ?? correctGuesses}/
-            {verbsProgress?.totalGuesses ?? totalGuesses} correct
+        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            // href="/"
+            sx={{
+              mb: 2,
+              flexGrow: 1,
+              // fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            VERBS
+          </Typography>
+          <Typography variant="body2" component="p">
+            Guess the correct preterite and participle for the given verb
           </Typography>
         </Box>
-        <Typography component="h5" variant="h5">
-          {activeVerb?.original}{' '}
-          {includeTranslation && `(${activeVerb?.translation})`}
-        </Typography>
-        {successMsg && (
-          <Typography
-            component="h6"
-            variant="h6"
-            mt={2}
-            color={messageClass === 'success' ? 'green' : 'red'}
+        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+          <Box my={2}>
+            <Typography>
+              {verbsProgress?.correctGuesses ?? correctGuesses}/
+              {verbsProgress?.totalGuesses ?? totalGuesses} correct
+            </Typography>
+          </Box>
+          <Typography component="h5" variant="h5">
+            {activeVerb?.original}{' '}
+            {includeTranslation && `(${activeVerb?.translation})`}
+          </Typography>
+          {successMsg && (
+            <Typography
+              component="h6"
+              variant="h6"
+              mt={2}
+              color={messageClass === 'success' ? 'green' : 'error'}
+            >
+              {successMsg}
+            </Typography>
+          )}
+          {messageClass !== 'success' && (
+            <Typography color="green" sx={{ mt: 2 }}>
+              correct: {isHard && activeVerb?.preterite + ' > '}
+              {activeVerb?.pastParticiple}
+            </Typography>
+          )}
+          <Box
+            component="form"
+            noValidate
+            onSubmit={checkUserInput}
+            sx={{ mt: 3 }}
           >
-            {successMsg}
-          </Typography>
-        )}
-        {messageClass !== 'success' && (
-          <Typography color="green" sx={{ mt: 2 }}>
-            correct: {isHard && activeVerb?.preterite + ' > '}
-            {activeVerb?.pastParticiple}
-          </Typography>
-        )}
-        <Box
-          component="form"
-          noValidate
-          onSubmit={checkUserInput}
-          sx={{ mt: 3 }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={6} sm={6}>
-              <CustomSwitch
-                value={isHard}
-                onChange={handleToggleLevel}
-                left={'Easy'}
-                right={'Hard'}
-                options={[
-                  {
-                    title: 'Easy',
-                    description: 'Only past participle',
-                  },
-                  {
-                    title: 'Hard',
-                    description: 'Preterite and past participle',
-                  },
-                ]}
-              />
-            </Grid>
-            <Grid item xs={6} sm={6}>
-              <CustomSwitch
-                value={includeTranslation}
-                onChange={handleToggleIncludeTranslation}
-                left={'Translation'}
-              />
-            </Grid>
-
-            {isHard && (
+            <Grid container spacing={2}>
+              <Grid item xs={6} sm={6}>
+                <CustomSwitch
+                  value={isHard}
+                  onChange={handleToggleLevel}
+                  left={'Easy'}
+                  right={'Hard'}
+                  options={[
+                    {
+                      title: 'Easy',
+                      description: 'Only past participle',
+                    },
+                    {
+                      title: 'Hard',
+                      description: 'Preterite and past participle',
+                    },
+                  ]}
+                />
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <CustomSwitch
+                  value={includeTranslation}
+                  onChange={handleToggleIncludeTranslation}
+                  left={'Translation'}
+                />
+              </Grid>
+              {isHard && (
+                <Grid item xs={12}>
+                  <TextField
+                    inputRef={preteriteTextRef}
+                    autoFocus={isHard}
+                    required
+                    fullWidth
+                    id="preterite"
+                    label="Preterite"
+                    name="preterite"
+                    autoComplete="preterite"
+                    value={userInputPreterite}
+                    onChange={(e) =>
+                      setUserInputPreterite(e.target.value.toLowerCase())
+                    }
+                  />
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <TextField
-                  inputRef={preteriteTextRef}
-                  autoFocus={isHard}
+                  inputRef={participleTextRef}
+                  autoFocus={!isHard}
                   required
                   fullWidth
-                  id="preterite"
-                  label="Preterite"
-                  name="preterite"
-                  autoComplete="preterite"
-                  value={userInputPreterite}
+                  id="particip"
+                  label="Participle"
+                  name="particip"
+                  autoComplete="particip"
+                  value={userInputParticiple}
                   onChange={(e) =>
-                    setUserInputPreterite(e.target.value.toLowerCase())
+                    setUserInputParticiple(e.target.value.toLowerCase())
                   }
                 />
               </Grid>
-            )}
-            <Grid item xs={12}>
-              <TextField
-                inputRef={participleTextRef}
-                autoFocus={!isHard}
-                required
-                fullWidth
-                id="particip"
-                label="Participle"
-                name="particip"
-                autoComplete="particip"
-                value={userInputParticiple}
-                onChange={(e) =>
-                  setUserInputParticiple(e.target.value.toLowerCase())
-                }
-              />
             </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isLoading}
-          >
-            Check
-          </Button>
-          <Button
-            type="button"
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 0, mb: 2 }}
-            onClick={resetInputs}
-            disabled={isLoading}
-          >
-            Skip
-          </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={isLoading}
+            >
+              Check
+            </Button>
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              sx={{ mt: 0, mb: 2 }}
+              onClick={resetInputs}
+              disabled={isLoading}
+            >
+              Skip
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Container>

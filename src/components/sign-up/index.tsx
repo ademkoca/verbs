@@ -182,7 +182,7 @@ export default function SignUp() {
             <Typography
               component="h6"
               variant="h6"
-              color={messageClass === 'success' ? 'green' : 'red'}
+              color={messageClass === 'success' ? 'green' : 'error'}
             >
               {successMsg}
             </Typography>

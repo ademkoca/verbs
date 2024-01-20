@@ -193,8 +193,8 @@ export default function Articles() {
           >
             ARTICLES
           </Typography>
-          <Typography variant="body" component="p">
-            Select the appropriate article for the given word:
+          <Typography variant="body2" component="p">
+            Select the appropriate article for the given word
           </Typography>
         </Box>
 

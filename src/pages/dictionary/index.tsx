@@ -220,147 +220,150 @@ export default function Dictionary() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          // minHeight: '80vh',
+          justifyContent: 'space-between',
+          height: '70dvh',
         }}
       >
-        <Typography
-          variant="h5"
-          noWrap
-          component="a"
-          // href="/"
-          sx={{
-            mb: 2,
-            flexGrow: 1,
-            // fontFamily: 'monospace',
-            fontWeight: 700,
-            letterSpacing: '.3rem',
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
-        >
-          DICTIONARY
-        </Typography>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <MarkChatReadOutlinedIcon />
-        </Avatar>
-        <Box my={2}>
-          <Typography>
-            {dictionaryProgress?.correctGuesses ?? correctGuesses}/
-            {dictionaryProgress?.totalGuesses ?? totalGuesses} correct
+        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            // href="/"
+            sx={{
+              mb: 2,
+              flexGrow: 1,
+              // fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            DICTIONARY
+          </Typography>
+          <Typography variant="body2" component="p">
+            Guess the correct translation of the given word
           </Typography>
         </Box>
-        <Typography component="h5" variant="h5">
-          {activeWord?.article + ' ' + activeWord?.original}
-        </Typography>
-        {successMsg && (
-          <Typography
-            component="h6"
-            variant="h6"
-            color={messageClass === 'success' ? 'green' : 'red'}
+        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+          <Box my={2}>
+            <Typography>
+              {dictionaryProgress?.correctGuesses ?? correctGuesses}/
+              {dictionaryProgress?.totalGuesses ?? totalGuesses} correct
+            </Typography>
+          </Box>
+          <Typography component="h5" variant="h5">
+            {activeWord?.article + ' ' + activeWord?.original}
+          </Typography>
+          {successMsg && (
+            <Typography
+              component="h6"
+              variant="h6"
+              color={messageClass === 'success' ? 'green' : 'error'}
+            >
+              {successMsg}
+            </Typography>
+          )}
+          {messageClass !== 'success' && (
+            <Typography color="green" sx={{ mt: 2 }}>
+              correct: {correctAnswer}
+            </Typography>
+          )}
+          <Box
+            component="form"
+            noValidate
+            onSubmit={checkUserInput}
+            sx={{ mt: 3 }}
           >
-            {successMsg}
-          </Typography>
-        )}
-        {messageClass !== 'success' && (
-          <Typography color="green" sx={{ mt: 2 }}>
-            correct: {correctAnswer}
-          </Typography>
-        )}
-        <Box
-          component="form"
-          noValidate
-          onSubmit={checkUserInput}
-          sx={{ mt: 3 }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={6} sm={6}>
-              <CustomSwitch
-                value={isHard}
-                onChange={handleToggleLevel}
-                left={'Easy'}
-                right={'Hard'}
-                options={[
-                  {
-                    title: 'Easy',
-                    description:
-                      'Pick the translation from the 3 possible options',
-                  },
-                  {
-                    title: 'Hard',
-                    description: 'Enter the translation manually',
-                  },
-                ]}
-              />
-            </Grid>
-
-            {isHard && (
-              <Grid item xs={12}>
-                <TextField
-                  inputRef={textRef}
-                  autoFocus={!isHard}
-                  required
-                  fullWidth
-                  id="translation"
-                  label="Translation"
-                  name="translation"
-                  autoComplete="translation"
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+            <Grid container spacing={2}>
+              <Grid item xs={6} sm={6}>
+                <CustomSwitch
+                  value={isHard}
+                  onChange={handleToggleLevel}
+                  left={'Easy'}
+                  right={'Hard'}
+                  options={[
+                    {
+                      title: 'Easy',
+                      description:
+                        'Pick the translation from the 3 possible options',
+                    },
+                    {
+                      title: 'Hard',
+                      description: 'Enter the translation manually',
+                    },
+                  ]}
                 />
               </Grid>
-            )}
-            {!isHard && (
-              <Grid item xs={12}>
-                <ToggleButtonGroup
-                  color="primary"
-                  value={userInput}
-                  exclusive
-                  onChange={handleChange}
-                  aria-label="Platform"
-                  fullWidth
-                  sx={{ mb: 3 }}
-                >
-                  {activeWord?.translation.map((w) => (
-                    <ToggleButton
-                      key={w.possibleTranslation}
-                      disabled={isLoading}
-                      value={w.possibleTranslation}
-                    >
-                      {w.possibleTranslation}
+              {isHard && (
+                <Grid item xs={12}>
+                  <TextField
+                    inputRef={textRef}
+                    autoFocus={!isHard}
+                    required
+                    fullWidth
+                    id="translation"
+                    label="Translation"
+                    name="translation"
+                    autoComplete="translation"
+                    value={userInput}
+                    onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+                  />
+                </Grid>
+              )}
+              {!isHard && (
+                <Grid item xs={12}>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={userInput}
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
+                    fullWidth
+                    sx={{ mb: 3 }}
+                  >
+                    {activeWord?.translation.map((w) => (
+                      <ToggleButton
+                        key={w.possibleTranslation}
+                        disabled={isLoading}
+                        value={w.possibleTranslation}
+                      >
+                        {w.possibleTranslation}
+                      </ToggleButton>
+                    ))}
+                    {/* <ToggleButton disabled={isLoading} value="die">
+                      die
                     </ToggleButton>
-                  ))}
-                  {/* <ToggleButton disabled={isLoading} value="die">
-                    die
-                  </ToggleButton>
-                  <ToggleButton disabled={isLoading} value="das">
-                    das
-                  </ToggleButton> */}
-                </ToggleButtonGroup>
-              </Grid>
+                    <ToggleButton disabled={isLoading} value="das">
+                      das
+                    </ToggleButton> */}
+                  </ToggleButtonGroup>
+                </Grid>
+              )}
+            </Grid>
+            {isHard && (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                disabled={isLoading}
+              >
+                Check
+              </Button>
             )}
-          </Grid>
-          {isHard && (
             <Button
-              type="submit"
+              type="button"
               fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              variant="outlined"
+              sx={{ mt: 0, mb: 2 }}
+              onClick={resetInputs}
               disabled={isLoading}
             >
-              Check
+              Skip
             </Button>
-          )}
-          <Button
-            type="button"
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 0, mb: 2 }}
-            onClick={resetInputs}
-            disabled={isLoading}
-          >
-            Skip
-          </Button>
+          </Box>
         </Box>
       </Box>
     </Container>
