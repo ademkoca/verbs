@@ -272,7 +272,7 @@ const ChatBox = ({
               maxWidth={'sm'}
               borderRadius={3}
               sx={{ whiteSpace: 'normal' }}
-              bgcolor={isMyMessage ? '#1976d2' : 'lightgrey'}
+              bgcolor={isMyMessage ? '#006d77' : 'lightgrey'}
               color={isMyMessage ? 'white' : 'black'}
               alignSelf={`flex-${isMyMessage ? 'end' : 'start'}`}
             >
