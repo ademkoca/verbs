@@ -9,7 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
-import { Avatar, Button, Tooltip } from '@mui/material';
+import { Avatar, Button, Tooltip, Drawer } from '@mui/material';
 import useGermanStore from '../../../store';
 import { auth } from '../../../utils/firebase';
 import { signOut } from 'firebase/auth';
@@ -31,6 +31,7 @@ const pages = [
 ];
 
 interface ISettings {
+  type: 'route' | 'setting';
   label: string;
   handler?: () => void | null;
   icon: React.ReactElement;
@@ -39,6 +40,7 @@ interface ISettings {
 function Navbar() {
   const store = useGermanStore();
   const [darkMode, setDarkMode] = React.useState<boolean>(store.darkMode);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const logoutHandler = () => {
     signOut(auth)
@@ -56,8 +58,12 @@ function Navbar() {
     window.location.href = `/#/${route}`;
     handleCloseUserMenu();
   };
+  const darkModeHandler = () => {
+    setDarkMode((prev) => !prev);
+  };
   const settings: ISettings[] = [
     {
+      type: 'route',
       label: 'Profile',
       handler: () => routeHandler('profile'),
       icon: darkMode ? (
@@ -67,11 +73,13 @@ function Navbar() {
       ),
     },
     {
+      type: 'route',
       label: 'Progress',
       handler: () => routeHandler('progress'),
       icon: <TrendingUpIcon sx={{ marginRight: 1 }} />,
     },
     {
+      type: 'route',
       label: 'Messages',
       handler: () => routeHandler('chat'),
       icon: darkMode ? (
@@ -82,11 +90,33 @@ function Navbar() {
     },
     // { label: 'Dashboard' },
     {
+      type: 'setting',
+      label: `${darkMode ? 'Light' : 'Dark'}  mode`,
+      handler: darkModeHandler,
+      icon: darkMode ? (
+        <NightlightRoundIcon sx={{ marginRight: 1 }} />
+      ) : (
+        <NightlightOutlinedIcon sx={{ marginRight: 1 }} />
+      ),
+    },
+    {
+      type: 'setting',
       label: 'Logout',
       handler: logoutHandler,
       icon: <LogoutIcon sx={{ marginRight: 1 }} />,
     },
   ];
+
+  // <MenuItem key={'Toogle mode'} onClick={handleToggleDarkMode}>
+  //   {darkMode ? (
+  //     <NightlightRoundIcon sx={{ marginRight: 1 }} />
+  //   ) : (
+  //     <NightlightOutlinedIcon sx={{ marginRight: 1 }} />
+  //   )}
+  //   <Typography textAlign="center">
+  //     {darkMode ? 'Light' : 'Dark'} Mode
+  //   </Typography>
+  // </MenuItem>
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -94,14 +124,16 @@ function Navbar() {
     null
   );
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
+    // setAnchorElNav(event.currentTarget);
+    setIsDrawerOpen(true);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+    // setAnchorElNav(null);
+    setIsDrawerOpen(false);
   };
 
   const handleCloseUserMenu = () => {
@@ -132,7 +164,7 @@ function Navbar() {
             >
               <MenuIcon />
             </IconButton>
-            <Menu
+            {/* <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
@@ -157,7 +189,28 @@ function Navbar() {
                   </Link>
                 </MenuItem>
               ))}
-            </Menu>
+            </Menu> */}
+            <Drawer
+              anchor={'left'}
+              open={isDrawerOpen}
+              onClose={() => setIsDrawerOpen(false)}
+            >
+              <Box p={2} mr={4} mt={2}>
+                <Typography variant="h6" marginBottom={2}>
+                  Jump to:{' '}
+                </Typography>
+                {pages.map((page) => (
+                  <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                    <ChatOutlinedIcon sx={{ marginRight: 1 }} />
+                    <Link to={page.url}>
+                      <Typography color={'white'} textAlign="center">
+                        {page.name}
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                ))}
+              </Box>
+            </Drawer>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 1 }}>
             <img src="logo-clear-white-1.png" alt="Logo" width={150} />
@@ -217,18 +270,8 @@ function Navbar() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem key={'Toogle mode'} onClick={handleToggleDarkMode}>
-                    {darkMode ? (
-                      <NightlightRoundIcon sx={{ marginRight: 1 }} />
-                    ) : (
-                      <NightlightOutlinedIcon sx={{ marginRight: 1 }} />
-                    )}
-                    <Typography textAlign="center">
-                      {darkMode ? 'Light' : 'Dark'} Mode
-                    </Typography>
-                  </MenuItem>
                   {settings.map((setting: ISettings) => {
-                    if (setting.label !== 'Logout')
+                    if (setting.type === 'route')
                       return (
                         <MenuItem key={setting.label} onClick={setting.handler}>
                           {setting.icon}
@@ -237,7 +280,8 @@ function Navbar() {
                           </Typography>
                         </MenuItem>
                       );
-                    if (setting.label === 'Logout')
+
+                    if (setting.type === 'setting')
                       return (
                         <>
                           <Divider />
