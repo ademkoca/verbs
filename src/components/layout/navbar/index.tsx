@@ -225,7 +225,7 @@ function Navbar() {
                     {page.icon}
                     <Link to={page.url}>
                       <Typography
-                        color={darkMode ? 'white' : 'primary'}
+                        color={darkMode ? 'white' : 'black'}
                         textAlign="center"
                       >
                         {page.name}
