@@ -21,13 +21,34 @@ import Person2Icon from '@mui/icons-material/Person2';
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import TranslateIcon from '@mui/icons-material/Translate';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import DescriptionIcon from '@mui/icons-material/Description';
 import Divider from '@mui/material/Divider';
 
 const pages = [
-  { name: 'Articles', url: '/articles' },
-  { name: 'Verbs', url: '/' },
-  { name: 'Dictionary', url: '/dictionary' },
-  { name: 'Sentences', url: '/sentences' },
+  {
+    name: 'Articles',
+    url: '/articles',
+    icon: <MenuBookIcon sx={{ marginRight: 1 }} />,
+  },
+  {
+    name: 'Verbs',
+    url: '/',
+    icon: <DescriptionIcon sx={{ marginRight: 1 }} />,
+  },
+  {
+    name: 'Dictionary',
+    url: '/dictionary',
+    icon: <TranslateIcon sx={{ marginRight: 1 }} />,
+  },
+  {
+    name: 'Sentences',
+    url: '/sentences',
+    icon: <SubtitlesIcon sx={{ marginRight: 1 }} />,
+  },
 ];
 
 interface ISettings {
@@ -201,9 +222,12 @@ function Navbar() {
                 </Typography>
                 {pages.map((page) => (
                   <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                    <ChatOutlinedIcon sx={{ marginRight: 1 }} />
+                    {page.icon}
                     <Link to={page.url}>
-                      <Typography color={'white'} textAlign="center">
+                      <Typography
+                        color={darkMode ? 'white' : 'primary'}
+                        textAlign="center"
+                      >
                         {page.name}
                       </Typography>
                     </Link>
