@@ -16,7 +16,7 @@ import CustomSwitch from '../switch';
 
 function Copyright(props: any) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
+    <Typography variant="body2" color="secondary.main" align="center">
       {'Copyright © '}
       <Link
         color="inherit"
@@ -166,7 +166,7 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 2, bgcolor: 'primary.main' }}>
             <MarkChatReadOutlinedIcon />
           </Avatar>
           <Box mb={2}>

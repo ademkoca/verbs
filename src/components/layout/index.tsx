@@ -34,7 +34,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         // contrastText: will be calculated to contrast with palette.primary.main
       },
       secondary: {
-        main: '#E0C2FF',
+        main: '#F1F1F1',
         light: '#F5EBFF',
         // dark: will be calculated from palette.secondary.main,
         contrastText: '#47008F',
