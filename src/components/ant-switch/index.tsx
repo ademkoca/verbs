@@ -23,7 +23,8 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
       '& + .MuiSwitch-track': {
         opacity: 1,
         // backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
-        backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#006d77',
+        // backgroundColor: theme.palette.mode === 'dark' ? 'primary' : '#006d77',
+        backgroundColor: 'primary',
       },
     },
   },

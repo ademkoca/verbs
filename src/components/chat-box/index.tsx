@@ -171,6 +171,7 @@ const ChatBox = ({
     // el?.style.backgroundColor = '#FF0000';
     if (el.length > 0) {
       el[0].style.backgroundColor = store.darkMode ? '#121212' : '';
+      el[0].style.color = store.darkMode ? '#F1F1F1' : '';
     }
   }, [store.darkMode]);
 
