@@ -166,6 +166,14 @@ const ChatBox = ({
   }, [receivedMessage]);
   const scroll = useRef();
 
+  useEffect(() => {
+    const el = document.getElementsByClassName('react-input-emoji--container');
+    // el?.style.backgroundColor = '#FF0000';
+    if (el.length > 0) {
+      el[0].style.backgroundColor = store.darkMode ? '#121212' : '';
+    }
+  }, [store.darkMode]);
+
   return (
     <Container>
       {/* chat header */}
@@ -297,6 +305,7 @@ const ChatBox = ({
       {/* message input */}
       <Box display={'flex'}>
         <InputEmoji
+          theme={store.darkMode ? 'dark' : 'light'}
           keepOpened
           value={newMessage}
           onChange={handleChange}
