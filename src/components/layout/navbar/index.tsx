@@ -27,6 +27,7 @@ import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Divider from '@mui/material/Divider';
+import CustomSwitch from '../../switch';
 
 const pages = [
   {
@@ -111,16 +112,16 @@ function Navbar() {
       ),
     },
     // { label: 'Dashboard' },
-    {
-      type: 'setting',
-      label: `${darkMode ? 'Light' : 'Dark'}  mode`,
-      handler: darkModeHandler,
-      icon: darkMode ? (
-        <NightlightRoundIcon sx={{ marginRight: 1 }} />
-      ) : (
-        <NightlightOutlinedIcon sx={{ marginRight: 1 }} />
-      ),
-    },
+    // {
+    //   type: 'setting',
+    //   label: `${darkMode ? 'Light' : 'Dark'}  mode`,
+    //   handler: darkModeHandler,
+    //   icon: darkMode ? (
+    //     <NightlightRoundIcon sx={{ marginRight: 1 }} />
+    //   ) : (
+    //     <NightlightOutlinedIcon sx={{ marginRight: 1 }} />
+    //   ),
+    // },
     {
       type: 'setting',
       label: 'Logout',
@@ -218,23 +219,49 @@ function Navbar() {
               open={isDrawerOpen}
               onClose={() => setIsDrawerOpen(false)}
             >
-              <Box p={2} mr={4} mt={2}>
-                <Typography variant="h6" marginBottom={2}>
-                  Jump to:{' '}
-                </Typography>
-                {pages.map((page) => (
-                  <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                    {page.icon}
-                    <Link to={page.url}>
-                      <Typography
-                        color={darkMode ? 'white' : 'black'}
-                        textAlign="center"
-                      >
-                        {page.name}
-                      </Typography>
-                    </Link>
-                  </MenuItem>
-                ))}
+              <Box
+                p={2}
+                mr={4}
+                mt={2}
+                display={'flex'}
+                flexDirection={'column'}
+                justifyContent={'space-between'}
+                height={'100%'}
+              >
+                <Box>
+                  <Typography variant="h6" marginBottom={2}>
+                    Jump to:{' '}
+                  </Typography>
+                  {pages.map((page) => (
+                    <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                      {page.icon}
+                      <Link to={page.url}>
+                        <Typography
+                          color={darkMode ? 'white' : 'black'}
+                          textAlign="center"
+                        >
+                          {page.name}
+                        </Typography>
+                      </Link>
+                      {/* <Button href={'/#/' + page.url}>
+                        <Typography
+                          color={darkMode ? 'white' : 'black'}
+                          textAlign="center"
+                        >
+                          {page.name}
+                        </Typography>
+                      </Button> */}
+                    </MenuItem>
+                  ))}
+                </Box>
+                <Box>
+                  <Divider sx={{ mb: 2 }} />
+                  <CustomSwitch
+                    left={'Dark mode'}
+                    value={darkMode}
+                    onChange={handleToggleDarkMode}
+                  />
+                </Box>
               </Box>
             </Drawer>
           </Box>
