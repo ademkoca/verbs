@@ -219,7 +219,7 @@ export default function Sentences() {
             SENTENCE <br /> CONSTRUCTION
           </Typography>
           <Typography variant="body2" component="p">
-            Guess the correct preterite and participle for the given verb
+            Put the words in the correct order to form a sentence
           </Typography>
         </Box>
         <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
