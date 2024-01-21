@@ -78,6 +78,13 @@ export default function SignUp() {
     } else toast.error('Please enter all required fields');
   };
 
+  React.useEffect(() => {
+    const pingAPI = async () => {
+      await fetch(`${apiUrl}/ping`);
+    };
+    pingAPI();
+  }, []);
+
   return (
     <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
       <CssBaseline />

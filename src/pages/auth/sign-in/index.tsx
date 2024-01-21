@@ -66,6 +66,10 @@ export default function SignIn() {
 
   React.useEffect(() => {
     if (store.user) window.location.href = '/#/progress';
+    const pingAPI = async () => {
+      await fetch(`${apiUrl}/ping`);
+    };
+    pingAPI();
   }, []);
 
   return (

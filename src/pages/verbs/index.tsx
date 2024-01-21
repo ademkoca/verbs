@@ -208,6 +208,13 @@ export default function Verbs() {
     if (store.user) updateUser();
   }, [verbsProgress?.used.length]);
 
+  useEffect(() => {
+    const pingAPI = async () => {
+      await fetch(`${apiUrl}/ping`);
+    };
+    pingAPI();
+  }, []);
+
   return (
     <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
       <CssBaseline />

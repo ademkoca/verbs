@@ -167,12 +167,7 @@ function Navbar() {
   React.useEffect(() => {
     store.setDarkMode(darkMode);
   }, [darkMode]);
-  React.useEffect(() => {
-    const pingAPI = async () => {
-      await fetch(`${apiUrl}/ping`);
-    };
-    pingAPI();
-  }, []);
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
