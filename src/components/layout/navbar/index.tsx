@@ -59,6 +59,7 @@ interface ISettings {
 }
 
 function Navbar() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const store = useGermanStore();
   const [darkMode, setDarkMode] = React.useState<boolean>(store.darkMode);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
@@ -166,6 +167,12 @@ function Navbar() {
   React.useEffect(() => {
     store.setDarkMode(darkMode);
   }, [darkMode]);
+  React.useEffect(() => {
+    const pingAPI = async () => {
+      await fetch(`${apiUrl}/ping`);
+    };
+    pingAPI();
+  }, []);
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -270,7 +277,11 @@ function Navbar() {
                 </Box>
               </>
             )}
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }} mr={2} mt={1}>
+            <Box
+              sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
+              mr={2}
+              mt={1}
+            >
               <Box onClick={handleToggleDarkMode} style={{ color: 'white' }}>
                 {darkMode ? (
                   <NightlightRoundIcon />
