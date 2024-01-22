@@ -79,7 +79,7 @@ const Progress = () => {
     if (!store.user) window.location.href = '/#/sign-in';
   }, [store]);
   useEffect(() => {
-    updateUser();
+    user && updateUser();
   }, [user?.progress]);
 
   if (!data)
