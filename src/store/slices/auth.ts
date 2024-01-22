@@ -22,7 +22,7 @@ export type IUser = {
 const initialAuthState = {
   user: null,
   token: null,
-  darkMode: !!window.matchMedia('(prefers-color-scheme: dark)'),
+  darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
 };
 
 interface IState {
