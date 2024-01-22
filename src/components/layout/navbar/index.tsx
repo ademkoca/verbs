@@ -168,6 +168,9 @@ function Navbar() {
   React.useEffect(() => {
     store.setDarkMode(darkMode);
   }, [darkMode]);
+  React.useEffect(() => {
+    setDarkMode(store.darkMode);
+  }, [store.darkMode]);
 
   return (
     <AppBar position="static">

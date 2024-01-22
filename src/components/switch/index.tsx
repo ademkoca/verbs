@@ -16,6 +16,7 @@ const CustomSwitch = ({ value, onChange, left, right, options }: Props) => {
     <Stack direction="row" spacing={1} alignItems="center">
       <Typography>{left}</Typography>
       <AntSwitch
+        checked={!!value}
         // defaultChecked
         inputProps={{ 'aria-label': 'ant design' }}
         value={value}

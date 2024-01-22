@@ -22,11 +22,13 @@ export type IUser = {
 const initialAuthState = {
   user: null,
   token: null,
+  darkMode: !!window.matchMedia('(prefers-color-scheme: dark)'),
 };
 
 interface IState {
   user: IUser;
   token: string | null;
+  darkMode: boolean;
 }
 type SetFunction<T> = (updater: (prev: T) => T) => void;
 export const authSlice = (set: SetFunction<IState>) => ({
@@ -47,4 +49,8 @@ export const authSlice = (set: SetFunction<IState>) => ({
   updateUser: (user: IUser) => {
     set((state: IState) => ({ ...state, user }));
   },
+  setDarkMode: (darkMode: boolean) =>
+    set((state: IState) => {
+      return { ...state, darkMode };
+    }),
 });
