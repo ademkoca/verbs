@@ -31,24 +31,24 @@ import CustomSwitch from '../../switch';
 
 const pages = [
   {
-    name: 'Articles',
-    url: '/articles',
-    icon: <MenuBookIcon sx={{ marginRight: 1 }} />,
-  },
-  {
     name: 'Verbs',
     url: '/',
     icon: <DescriptionIcon sx={{ marginRight: 1 }} />,
   },
   {
-    name: 'Dictionary',
-    url: '/dictionary',
-    icon: <TranslateIcon sx={{ marginRight: 1 }} />,
+    name: 'Articles',
+    url: '/articles',
+    icon: <MenuBookIcon sx={{ marginRight: 1 }} />,
   },
   {
     name: 'Sentences',
     url: '/sentences',
     icon: <SubtitlesIcon sx={{ marginRight: 1 }} />,
+  },
+  {
+    name: 'Dictionary',
+    url: '/dictionary',
+    icon: <TranslateIcon sx={{ marginRight: 1 }} />,
   },
 ];
 
@@ -238,7 +238,13 @@ function Navbar() {
                   {pages.map((page) => (
                     <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                       {page.icon}
-                      <Link to={page.url}>
+                      <Link
+                        to={page.url}
+                        // style={{
+                        //   display: 'block',
+                        //   width: '100%',
+                        // }}
+                      >
                         <Typography
                           color={darkMode ? 'white' : 'black'}
                           textAlign="center"
