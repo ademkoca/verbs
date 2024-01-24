@@ -238,13 +238,7 @@ function Navbar() {
                   {pages.map((page) => (
                     <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                       {page.icon}
-                      <Link
-                        to={page.url}
-                        style={{
-                          display: 'block',
-                          width: '100%',
-                        }}
-                      >
+                      <Link to={page.url}>
                         <Typography
                           color={darkMode ? 'white' : 'black'}
                           textAlign="center"
