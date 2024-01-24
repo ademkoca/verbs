@@ -240,10 +240,10 @@ function Navbar() {
                       {page.icon}
                       <Link
                         to={page.url}
-                        // style={{
-                        //   display: 'block',
-                        //   width: '100%',
-                        // }}
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                        }}
                       >
                         <Typography
                           color={darkMode ? 'white' : 'black'}
