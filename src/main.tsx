@@ -10,10 +10,19 @@ import Sentences from './pages/sentences/index.tsx';
 import Progress from './pages/progress/index.tsx';
 import Profile from './pages/profile/index.tsx';
 import Chat from './pages/chat/index.tsx';
+import Home from './pages/home/index.tsx';
 
 const router = createHashRouter([
   {
     path: '/',
+    element: (
+      <Layout>
+        <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: '/verbs',
     element: (
       <Layout>
         <Verbs />

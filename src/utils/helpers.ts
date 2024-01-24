@@ -4,3 +4,10 @@ export const getFirstLetterCapitalized = (word: string): string => {
   }
   return word.charAt(0).toUpperCase() + word.slice(1);
 };
+
+export const accentColors = {
+  verbs: '#006D77',
+  articles: '#EF7A06',
+  sentences: '#9A5B5E',
+  dictionary: '#9BA2FF',
+};

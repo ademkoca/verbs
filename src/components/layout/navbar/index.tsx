@@ -21,18 +21,23 @@ import Person2Icon from '@mui/icons-material/Person2';
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import LogoutIcon from '@mui/icons-material/Logout';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import TranslateIcon from '@mui/icons-material/Translate';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import DescriptionIcon from '@mui/icons-material/Description';
+import HomeIcon from '@mui/icons-material/Home';
 import Divider from '@mui/material/Divider';
 import CustomSwitch from '../../switch';
 
 const pages = [
   {
-    name: 'Verbs',
+    name: 'Home',
     url: '/',
+    icon: <HomeIcon sx={{ marginRight: 1 }} />,
+  },
+  {
+    name: 'Verbs',
+    url: '/verbs',
     icon: <DescriptionIcon sx={{ marginRight: 1 }} />,
   },
   {
@@ -69,7 +74,7 @@ function Navbar() {
     signOut(auth)
       .then(() => {
         store.logout();
-        window.location.href = '/#/sign-in';
+        window.location.href = '/';
         // Sign-out successful.
       })
       .catch((error) => {
@@ -176,7 +181,14 @@ function Navbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}>
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              mr: 2,
+              cursor: 'pointer',
+            }}
+            onClick={() => (window.location.href = '/')}
+          >
             <img src="logo-clear-white-1.png" alt="Logo" width={150} />
           </Box>
 

@@ -41,7 +41,7 @@ export default function SignIn() {
             });
             const response = await res.json();
             token && store.login(response.data, token);
-            window.location.href = '/#/progress';
+            window.location.href = '/';
           } catch (err) {
             console.log(err);
             toast.error('Error occurred: ' + err.message);
