@@ -65,9 +65,9 @@ export default function Verbs() {
     generateNewVerb();
     setMessageClass('success');
     setIsLoading(false);
-    isHard
-      ? preteriteTextRef?.current?.focus()
-      : participleTextRef?.current?.focus();
+    // isHard
+    //   ? preteriteTextRef?.current?.focus()
+    //   : participleTextRef?.current?.focus();
   };
 
   const checkUserInput = (e: any) => {
@@ -314,7 +314,7 @@ export default function Verbs() {
                 <Grid item xs={12}>
                   <TextField
                     inputRef={preteriteTextRef}
-                    autoFocus={isHard}
+                    // autoFocus={isHard}
                     required
                     fullWidth
                     id="preterite"
@@ -331,7 +331,7 @@ export default function Verbs() {
               <Grid item xs={12}>
                 <TextField
                   inputRef={participleTextRef}
-                  autoFocus={!isHard}
+                  // autoFocus={!isHard}
                   required
                   fullWidth
                   id="particip"
