@@ -25,6 +25,7 @@ import TranslateIcon from '@mui/icons-material/Translate';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import DescriptionIcon from '@mui/icons-material/Description';
+import FeedbackIcon from '@mui/icons-material/Feedback';
 import HomeIcon from '@mui/icons-material/Home';
 import Divider from '@mui/material/Divider';
 import CustomSwitch from '../../switch';
@@ -126,6 +127,12 @@ function Navbar() {
     //   ) : (
     //     <NightlightOutlinedIcon sx={{ marginRight: 1 }} />
     //   ),
+    // },
+    // {
+    //   type: 'route',
+    //   label: 'Send feedback',
+    //   handler: logoutHandler,
+    //   icon: <FeedbackIcon sx={{ marginRight: 1 }} />,
     // },
     {
       type: 'setting',
@@ -235,7 +242,7 @@ function Navbar() {
               onClose={() => setIsDrawerOpen(false)}
             >
               <Box
-                py={2}
+                pt={2}
                 // mr={4}
                 mt={2}
                 display={'flex'}
@@ -292,12 +299,40 @@ function Navbar() {
                 </Box>
                 <Box>
                   <Divider sx={{ mb: 2 }} />
-                  <Box ml={2}>
-                    <CustomSwitch
-                      left={'Dark mode'}
-                      value={darkMode}
-                      onChange={handleToggleDarkMode}
-                    />
+                  <Box>
+                    <Box ml={2} my={3}>
+                      <CustomSwitch
+                        left={'Dark mode'}
+                        value={darkMode}
+                        onChange={handleToggleDarkMode}
+                      />
+                    </Box>
+                    <MenuItem onClick={handleCloseNavMenu} sx={{ padding: 0 }}>
+                      <Button
+                        href={'/#/send-feedback'}
+                        variant="contained"
+                        fullWidth
+                        color="primary"
+                        sx={{
+                          // mb: page.name === 'Home' ? 2 : 0,
+                          mb: 0,
+                          display: 'flex',
+                          justifyContent: 'start',
+                          color: 'white',
+                          borderRadius: 0,
+                          paddingY: 3,
+                          paddingX: 5,
+                        }}
+                      >
+                        <FeedbackIcon sx={{ marginRight: 1 }} />
+                        <Typography
+                          color={'white'}
+                          // textAlign="center"
+                        >
+                          Send feedback
+                        </Typography>
+                      </Button>
+                    </MenuItem>
                   </Box>
                 </Box>
               </Box>

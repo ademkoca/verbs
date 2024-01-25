@@ -11,6 +11,7 @@ import Progress from './pages/progress/index.tsx';
 import Profile from './pages/profile/index.tsx';
 import Chat from './pages/chat/index.tsx';
 import Home from './pages/home/index.tsx';
+import SendFeedback from './pages/send-feedback/index.tsx';
 
 const router = createHashRouter([
   {
@@ -98,6 +99,14 @@ const router = createHashRouter([
     element: (
       <Layout>
         <Chat />
+      </Layout>
+    ),
+  },
+  {
+    path: '/send-feedback',
+    element: (
+      <Layout>
+        <SendFeedback />
       </Layout>
     ),
   },
