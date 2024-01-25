@@ -267,11 +267,12 @@ function Navbar() {
                             mb: page.name === 'Home' ? 4 : 1,
                             display: 'flex',
                             justifyContent: 'start',
+                            color: 'white',
                           }}
                         >
                           {page.icon}
                           <Typography
-                            color={darkMode ? 'white' : 'black'}
+                            color={'white'}
                             // textAlign="center"
                           >
                             {page.name}
