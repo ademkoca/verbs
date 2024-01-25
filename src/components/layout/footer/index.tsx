@@ -5,11 +5,7 @@ const Footer = () => {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link
-        color="inherit"
-        href="https://ademkoca.github.io/portfolio-react"
-        target="_blank"
-      >
+      <Link color="primary" href="https://ademkoca.netlify.app" target="_blank">
         Adem Koca
       </Link>{' '}
       {new Date().getFullYear()}
