@@ -243,13 +243,17 @@ function Navbar() {
                 justifyContent={'space-between'}
                 height={'100%'}
               >
-                <Box>
+                <Box padding={0}>
                   <Typography variant="h6" marginBottom={2} ml={2}>
                     Jump to:{' '}
                   </Typography>
                   {pages.map((page) => {
                     return (
-                      <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                      <MenuItem
+                        key={page.name}
+                        onClick={handleCloseNavMenu}
+                        sx={{ padding: 0 }}
+                      >
                         {/* <Link to={page.url}>
                         <Typography
                           color={darkMode ? 'white' : 'black'}
@@ -264,10 +268,14 @@ function Navbar() {
                           fullWidth
                           color={page.name.toLowerCase()}
                           sx={{
-                            mb: page.name === 'Home' ? 4 : 1,
+                            // mb: page.name === 'Home' ? 2 : 0,
+                            mb: 0,
                             display: 'flex',
                             justifyContent: 'start',
                             color: 'white',
+                            borderRadius: 0,
+                            paddingY: 3,
+                            paddingX: 5,
                           }}
                         >
                           {page.icon}
