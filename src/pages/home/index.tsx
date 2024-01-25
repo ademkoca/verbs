@@ -157,10 +157,19 @@ export default function Home() {
                 variant="elevation"
                 sx={{
                   width: { xs: '100%', sm: '45%', md: '23%' },
+                  height: { md: '17rem', lg: '15rem' },
                   marginBottom: { xs: 5, sm: 0 },
                 }}
               >
-                <CardContent sx={{ textAlign: 'center' }}>
+                <CardContent
+                  sx={{
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    height: '100%',
+                  }}
+                >
                   <Typography variant="h5" sx={{ mb: 3 }}>
                     {getFirstLetterCapitalized(page.name)}
                   </Typography>
