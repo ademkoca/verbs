@@ -9,5 +9,5 @@ export const accentColors = {
   verbs: '#006D77',
   articles: '#EF7A06',
   sentences: '#9A5B5E',
-  dictionary: '#9BA2FF',
+  dictionary: '#3A0F80',
 };

@@ -291,18 +291,21 @@ function Navbar() {
               marginLeft: 2,
             }}
           >
-            {pages.map((page) => (
-              <Link
-                key={page.name}
-                to={page.url}
-                // onClick={handleCloseNavMenu}
-                // sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                <Typography textAlign="center" color={'white'} mt={1}>
-                  {page.name}
-                </Typography>
-              </Link>
-            ))}
+            {pages.map((page) => {
+              if (page.name !== 'Home')
+                return (
+                  <Link
+                    key={page.name}
+                    to={page.url}
+                    // onClick={handleCloseNavMenu}
+                    // sx={{ my: 2, color: 'white', display: 'block' }}
+                  >
+                    <Typography textAlign="center" color={'white'} mt={1}>
+                      {page.name}
+                    </Typography>
+                  </Link>
+                );
+            })}
           </Box>
           <Box display={'flex'} alignItems={'center'}>
             {store.user && (

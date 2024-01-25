@@ -56,7 +56,14 @@ export default function BasicTable({
               </TableCell>
               <TableCell align="right">{row.progress}</TableCell>
               <TableCell align="right">
-                <Button onClick={() => onReset(row.name)}>Reset</Button>
+                <Button
+                  variant="contained"
+                  color={row.name}
+                  onClick={() => onReset(row.name)}
+                  sx={{ color: 'white' }}
+                >
+                  Reset
+                </Button>
               </TableCell>
             </TableRow>
           ))}

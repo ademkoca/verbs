@@ -166,6 +166,7 @@ export default function Home() {
                   </Typography>
                   <Typography variant="body1">{page.description}</Typography>
                   <Button
+                    color={page.name.toLowerCase()}
                     variant="contained"
                     href={`/#${page.url}`}
                     sx={{ color: 'white', marginTop: 4 }}
@@ -245,6 +246,7 @@ export default function Home() {
                     0
                   )}%`}</Typography>
                   <Button
+                    color={p.name}
                     variant="contained"
                     href={`/#/${p.name}`}
                     sx={{ color: 'white', marginTop: 2 }}
