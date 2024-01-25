@@ -283,11 +283,13 @@ function Navbar() {
                 </Box>
                 <Box>
                   <Divider sx={{ mb: 2 }} />
-                  <CustomSwitch
-                    left={'Dark mode'}
-                    value={darkMode}
-                    onChange={handleToggleDarkMode}
-                  />
+                  <Box ml={2}>
+                    <CustomSwitch
+                      left={'Dark mode'}
+                      value={darkMode}
+                      onChange={handleToggleDarkMode}
+                    />
+                  </Box>
                 </Box>
               </Box>
             </Drawer>
