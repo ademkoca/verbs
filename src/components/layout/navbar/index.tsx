@@ -235,8 +235,8 @@ function Navbar() {
               onClose={() => setIsDrawerOpen(false)}
             >
               <Box
-                p={2}
-                mr={4}
+                py={2}
+                // mr={4}
                 mt={2}
                 display={'flex'}
                 flexDirection={'column'}
@@ -244,30 +244,42 @@ function Navbar() {
                 height={'100%'}
               >
                 <Box>
-                  <Typography variant="h6" marginBottom={2}>
+                  <Typography variant="h6" marginBottom={2} ml={2}>
                     Jump to:{' '}
                   </Typography>
-                  {pages.map((page) => (
-                    <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                      {page.icon}
-                      <Link to={page.url}>
+                  {pages.map((page) => {
+                    return (
+                      <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                        {/* <Link to={page.url}>
                         <Typography
                           color={darkMode ? 'white' : 'black'}
                           textAlign="center"
                         >
                           {page.name}
                         </Typography>
-                      </Link>
-                      {/* <Button href={'/#/' + page.url}>
-                        <Typography
-                          color={darkMode ? 'white' : 'black'}
-                          textAlign="center"
+                      </Link> */}
+                        <Button
+                          href={'/#' + page.url}
+                          variant="contained"
+                          fullWidth
+                          color={page.name.toLowerCase()}
+                          sx={{
+                            mb: page.name === 'Home' ? 4 : 1,
+                            display: 'flex',
+                            justifyContent: 'start',
+                          }}
                         >
-                          {page.name}
-                        </Typography>
-                      </Button> */}
-                    </MenuItem>
-                  ))}
+                          {page.icon}
+                          <Typography
+                            color={darkMode ? 'white' : 'black'}
+                            // textAlign="center"
+                          >
+                            {page.name}
+                          </Typography>
+                        </Button>
+                      </MenuItem>
+                    );
+                  })}
                 </Box>
                 <Box>
                   <Divider sx={{ mb: 2 }} />

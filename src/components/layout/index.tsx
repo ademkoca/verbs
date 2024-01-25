@@ -43,6 +43,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         // main: '#d90429',
         main: '#f95738',
       },
+      home: { main: '#090909' },
       verbs: { main: '#006d77' },
       articles: { main: '#EF7A06' },
       sentences: { main: '#9A5B5E' },
