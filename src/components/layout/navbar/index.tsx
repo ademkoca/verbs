@@ -371,7 +371,7 @@ function Navbar() {
               <>
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }} mr={2} mt={1}>
                   <Link to={'/chat'} style={{ color: 'white' }}>
-                    <ChatIcon />
+                    {darkMode ? <ChatIcon /> : <ChatOutlinedIcon />}
                   </Link>
                 </Box>
               </>
