@@ -38,13 +38,17 @@ export default function BasicTable({
   return (
     <TableContainer component={Paper} sx={{ mt: 5 }}>
       <Table sx={{ minWidth: 250 }} aria-label="simple table">
-        {/* <TableHead>
+        <TableHead>
           <TableRow>
-            <TableCell>Progress type</TableCell>
-            <TableCell align="right">Progress</TableCell>
-            <TableCell align="right">Reset</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Module</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }} align="right">
+              Correct / Guessed
+            </TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }} align="center">
+              Reset
+            </TableCell>
           </TableRow>
-        </TableHead> */}
+        </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow
