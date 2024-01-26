@@ -244,13 +244,27 @@ export default function Home() {
                   <Typography variant="h5" sx={{ mb: 3 }}>
                     {getFirstLetterCapitalized(p.name)}
                   </Typography>
-                  <CircularProgress
-                    variant="determinate"
-                    value={solvedPercentage}
-                    size={150}
-                    thickness={7}
-                    sx={{ color: accentColors[p.name] }}
-                  />
+                  <Box position={'relative'}>
+                    {/* Filled portion */}
+                    <CircularProgress
+                      variant="determinate"
+                      value={100}
+                      size={150}
+                      thickness={7}
+                      // color="grey"
+                      style={{
+                        color: store.darkMode ? 'grey' : 'lightgrey',
+                        position: 'absolute',
+                      }}
+                    />
+                    <CircularProgress
+                      variant="determinate"
+                      value={solvedPercentage}
+                      size={150}
+                      thickness={7}
+                      sx={{ color: accentColors[p.name], zIndex: 100 }}
+                    />
+                  </Box>
                   <Typography variant="h6">{`${solvedPercentage.toFixed(
                     0
                   )}%`}</Typography>
