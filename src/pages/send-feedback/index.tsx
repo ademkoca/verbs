@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,17 +8,24 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ToastContainer, toast } from 'react-toastify';
+import useGermanStore from '../../store';
 
 export default function SendFeedback() {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const store = useGermanStore();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [fullName, setFullName] = useState(
+    store.user ? store.user?.firstName + ' ' + store.user?.lastName : ''
+  );
+  const [email, setEmail] = useState(store.user?.email);
+  const [feedback, setFeedback] = useState('');
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    // const data = new FormData(event.currentTarget);
 
-    const email = data.get('email');
-    const fullName = data.get('full-name');
-    const feedback = data.get('feedback');
+    // const email = data.get('email');
+    // const fullName = data.get('full-name');
+    // const feedback = data.get('feedback');
 
     if (email !== '' && feedback !== '') {
       try {
@@ -101,6 +108,8 @@ export default function SendFeedback() {
             autoComplete="email"
             autoFocus
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -110,6 +119,8 @@ export default function SendFeedback() {
             type="text"
             id="full-name"
             autoComplete="full-name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -122,6 +133,8 @@ export default function SendFeedback() {
             type="text"
             id="feedback"
             autoComplete="feedback"
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
           />
           <Button
             type="submit"

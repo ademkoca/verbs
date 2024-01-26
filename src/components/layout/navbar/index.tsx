@@ -26,6 +26,7 @@ import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import HomeIcon from '@mui/icons-material/Home';
 import Divider from '@mui/material/Divider';
 import CustomSwitch from '../../switch';
@@ -387,6 +388,15 @@ function Navbar() {
                   <NightlightOutlinedIcon />
                 )}
               </Box>
+            </Box>
+            <Box
+              sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
+              mr={2}
+              mt={1}
+            >
+              <Link to={'/send-feedback'} style={{ color: 'white' }}>
+                {darkMode ? <FeedbackIcon /> : <FeedbackOutlinedIcon />}
+              </Link>
             </Box>
             {store.user && (
               <Box sx={{ flexGrow: 0 }}>
