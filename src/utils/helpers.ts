@@ -7,7 +7,7 @@ export const getFirstLetterCapitalized = (word: string): string => {
 
 export const accentColors = {
   verbs: '#006D77',
-  articles: '#EF7A06',
+  articles: '#DB7006',
   sentences: '#9A5B5E',
-  dictionary: '#3A0F80',
+  dictionary: '#022550',
 };

@@ -44,10 +44,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
         main: '#f95738',
       },
       home: { main: '#090909' },
-      verbs: { main: '#006d77' },
-      articles: { main: '#EF7A06' },
+      verbs: { main: '#006D77' },
+      articles: { main: '#DB7006' },
       sentences: { main: '#9A5B5E' },
-      dictionary: { main: '#3A0F80' },
+      dictionary: { main: '#022550' },
     },
   });
   const queryClient = new QueryClient();
