@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { sentencesWithoutParts } from '../../../sentences';
@@ -64,7 +62,7 @@ export default function Sentences() {
         }, 3000);
       } else {
         setMessageClass('error');
-        setSuccessMsg(`${userInput?.join(' ')} is incorrect`);
+        setSuccessMsg(`Incorrect: ${userInput?.join(' ')}`);
         // setUserInput(null);
         setIsWrongAnswer(true);
 
@@ -337,7 +335,7 @@ export default function Sentences() {
               variant="outlined"
               sx={{ mt: 0, mb: 2 }}
               onClick={reset}
-              disabled={isLoading}
+              disabled={isLoading || isWrongAnswer}
             >
               Reset
             </Button>
@@ -347,7 +345,7 @@ export default function Sentences() {
               variant="outlined"
               sx={{ mt: 0, mb: 2 }}
               onClick={resetInputs}
-              disabled={isLoading}
+              disabled={isLoading || isWrongAnswer}
             >
               Skip
             </Button>

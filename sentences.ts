@@ -146,11 +146,6 @@ export const sentencesWithoutParts = [
     translation:
       'The vacation in Italy was beautiful; we visited many historical places.',
   },
-  // {
-  //   original:
-  //     'Ich arbeite hart, um meine Ziele zu erreichen und erfolgreich zu sein.',
-  //   translation: 'I work hard to achieve my goals and be successful.',
-  // },
   {
     original: 'Im Winter trage ich gerne warme Pullover und trinke heißen Tee.',
     translation: 'In winter, I like to wear warm sweaters and drink hot tea.',
@@ -165,12 +160,6 @@ export const sentencesWithoutParts = [
       'Der Flug nach Paris dauert ungefähr zwei Stunden, und dann erkunden wir die Stadt.',
     translation:
       'The flight to Paris takes about two hours, and then we explore the city.',
-  },
-  {
-    original:
-      'In der Bibliothek finde ich immer interessante Bücher, die ich lesen möchte.',
-    translation:
-      'I always find interesting books in the library that I want to read.',
   },
   {
     original:
@@ -199,12 +188,6 @@ export const sentencesWithoutParts = [
     original: 'Meine Katze schläft den ganzen Tag und wird nachts aktiv.',
     translation: 'My cat sleeps all day and becomes active at night.',
   },
-  // {
-  //   original:
-  //     'Wir planen eine Reise in die Berge, um die Natur zu genießen und zu wandern.',
-  //   translation:
-  //     'We are planning a trip to the mountains to enjoy nature and hike.',
-  // },
   {
     original:
       'Der neue Film im Kino hat positive Kritiken bekommen, also werden wir ihn sehen.',
@@ -227,11 +210,6 @@ export const sentencesWithoutParts = [
     translation:
       'My brother celebrated his birthday yesterday and received many gifts.',
   },
-  // {
-  //   original:
-  //     'Es ist wichtig, regelmäßig Sport zu treiben, um gesund zu bleiben.',
-  //   translation: 'It is important to exercise regularly to stay healthy.',
-  // },
   {
     original:
       'Das Restaurant, in dem wir gestern gegessen haben, hatte köstliches Essen.',
@@ -251,11 +229,6 @@ export const sentencesWithoutParts = [
       'Der Park in der Nähe meines Hauses ist ein schöner Ort zum Spazierengehen.',
     translation: 'The park near my house is a beautiful place for a walk.',
   },
-  // {
-  //   original:
-  //     'Meine Schwester und ich teilen uns ein Zimmer, aber wir verstehen uns gut.',
-  //   translation: 'My sister and I share a room, but we get along well.',
-  // },
   {
     original:
       'Ich höre gerne Musik aus verschiedenen Genres, um meinen Musikgeschmack zu erweitern.',
@@ -270,12 +243,6 @@ export const sentencesWithoutParts = [
   {
     original: 'Der Sonnenuntergang am Strand ist immer atemberaubend schön.',
     translation: 'The sunset at the beach is always breathtakingly beautiful.',
-  },
-  {
-    original:
-      'In meiner Freizeit male ich gerne, um meiner kreativen Seite Ausdruck zu verleihen.',
-    translation:
-      'In my free time, I like to paint to express my creative side.',
   },
   {
     original:
@@ -295,12 +262,6 @@ export const sentencesWithoutParts = [
     translation:
       'The movie I watched yesterday was very sad but also touching.',
   },
-  // {
-  //   original:
-  //     'Im Frühling blühen die Blumen, und die Luft riecht nach frischem Grün.',
-  //   translation:
-  //     'In spring, the flowers bloom, and the air smells of fresh greenery.',
-  // },
   {
     original:
       'Mein Lieblingssport ist Schwimmen, weil es erfrischend und gesund ist.',
@@ -337,12 +298,6 @@ export const sentencesWithoutParts = [
     translation:
       'Yesterday, we discovered a new hiking trail that leads through a picturesque forest.',
   },
-  // {
-  //   original:
-  //     'Im Sommer gehe ich gerne campen, um die Natur zu erleben und am Lagerfeuer zu sitzen.',
-  //   translation:
-  //     'In the summer, I like to go camping to experience nature and sit by the campfire.',
-  // },
   {
     original:
       'Das Konzertticket, das ich gewonnen habe, ermöglicht mir den Zugang zur exklusiven VIP-Lounge.',
@@ -475,12 +430,7 @@ export const sentencesWithoutParts = [
     translation:
       'The Saturday market offers fresh fruits, vegetables, and handmade products from local farmers.',
   },
-  // {
-  //   original:
-  //     'In der Pause zwischen den Vorlesungen treffe ich mich oft mit Freunden in der Cafeteria der Universität.',
-  //   translation:
-  //     'During the break between lectures, I often meet up with friends in the university cafeteria.',
-  // },
+
   {
     original:
       'Die Sommerferien verbringen wir dieses Jahr in einem idyllischen Ferienhaus an der Küste.',
@@ -523,12 +473,7 @@ export const sentencesWithoutParts = [
     translation:
       'The library near my place is a quiet space where I enjoy reading and studying.',
   },
-  // {
-  //   original:
-  //     'Im Frühjahr blühen die Kirschbäume in meiner Nachbarschaft, und die Blüten sehen wunderschön aus.',
-  //   translation:
-  //     'In spring, the cherry trees in my neighborhood blossom, and the flowers look beautiful.',
-  // },
+
   {
     original:
       'Mein Lieblingsurlaubsort ist ein abgelegener Strand, wo das Wasser kristallklar und der Sand fein ist.',
@@ -559,12 +504,7 @@ export const sentencesWithoutParts = [
     translation:
       'The view from my balcony over the city at sunset is simply enchanting.',
   },
-  // {
-  //   original:
-  //     'Ich habe kürzlich angefangen, Yoga zu praktizieren, um meine Flexibilität und Entspannung zu fördern.',
-  //   translation:
-  //     'I recently started practicing yoga to enhance my flexibility and relaxation.',
-  // },
+
   {
     original:
       'In meiner Jugend habe ich an einem Schüleraustausch teilgenommen und viele internationale Freundschaften geschlossen.',
@@ -607,12 +547,7 @@ export const sentencesWithoutParts = [
     translation:
       'I have a collection of nostalgic vinyl records that I play on my old turntable.',
   },
-  // {
-  //   original:
-  //     'Das jährliche Stadtfest zieht viele Besucher an und bietet eine Vielzahl von Aktivitäten und Unterhaltung.',
-  //   translation:
-  //     'The annual city festival attracts many visitors and offers a variety of activities and entertainment.',
-  // },
+
   {
     original:
       'In meiner Kindheit habe ich gerne im Garten Verstecken gespielt und die Natur erkundet.',
@@ -631,12 +566,6 @@ export const sentencesWithoutParts = [
     translation:
       'Last night, we saw a live performance of a local band in the club, and they thrilled the audience.',
   },
-  // {
-  //   original:
-  //     'Das historische Schloss, das hoch auf dem Hügel thront, bietet eine beeindruckende Aussicht auf das Tal.',
-  //   translation:
-  //     'The historic castle, perched high on the hill, offers an impressive view of the valley.',
-  // },
   {
     original:
       'Die Fahrt mit dem Heißluftballon ermöglichte uns einen einzigartigen Blick auf die malerische Landschaft.',
@@ -655,36 +584,13 @@ export const sentencesWithoutParts = [
     translation:
       'The narrow streets in the old town are adorned with flowers and have a picturesque charm.',
   },
-  // {
-  //   original:
-  //     'Die Teilnahme am Marathon war eine Herausforderung, aber das Gefühl, das Ziel zu erreichen, war unbezahlbar.',
-  //   translation:
-  //     'Participating in the marathon was a challenge, but the feeling of reaching the finish line was priceless.',
-  // },
-  // {
-  //   original:
-  //     'In der Bibliothek gibt es einen ruhigen Lesesaal, der perfekt für konzentriertes Studieren ist.',
-  //   translation:
-  //     'In the library, there is a quiet reading room that is perfect for focused studying.',
-  // },
+
   {
     original:
       'Die jährliche Kunstausstellung präsentiert Werke lokaler Künstler und zieht Kunstliebhaber aus der ganzen Region an.',
     translation:
       'The annual art exhibition showcases works by local artists and attracts art enthusiasts from the entire region.',
   },
-  // {
-  //   original:
-  //     'Mein Lieblingsplatz in der Natur ist ein abgelegener See, der von dichten Wäldern umgeben ist.',
-  //   translation:
-  //     'My favorite spot in nature is a secluded lake surrounded by dense forests.',
-  // },
-  // {
-  //   original:
-  //     'Die Fahrradtour durch die Weinberge bot eine herrliche Aussicht auf die Rebstöcke und das umliegende Tal.',
-  //   translation:
-  //     'The bike tour through the vineyards offered a splendid view of the grapevines and the surrounding valley.',
-  // },
   {
     original:
       'Im Winter bauen wir eine Schneefamilie im Garten, und es ist immer ein fröhliches Familienprojekt.',
@@ -703,12 +609,7 @@ export const sentencesWithoutParts = [
     translation:
       'The starry skies in rural areas are particularly clear, and one can identify many constellations.',
   },
-  // {
-  //   original:
-  //     'Die Wanderung durch den Nationalpark führte uns zu einem idyllischen Wasserfall, der in der Sonne glitzerte.',
-  //   translation:
-  //     'The hike through the national park led us to an idyllic waterfall that glistened in the sun.',
-  // },
+
   {
     original:
       'In der Stadt gibt es ein altes Schloss, das als Museum dient und eine beeindruckende Sammlung beherbergt.',
