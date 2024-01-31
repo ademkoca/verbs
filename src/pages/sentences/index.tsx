@@ -130,19 +130,21 @@ export default function Sentences() {
     generateNewArticle();
   }, []);
   const generateNewArticle = () => {
-    const random = Math.floor(
-      Math.random() * (totalSentences - usedItems.length)
-    );
-    try {
-      if (!usedItems.includes(data[random].original)) {
-        setActiveSentence(data[random]);
-        setActiveSentenceCopy(data[random]);
-        setShuffled(shuffleArray(data[random].original.split(' ')));
+    if (usedItems.length !== totalSentences) {
+      const random = Math.floor(
+        Math.random() * (totalSentences - usedItems.length)
+      );
+      try {
+        if (!usedItems.includes(data[random].original)) {
+          setActiveSentence(data[random]);
+          setActiveSentenceCopy(data[random]);
+          setShuffled(shuffleArray(data[random].original.split(' ')));
 
-        usedItems.push(data[random].original);
-      } else generateNewArticle();
-    } catch (e) {
-      setIsMaxNumberReached(true);
+          usedItems.push(data[random].original);
+        } else generateNewArticle();
+      } catch (e) {
+        setIsMaxNumberReached(true);
+      }
     }
   };
 

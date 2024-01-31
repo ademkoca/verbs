@@ -64,20 +64,23 @@ export default function Dictionary() {
   const [isHard, setIsHard] = useState<boolean>(false);
   const [usedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
   const [isMaxNumberReached, setIsMaxNumberReached] = useState<boolean>(false);
   useEffect(() => {
     generateNewWord();
   }, []);
   const generateNewWord = () => {
-    const random = Math.floor(Math.random() * (totalWords - usedItems.length));
-    try {
-      if (!usedItems.includes(words[random].original)) {
-        setActiveWord(words[random]);
-        usedItems.push(words[random].original);
-      } else generateNewWord();
-    } catch (e) {
-      setIsMaxNumberReached(true);
+    if (usedItems.length !== totalWords) {
+      const random = Math.floor(
+        Math.random() * (totalWords - usedItems.length)
+      );
+      try {
+        if (!usedItems.includes(words[random].original)) {
+          setActiveWord(words[random]);
+          usedItems.push(words[random].original);
+        } else generateNewWord();
+      } catch (e) {
+        setIsMaxNumberReached(true);
+      }
     }
   };
 

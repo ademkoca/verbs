@@ -139,14 +139,18 @@ export default function Articles() {
     if (store.user) updateUser();
   }, [articlesProgress?.used.length]);
   const generateNewArticle = () => {
-    const random = Math.floor(Math.random() * (totalNouns - usedItems.length));
-    try {
-      if (!usedItems.includes(data[random].original)) {
-        setActiveNoun(data[random]);
-        usedItems.push(data[random].original);
-      } else generateNewArticle();
-    } catch (e) {
-      setIsMaxNumberReached(true);
+    if (usedItems.length !== totalNouns) {
+      const random = Math.floor(
+        Math.random() * (totalNouns - usedItems.length)
+      );
+      try {
+        if (!usedItems.includes(data[random].original)) {
+          setActiveNoun(data[random]);
+          usedItems.push(data[random].original);
+        } else generateNewArticle();
+      } catch (e) {
+        setIsMaxNumberReached(true);
+      }
     }
   };
 

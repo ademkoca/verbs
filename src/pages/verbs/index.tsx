@@ -55,14 +55,18 @@ export default function Verbs() {
     generateNewVerb();
   }, []);
   const generateNewVerb = () => {
-    const random = Math.floor(Math.random() * (totalVerbs - usedItems.length));
-    try {
-      if (!usedItems.includes(data[random].original)) {
-        setActiveVerb(data[random]);
-        usedItems.push(data[random].original);
-      } else generateNewVerb();
-    } catch (e) {
-      setIsMaxNumberReached(true);
+    if (usedItems.length !== totalVerbs) {
+      const random = Math.floor(
+        Math.random() * (totalVerbs - usedItems.length)
+      );
+      try {
+        if (!usedItems.includes(data[random].original)) {
+          setActiveVerb(data[random]);
+          usedItems.push(data[random].original);
+        } else generateNewVerb();
+      } catch (e) {
+        setIsMaxNumberReached(true);
+      }
     }
   };
 

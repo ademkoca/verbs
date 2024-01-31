@@ -22,55 +22,16 @@ import useGermanStore from '../../store';
 import { Alert, CircularProgress } from '@mui/material';
 import { getFirstLetterCapitalized } from '../../utils/helpers';
 import verbsWithTranslation from '../../../verbsWithTranslation';
-import nouns from '../../../../nouns';
+
 import { sentencesWithoutParts } from '../../../sentences';
 import nounsWithMultipleTranslations from '../../../dictionary';
 import { accentColors } from '../../utils/helpers';
+import nounsWithTranslation from '../../../nouns';
 
 export default function Home() {
   const store = useGermanStore();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const [isLoading, setIsLoading] = React.useState(false);
   const [greeting, setGreeting] = React.useState('Hello');
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    const email = data.get('email');
-    const password = data.get('password');
-    if (email !== '' && password !== '') {
-      try {
-        setIsLoading(true);
-        const firebaseLogin = signInWithEmailAndPassword(auth, email, password);
-        const user = (await firebaseLogin).user;
-        const { accessToken } = user;
-        const token = await auth.currentUser?.getIdToken(true);
-
-        if (accessToken) {
-          try {
-            const res = await fetch(`${apiUrl}/auth/signin`, {
-              headers: { Authorization: 'Bearer ' + token },
-            });
-            const response = await res.json();
-            token && store.login(response.data, token);
-            window.location.href = '/#/progress';
-          } catch (err) {
-            console.log(err);
-            toast.error('Error occurred: ' + err.message);
-          }
-        }
-      } catch (err) {
-        if (err.code === 'auth/wrong-password') {
-          toast.error('Wrong password');
-        }
-        if (err.code === 'auth/user-not-found') {
-          toast.error('User not found');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    } else toast.error('Please enter email and password');
-  };
 
   React.useEffect(() => {
     const pingAPI = async () => {
@@ -90,11 +51,11 @@ export default function Home() {
   const totalLength = {
     verbs: verbsWithTranslation.length,
     // verbs: 2.5,
-    articles: nounsWithMultipleTranslations.length,
+    articles: nounsWithTranslation.length,
     // articles: 4,
     sentences: sentencesWithoutParts.length,
     // sentences: 3,
-    dictionary: verbsWithTranslation.length,
+    dictionary: nounsWithMultipleTranslations.length,
     // dictionary: 3,
   };
   const pages = [
@@ -234,6 +195,7 @@ export default function Home() {
               (p.used.length / totalLength[p.name]) * 100;
             return (
               <Card
+                key={p.name}
                 variant="elevation"
                 sx={{
                   width: { xs: '100%', sm: '45%', md: '23%' },
@@ -271,10 +233,16 @@ export default function Home() {
                   <Button
                     color={p.name}
                     variant="contained"
-                    href={`/#/${p.name}`}
+                    href={`/#/${
+                      solvedPercentage === 100 ? 'progress' : p.name
+                    }`}
                     sx={{ color: 'white', marginTop: 2 }}
                   >
-                    Continue practicing
+                    {solvedPercentage === 100
+                      ? 'Reset progress'
+                      : solvedPercentage === 0
+                      ? 'Start practicing'
+                      : 'Continue practicing'}
                   </Button>
                 </CardContent>
               </Card>
