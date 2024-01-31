@@ -2,22 +2,13 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { auth } from '../../utils/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import HomeIcon from '@mui/icons-material/Home';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
-import { ToastContainer, toast } from 'react-toastify';
 import useGermanStore from '../../store';
 import { Alert, CircularProgress } from '@mui/material';
 import { getFirstLetterCapitalized } from '../../utils/helpers';
@@ -25,8 +16,8 @@ import verbsWithTranslation from '../../../verbsWithTranslation';
 
 import { sentencesWithoutParts } from '../../../sentences';
 import nounsWithMultipleTranslations from '../../../dictionary';
-import { accentColors } from '../../utils/helpers';
 import nounsWithTranslation from '../../../nouns';
+import { ButtonColors } from '../../types/interfaces';
 
 export default function Home() {
   const store = useGermanStore();
@@ -48,7 +39,10 @@ export default function Home() {
       setGreeting('Good evening');
     }
   }, []);
-  const totalLength = {
+  type Lengths = {
+    [key: string]: number;
+  };
+  const totalLength: Lengths = {
     verbs: verbsWithTranslation.length,
     // verbs: 2.5,
     articles: nounsWithTranslation.length,
@@ -58,6 +52,7 @@ export default function Home() {
     dictionary: nounsWithMultipleTranslations.length,
     // dictionary: 3,
   };
+  console.log(totalLength['verbs']);
   const pages = [
     {
       name: 'Verbs',
@@ -136,7 +131,7 @@ export default function Home() {
                   </Typography>
                   <Typography variant="body1">{page.description}</Typography>
                   <Button
-                    color={page.name.toLowerCase()}
+                    color={page.name.toLowerCase() as ButtonColors}
                     variant="contained"
                     href={`/#${page.url}`}
                     sx={{ color: 'white', marginTop: 4 }}
@@ -224,14 +219,14 @@ export default function Home() {
                       value={solvedPercentage}
                       size={150}
                       thickness={7}
-                      sx={{ color: accentColors[p.name], zIndex: 100 }}
+                      sx={{ color: p.name as ButtonColors, zIndex: 100 }}
                     />
                   </Box>
                   <Typography variant="h6">{`${solvedPercentage.toFixed(
                     0
                   )}%`}</Typography>
                   <Button
-                    color={p.name}
+                    color={p.name as ButtonColors}
                     variant="contained"
                     href={`/#/${
                       solvedPercentage === 100 ? 'progress' : p.name
