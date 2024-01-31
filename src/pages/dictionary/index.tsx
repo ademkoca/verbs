@@ -15,6 +15,7 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import nounsWithMultipleTranslations from '../../../dictionary';
 import useGermanStore from '../../store';
 import { auth } from '../../utils/firebase';
+import { Alert } from '@mui/material';
 
 export default function Dictionary() {
   const store = useGermanStore();
@@ -64,15 +65,20 @@ export default function Dictionary() {
   const [usedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
+  const [isMaxNumberReached, setIsMaxNumberReached] = useState<boolean>(false);
   useEffect(() => {
     generateNewWord();
   }, []);
   const generateNewWord = () => {
-    const random = Math.floor(Math.random() * totalWords);
-    if (!usedItems.includes(words[random].original)) {
-      setActiveWord(words[random]);
-      usedItems.push(words[random].original);
-    } else generateNewWord();
+    const random = Math.floor(Math.random() * (totalWords - usedItems.length));
+    try {
+      if (!usedItems.includes(words[random].original)) {
+        setActiveWord(words[random]);
+        usedItems.push(words[random].original);
+      } else generateNewWord();
+    } catch (e) {
+      setIsMaxNumberReached(true);
+    }
   };
 
   const handleChange = (
@@ -221,7 +227,7 @@ export default function Dictionary() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '70dvh',
+          height: !isMaxNumberReached ? '70dvh' : '50dvh',
         }}
       >
         <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
@@ -246,125 +252,145 @@ export default function Dictionary() {
             Guess the correct translation of the given word
           </Typography>
         </Box>
-        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-          <Box my={2}>
-            <Typography>
-              {dictionaryProgress?.correctGuesses ?? correctGuesses}/
-              {dictionaryProgress?.totalGuesses ?? totalGuesses} correct
+        {!isMaxNumberReached ? (
+          <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+            <Box my={2}>
+              <Typography>
+                {dictionaryProgress?.correctGuesses ?? correctGuesses}/
+                {dictionaryProgress?.totalGuesses ?? totalGuesses} correct
+              </Typography>
+            </Box>
+            <Typography component="h5" variant="h5">
+              {activeWord?.article + ' ' + activeWord?.original}
             </Typography>
-          </Box>
-          <Typography component="h5" variant="h5">
-            {activeWord?.article + ' ' + activeWord?.original}
-          </Typography>
-          {successMsg && (
-            <Typography
-              component="h6"
-              variant="h6"
-              color={messageClass === 'success' ? 'green' : 'error'}
+            {successMsg && (
+              <Typography
+                component="h6"
+                variant="h6"
+                color={messageClass === 'success' ? 'green' : 'error'}
+              >
+                {successMsg}
+              </Typography>
+            )}
+            {messageClass !== 'success' && (
+              <Typography color="green" sx={{ mt: 2 }}>
+                correct: {correctAnswer}
+              </Typography>
+            )}
+            <Box
+              component="form"
+              noValidate
+              onSubmit={checkUserInput}
+              sx={{ mt: 3 }}
             >
-              {successMsg}
-            </Typography>
-          )}
-          {messageClass !== 'success' && (
-            <Typography color="green" sx={{ mt: 2 }}>
-              correct: {correctAnswer}
-            </Typography>
-          )}
-          <Box
-            component="form"
-            noValidate
-            onSubmit={checkUserInput}
-            sx={{ mt: 3 }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={6} sm={6}>
-                <CustomSwitch
-                  value={isHard}
-                  onChange={handleToggleLevel}
-                  left={'Easy'}
-                  right={'Hard'}
-                  options={[
-                    {
-                      title: 'Easy',
-                      description:
-                        'Pick the translation from the 3 possible options',
-                    },
-                    {
-                      title: 'Hard',
-                      description: 'Enter the translation manually',
-                    },
-                  ]}
-                />
-              </Grid>
-              {isHard && (
-                <Grid item xs={12}>
-                  <TextField
-                    inputRef={textRef}
-                    autoFocus={!isHard}
-                    required
-                    fullWidth
-                    id="translation"
-                    label="Translation"
-                    name="translation"
-                    autoComplete="translation"
-                    value={userInput}
-                    onChange={(e) => setUserInput(e.target.value.toLowerCase())}
+              <Grid container spacing={2}>
+                <Grid item xs={6} sm={6}>
+                  <CustomSwitch
+                    value={isHard}
+                    onChange={handleToggleLevel}
+                    left={'Easy'}
+                    right={'Hard'}
+                    options={[
+                      {
+                        title: 'Easy',
+                        description:
+                          'Pick the translation from the 3 possible options',
+                      },
+                      {
+                        title: 'Hard',
+                        description: 'Enter the translation manually',
+                      },
+                    ]}
                   />
                 </Grid>
-              )}
-              {!isHard && (
-                <Grid item xs={12}>
-                  <ToggleButtonGroup
-                    color="primary"
-                    value={userInput}
-                    exclusive
-                    onChange={handleChange}
-                    aria-label="Platform"
-                    fullWidth
-                    sx={{ mb: 3 }}
-                  >
-                    {activeWord?.translation.map((w) => (
-                      <ToggleButton
-                        key={w.possibleTranslation}
-                        disabled={isLoading}
-                        value={w.possibleTranslation}
-                      >
-                        {w.possibleTranslation}
-                      </ToggleButton>
-                    ))}
-                    {/* <ToggleButton disabled={isLoading} value="die">
+                {isHard && (
+                  <Grid item xs={12}>
+                    <TextField
+                      inputRef={textRef}
+                      autoFocus={!isHard}
+                      required
+                      fullWidth
+                      id="translation"
+                      label="Translation"
+                      name="translation"
+                      autoComplete="translation"
+                      value={userInput}
+                      onChange={(e) =>
+                        setUserInput(e.target.value.toLowerCase())
+                      }
+                    />
+                  </Grid>
+                )}
+                {!isHard && (
+                  <Grid item xs={12}>
+                    <ToggleButtonGroup
+                      color="primary"
+                      value={userInput}
+                      exclusive
+                      onChange={handleChange}
+                      aria-label="Platform"
+                      fullWidth
+                      sx={{ mb: 3 }}
+                    >
+                      {activeWord?.translation.map((w) => (
+                        <ToggleButton
+                          key={w.possibleTranslation}
+                          disabled={isLoading}
+                          value={w.possibleTranslation}
+                        >
+                          {w.possibleTranslation}
+                        </ToggleButton>
+                      ))}
+                      {/* <ToggleButton disabled={isLoading} value="die">
                       die
                     </ToggleButton>
                     <ToggleButton disabled={isLoading} value="das">
                       das
                     </ToggleButton> */}
-                  </ToggleButtonGroup>
-                </Grid>
+                    </ToggleButtonGroup>
+                  </Grid>
+                )}
+              </Grid>
+              {isHard && (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  disabled={isLoading}
+                >
+                  Check
+                </Button>
               )}
-            </Grid>
-            {isHard && (
               <Button
-                type="submit"
+                type="button"
                 fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                variant="outlined"
+                sx={{ mt: 0, mb: 2 }}
+                onClick={resetInputs}
                 disabled={isLoading}
               >
-                Check
+                Skip
               </Button>
-            )}
-            <Button
-              type="button"
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 0, mb: 2 }}
-              onClick={resetInputs}
-              disabled={isLoading}
-            >
-              Skip
-            </Button>
+            </Box>
           </Box>
-        </Box>
+        ) : (
+          <Alert severity="success" sx={{ mt: { xs: 0, md: 3 } }}>
+            <Typography mb={2}>
+              CONGRATS! You've guessed{' '}
+              {dictionaryProgress?.correctGuesses ?? correctGuesses} out of{' '}
+              {dictionaryProgress?.totalGuesses ?? totalGuesses} words correct.
+            </Typography>
+            <Typography>
+              {' '}
+              You can
+              <Button variant="text" href="/#/progress" size="small">
+                Reset
+              </Button>
+              your progress and start again
+            </Typography>
+          </Alert>
+        )}
       </Box>
     </Container>
   );

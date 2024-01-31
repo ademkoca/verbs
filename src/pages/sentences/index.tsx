@@ -8,6 +8,7 @@ import { sentencesWithoutParts } from '../../../sentences';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import useGermanStore from '../../store';
 import { auth } from '../../utils/firebase';
+import { Alert } from '@mui/material';
 
 export default function Sentences() {
   const store = useGermanStore();
@@ -49,6 +50,7 @@ export default function Sentences() {
   const [shuffled, setShuffled] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isWrongAnswer, setIsWrongAnswer] = useState<boolean>(false);
+  const [isMaxNumberReached, setIsMaxNumberReached] = useState<boolean>(false);
 
   const checkUserInput = () => {
     if (shuffled?.length === 0) {
@@ -128,14 +130,20 @@ export default function Sentences() {
     generateNewArticle();
   }, []);
   const generateNewArticle = () => {
-    const random = Math.floor(Math.random() * totalSentences);
-    if (!usedItems.includes(data[random].original)) {
-      setActiveSentence(data[random]);
-      setActiveSentenceCopy(data[random]);
-      setShuffled(shuffleArray(data[random].original.split(' ')));
+    const random = Math.floor(
+      Math.random() * (totalSentences - usedItems.length)
+    );
+    try {
+      if (!usedItems.includes(data[random].original)) {
+        setActiveSentence(data[random]);
+        setActiveSentenceCopy(data[random]);
+        setShuffled(shuffleArray(data[random].original.split(' ')));
 
-      usedItems.push(data[random].original);
-    } else generateNewArticle();
+        usedItems.push(data[random].original);
+      } else generateNewArticle();
+    } catch (e) {
+      setIsMaxNumberReached(true);
+    }
   };
 
   useEffect(() => {
@@ -220,83 +228,84 @@ export default function Sentences() {
             Put the words in the correct order to form a sentence
           </Typography>
         </Box>
-        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-          <Box my={2}>
-            <Typography>
-              {sentencesProgress?.correctGuesses ?? correctGuesses}/
-              {sentencesProgress?.totalGuesses ?? totalGuesses} correct
-            </Typography>
-          </Box>
-          <Typography component="h5" variant="h5">
-            {activeSentence?.translation}
-          </Typography>
-          <Box
-            maxWidth={'sm'}
-            flexDirection={'column'}
-            rowGap={5}
-            minWidth={'100%'}
-          >
-            <Box
-              display={'flex'}
-              flexDirection={'row'}
-              justifyContent={'center'}
-              flexWrap={'wrap'}
-              my={5}
-              gap={2}
-            >
-              {userInput?.map((i) => (
-                <Button
-                  style={{ textTransform: 'none' }}
-                  key={i}
-                  variant="contained"
-                  onClick={() => handleUserInputClick(i)}
-                >
-                  {i}
-                </Button>
-              ))}
+        {!isMaxNumberReached ? (
+          <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+            <Box my={2}>
+              <Typography>
+                {sentencesProgress?.correctGuesses ?? correctGuesses}/
+                {sentencesProgress?.totalGuesses ?? totalGuesses} correct
+              </Typography>
             </Box>
+            <Typography component="h5" variant="h5">
+              {activeSentence?.translation}
+            </Typography>
             <Box
-              display={'flex'}
-              flexDirection={'row'}
-              gap={2}
-              justifyContent={'center'}
-              flexWrap={'wrap'}
-              mb={2}
+              maxWidth={'sm'}
+              flexDirection={'column'}
+              rowGap={5}
+              minWidth={'100%'}
             >
-              {shuffled?.map((p) => (
-                <Button
-                  style={{ textTransform: 'none' }}
-                  key={p}
-                  variant="outlined"
-                  onClick={() => handleActiveSentenceClick(p)}
-                >
-                  {p}
-                </Button>
-              ))}
+              <Box
+                display={'flex'}
+                flexDirection={'row'}
+                justifyContent={'center'}
+                flexWrap={'wrap'}
+                my={5}
+                gap={2}
+              >
+                {userInput?.map((i) => (
+                  <Button
+                    style={{ textTransform: 'none' }}
+                    key={i}
+                    variant="contained"
+                    onClick={() => handleUserInputClick(i)}
+                  >
+                    {i}
+                  </Button>
+                ))}
+              </Box>
+              <Box
+                display={'flex'}
+                flexDirection={'row'}
+                gap={2}
+                justifyContent={'center'}
+                flexWrap={'wrap'}
+                mb={2}
+              >
+                {shuffled?.map((p) => (
+                  <Button
+                    style={{ textTransform: 'none' }}
+                    key={p}
+                    variant="outlined"
+                    onClick={() => handleActiveSentenceClick(p)}
+                  >
+                    {p}
+                  </Button>
+                ))}
+              </Box>
             </Box>
-          </Box>
-          {successMsg && (
-            <Typography
-              mb={2}
-              component="h6"
-              variant="h6"
-              color={messageClass === 'success' ? 'green' : 'error'}
+            {successMsg && (
+              <Typography
+                mb={2}
+                component="h6"
+                variant="h6"
+                color={messageClass === 'success' ? 'green' : 'error'}
+              >
+                {successMsg}
+              </Typography>
+            )}
+            {messageClass !== 'success' && (
+              <Typography component="h6" variant="h6" color="green">
+                correct: {activeSentence?.original}
+              </Typography>
+            )}
+            <Box
+              component="form"
+              noValidate
+              // onSubmit={checkUserInput}
+              sx={{ mt: 3 }}
             >
-              {successMsg}
-            </Typography>
-          )}
-          {messageClass !== 'success' && (
-            <Typography component="h6" variant="h6" color="green">
-              correct: {activeSentence?.original}
-            </Typography>
-          )}
-          <Box
-            component="form"
-            noValidate
-            // onSubmit={checkUserInput}
-            sx={{ mt: 3 }}
-          >
-            {/* <Grid container spacing={2}>
+              {/* <Grid container spacing={2}>
               <Grid item xs={6} sm={6}>
                 <CustomSwitch
                   value={includeTranslation}
@@ -305,52 +314,70 @@ export default function Sentences() {
                 />
               </Grid>
             </Grid> */}
-            {!isWrongAnswer && (
+              {!isWrongAnswer && (
+                <Button
+                  type="button"
+                  onClick={checkUserInput}
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  disabled={shuffled?.length > 0}
+                >
+                  Check
+                </Button>
+              )}
+              {isWrongAnswer && (
+                <Button
+                  type="button"
+                  onClick={proceed}
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Continue
+                </Button>
+              )}
+              <Button
+                startIcon={<RefreshIcon />}
+                type="button"
+                fullWidth
+                variant="outlined"
+                sx={{ mt: 0, mb: 2 }}
+                onClick={reset}
+                disabled={isLoading || isWrongAnswer}
+              >
+                Reset
+              </Button>
               <Button
                 type="button"
-                onClick={checkUserInput}
                 fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                disabled={shuffled?.length > 0}
+                variant="outlined"
+                sx={{ mt: 0, mb: 2 }}
+                onClick={resetInputs}
+                disabled={isLoading || isWrongAnswer}
               >
-                Check
+                Skip
               </Button>
-            )}
-            {isWrongAnswer && (
-              <Button
-                type="button"
-                onClick={proceed}
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Continue
-              </Button>
-            )}
-            <Button
-              startIcon={<RefreshIcon />}
-              type="button"
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 0, mb: 2 }}
-              onClick={reset}
-              disabled={isLoading || isWrongAnswer}
-            >
-              Reset
-            </Button>
-            <Button
-              type="button"
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 0, mb: 2 }}
-              onClick={resetInputs}
-              disabled={isLoading || isWrongAnswer}
-            >
-              Skip
-            </Button>
+            </Box>
           </Box>
-        </Box>
+        ) : (
+          <Alert severity="success" sx={{ mt: 10 }}>
+            <Typography mb={2}>
+              CONGRATS! You've guessed{' '}
+              {sentencesProgress?.correctGuesses ?? correctGuesses} out of{' '}
+              {sentencesProgress?.totalGuesses ?? totalGuesses} sentences
+              correct.
+            </Typography>
+            <Typography>
+              {' '}
+              You can
+              <Button variant="text" href="/#/progress" size="small">
+                Reset
+              </Button>
+              your progress and start again
+            </Typography>
+          </Alert>
+        )}
       </Box>
     </Container>
   );

@@ -13,6 +13,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { auth } from '../../utils/firebase';
 import useGermanStore from '../../store';
+import { Alert } from '@mui/material';
 
 export default function Articles() {
   const store = useGermanStore();
@@ -53,6 +54,7 @@ export default function Articles() {
   const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isMaxNumberReached, setIsMaxNumberReached] = useState<boolean>(false);
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -137,11 +139,15 @@ export default function Articles() {
     if (store.user) updateUser();
   }, [articlesProgress?.used.length]);
   const generateNewArticle = () => {
-    const random = Math.floor(Math.random() * totalNouns);
-    if (!usedItems.includes(data[random].original)) {
-      setActiveNoun(data[random]);
-      usedItems.push(data[random].original);
-    } else generateNewArticle();
+    const random = Math.floor(Math.random() * (totalNouns - usedItems.length));
+    try {
+      if (!usedItems.includes(data[random].original)) {
+        setActiveNoun(data[random]);
+        usedItems.push(data[random].original);
+      } else generateNewArticle();
+    } catch (e) {
+      setIsMaxNumberReached(true);
+    }
   };
 
   const resetInputs = () => {
@@ -167,7 +173,7 @@ export default function Articles() {
           flexDirection: 'column',
           // alignItems: 'center',
           justifyContent: 'space-between',
-          height: '70dvh',
+          height: !isMaxNumberReached ? '70dvh' : '50dvh',
         }}
       >
         <Box
@@ -198,68 +204,69 @@ export default function Articles() {
           </Typography>
         </Box>
 
-        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-          <Box my={2}>
-            <Typography>
-              {articlesProgress?.correctGuesses ?? correctGuesses}/
-              {articlesProgress?.totalGuesses ?? totalGuesses} correct
+        {!isMaxNumberReached ? (
+          <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+            <Box my={2}>
+              <Typography>
+                {articlesProgress?.correctGuesses ?? correctGuesses}/
+                {articlesProgress?.totalGuesses ?? totalGuesses} correct
+              </Typography>
+            </Box>
+            <Typography component="h5" variant="h5">
+              {activeNoun?.original}{' '}
+              {includeTranslation && `(${activeNoun?.translation})`}
             </Typography>
-          </Box>
-          <Typography component="h5" variant="h5">
-            {activeNoun?.original}{' '}
-            {includeTranslation && `(${activeNoun?.translation})`}
-          </Typography>
-          {successMsg && (
-            <Typography
-              component="h6"
-              variant="h6"
-              color={messageClass === 'success' ? 'green' : 'error'}
+            {successMsg && (
+              <Typography
+                component="h6"
+                variant="h6"
+                color={messageClass === 'success' ? 'green' : 'error'}
+              >
+                {successMsg}
+              </Typography>
+            )}
+            {messageClass !== 'success' && (
+              <Typography color="green">
+                correct: {activeNoun?.article + ' ' + activeNoun?.original}
+              </Typography>
+            )}
+            <Box
+              component="form"
+              noValidate
+              // onSubmit={checkUserInput}
+              sx={{ mt: 3 }}
             >
-              {successMsg}
-            </Typography>
-          )}
-          {messageClass !== 'success' && (
-            <Typography color="green">
-              correct: {activeNoun?.article + ' ' + activeNoun?.original}
-            </Typography>
-          )}
-          <Box
-            component="form"
-            noValidate
-            // onSubmit={checkUserInput}
-            sx={{ mt: 3 }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={6} sm={6}>
-                <CustomSwitch
-                  value={includeTranslation}
-                  onChange={handleToggleIncludeTranslation}
-                  left={'Translation'}
-                />
+              <Grid container spacing={2}>
+                <Grid item xs={6} sm={6}>
+                  <CustomSwitch
+                    value={includeTranslation}
+                    onChange={handleToggleIncludeTranslation}
+                    left={'Translation'}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={userInput}
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
+                    fullWidth
+                    sx={{ mb: 3 }}
+                  >
+                    <ToggleButton disabled={isLoading} value="der">
+                      der
+                    </ToggleButton>
+                    <ToggleButton disabled={isLoading} value="die">
+                      die
+                    </ToggleButton>
+                    <ToggleButton disabled={isLoading} value="das">
+                      das
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <ToggleButtonGroup
-                  color="primary"
-                  value={userInput}
-                  exclusive
-                  onChange={handleChange}
-                  aria-label="Platform"
-                  fullWidth
-                  sx={{ mb: 3 }}
-                >
-                  <ToggleButton disabled={isLoading} value="der">
-                    der
-                  </ToggleButton>
-                  <ToggleButton disabled={isLoading} value="die">
-                    die
-                  </ToggleButton>
-                  <ToggleButton disabled={isLoading} value="das">
-                    das
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              </Grid>
-            </Grid>
-            {/* <Button
+              {/* <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -267,18 +274,35 @@ export default function Articles() {
             >
               Check
             </Button> */}
-            <Button
-              type="button"
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 0, mb: 2 }}
-              onClick={resetInputs}
-              disabled={isLoading}
-            >
-              Skip
-            </Button>
+              <Button
+                type="button"
+                fullWidth
+                variant="outlined"
+                sx={{ mt: 0, mb: 2 }}
+                onClick={resetInputs}
+                disabled={isLoading}
+              >
+                Skip
+              </Button>
+            </Box>
           </Box>
-        </Box>
+        ) : (
+          <Alert severity="success" sx={{ mt: { xs: 0, md: 3 } }}>
+            <Typography mb={2}>
+              CONGRATS! You've guessed{' '}
+              {articlesProgress?.correctGuesses ?? correctGuesses} out of{' '}
+              {articlesProgress?.totalGuesses ?? totalGuesses} articles correct.
+            </Typography>
+            <Typography>
+              {' '}
+              You can
+              <Button variant="text" href="/#/progress" size="small">
+                Reset
+              </Button>
+              your progress and start again
+            </Typography>
+          </Alert>
+        )}
       </Box>
     </Container>
   );
