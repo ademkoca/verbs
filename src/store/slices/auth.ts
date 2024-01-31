@@ -43,7 +43,7 @@ export const authSlice = (set: SetFunction<IState>) => ({
 
   logout: () =>
     set((state: IState) => {
-      return { ...state, user: null };
+      return { ...state, user: null, token: null };
     }),
 
   updateUser: (user: IUser) => {
