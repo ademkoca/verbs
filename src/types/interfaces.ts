@@ -28,3 +28,16 @@ export interface IMessage {
   updatedAt: string;
   __v: number;
 }
+export type ButtonColors =
+  | 'inherit'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'error'
+  | 'info'
+  | 'warning'
+  | 'home'
+  | 'verbs'
+  | 'articles'
+  | 'sentences'
+  | 'dictionary';
