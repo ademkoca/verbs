@@ -43,6 +43,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         // main: '#d90429',
         main: '#f95738',
       },
+      //@ts-expect-error MUI color errors
       home: { main: '#090909' },
       verbs: { main: '#006D77' },
       articles: { main: '#DB7006' },

@@ -1,15 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
-import Avatar from '@mui/material/Avatar';
+import React, { useEffect, useState, useRef } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import verbsWithTranslation from '../../../verbsWithTranslation';
-import nounsWithTranslation from '../../../nouns';
 import CustomSwitch from '../../components/switch';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import nounsWithMultipleTranslations from '../../../dictionary';
@@ -19,8 +15,8 @@ import { Alert } from '@mui/material';
 
 export default function Dictionary() {
   const store = useGermanStore();
-  const preteriteTextRef = useRef();
-  const textRef = useRef();
+  const preteriteTextRef = useRef<HTMLInputElement>(null);
+  const textRef = useRef<HTMLInputElement>(null);
   const apiUrl = import.meta.env.VITE_API_URL;
   const dictionaryProgress = store.user?.progress?.find(
     (p) => p.name === 'dictionary'
@@ -53,9 +49,8 @@ export default function Dictionary() {
 
   // const words = nounsWithMultipleTranslations;
   const totalWords = words.length;
-  const [activeWord, setActiveWord] = useState<Word>();
+  const [activeWord, setActiveWord] = useState<Word | null>(null);
   const [userInput, setUserInput] = useState<string>('');
-  const [userInputPreterite, setUserInputPreterite] = useState<string>('');
   const [correctGuesses, setCorrectGuesses] = useState(0);
   const [totalGuesses, setTotalGuesses] = useState(0);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -100,8 +95,8 @@ export default function Dictionary() {
   };
 
   useEffect(() => {
-    if (userInput && !isHard) {
-      const correct: string | undefined = activeWord?.translation?.find(
+    if (userInput && !isHard && activeWord) {
+      const correct: string | undefined = activeWord.translation.find(
         (word) => word.isCorrectTranslation === true
       )?.possibleTranslation;
       setCorrectAnswer(correct);
@@ -138,14 +133,14 @@ export default function Dictionary() {
     }
   }, [userInput]);
 
-  const checkUserInput = (e: any) => {
+  const checkUserInput = (e: React.FormEvent) => {
     e.preventDefault();
     const correct: string | undefined = activeWord?.translation?.find(
       (word) => word.isCorrectTranslation === true
     )?.possibleTranslation;
     setCorrectAnswer(correct);
     // easy mode
-    if (isHard) {
+    if (isHard && activeWord) {
       setIsLoading(true);
       //if correct guess
       if (correct?.toLowerCase() === userInput.toLowerCase().trim()) {
@@ -172,7 +167,7 @@ export default function Dictionary() {
       if (store.user) {
         updateProgress(
           'dictionary',
-          activeWord?.original,
+          activeWord.original,
           correct?.toLowerCase() === userInput?.toLowerCase().trim()
         );
       }
@@ -193,13 +188,14 @@ export default function Dictionary() {
       return item;
     });
     const _user = { ...store.user, progress: updatedProgress };
+    //@ts-expect-error expected error from store - will update it
     store.updateUser(_user);
   };
   const updateUser = async () => {
     const token = await auth.currentUser?.getIdToken(true);
     const jwt = token ? token : store.token;
     try {
-      const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
+      await fetch(`${apiUrl}/users/${store.user?._id}`, {
         method: 'PUT',
         body: JSON.stringify(store?.user),
         headers: {
