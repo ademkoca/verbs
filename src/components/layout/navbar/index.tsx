@@ -30,6 +30,7 @@ import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
 import HomeIcon from '@mui/icons-material/Home';
 import Divider from '@mui/material/Divider';
 import CustomSwitch from '../../switch';
+import { getInitials } from '../../../utils/helpers';
 
 const pages = [
   {
@@ -402,10 +403,22 @@ function Navbar() {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      alt={store.user.firstName + '' + store.user.lastName}
-                      src={store.user?.profilePicture}
-                    />
+                    {store.user?.profilePicture !== '' ? (
+                      <Avatar
+                        alt={store.user?.firstName + ' ' + store.user?.lastName}
+                        src={store.user?.profilePicture}
+                      />
+                    ) : (
+                      <Avatar
+                        alt={store.user?.firstName + ' ' + store.user?.lastName}
+                        src={store.user?.profilePicture}
+                      >
+                        {getInitials(
+                          store.user?.firstName,
+                          store.user?.lastName
+                        )}
+                      </Avatar>
+                    )}
                   </IconButton>
                 </Tooltip>
                 <Menu

@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ref, uploadBytes } from 'firebase/storage';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { getInitials } from '../../utils/helpers';
 
 const Profile = () => {
   const store = useGermanStore();
@@ -166,11 +167,23 @@ const Profile = () => {
             justifyContent={'center'}
             alignItems={'center'}
           >
-            <Avatar
-              sx={{ width: 120, height: 120 }}
-              alt={user?.firstName}
-              src={image ? URL.createObjectURL(image) : user?.profilePicture}
-            />
+            {user?.profilePicture !== '' ? (
+              <Avatar
+                sx={{ width: 120, height: 120 }}
+                alt={user?.firstName + ' ' + user?.lastName}
+                src={image ? URL.createObjectURL(image) : user?.profilePicture}
+              />
+            ) : (
+              <Avatar
+                sx={{ width: 120, height: 120 }}
+                alt={user?.firstName + ' ' + user?.lastName}
+                src={image ? URL.createObjectURL(image) : user?.profilePicture}
+              >
+                <Typography variant="h3">
+                  {getInitials(user?.firstName, user?.lastName)}
+                </Typography>
+              </Avatar>
+            )}
           </Grid>
           <Grid
             flex={1}

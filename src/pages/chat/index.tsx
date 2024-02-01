@@ -14,6 +14,7 @@ import ChatBox from '../../components/chat-box';
 import { Autocomplete, Drawer, Menu, TextField } from '@mui/material';
 import { IUser } from '../../store/slices/auth';
 import { auth } from '../../utils/firebase';
+import { getInitials } from '../../utils/helpers';
 
 export default function Chat() {
   const store = useGermanStore();
@@ -250,10 +251,23 @@ export default function Chat() {
                     display={'flex'}
                     {...props}
                   >
-                    <Avatar
-                      src={option?.profilePicture}
-                      sx={{ width: 30, height: 30, marginRight: 1 }}
-                    />
+                    {option?.profilePicture !== '' ? (
+                      <Avatar
+                        sx={{ width: 30, height: 30, marginRight: 1 }}
+                        alt={option?.firstName + ' ' + option?.lastName}
+                        src={option?.profilePicture}
+                      />
+                    ) : (
+                      <Avatar
+                        sx={{ width: 30, height: 30, marginRight: 1 }}
+                        alt={option?.firstName + ' ' + option?.lastName}
+                        src={option?.profilePicture}
+                      >
+                        <Typography variant="body2">
+                          {getInitials(option?.firstName, option?.lastName)}
+                        </Typography>
+                      </Avatar>
+                    )}
                     {option?.username}
                   </Box>
                 )}
@@ -366,10 +380,23 @@ export default function Chat() {
                   display={'flex'}
                   {...props}
                 >
-                  <Avatar
-                    src={option?.profilePicture}
-                    sx={{ width: 30, height: 30, marginRight: 1 }}
-                  />
+                  {option?.profilePicture !== '' ? (
+                    <Avatar
+                      sx={{ width: 30, height: 30, marginRight: 1 }}
+                      alt={option?.firstName + ' ' + option?.lastName}
+                      src={option?.profilePicture}
+                    />
+                  ) : (
+                    <Avatar
+                      sx={{ width: 30, height: 30, marginRight: 1 }}
+                      alt={option?.firstName + ' ' + option?.lastName}
+                      src={option?.profilePicture}
+                    >
+                      <Typography variant="body2">
+                        {getInitials(option?.firstName, option?.lastName)}
+                      </Typography>
+                    </Avatar>
+                  )}
                   {option?.username}
                 </Box>
               )}

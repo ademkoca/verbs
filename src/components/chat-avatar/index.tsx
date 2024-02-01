@@ -4,6 +4,8 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { IUser } from '../../store/slices/auth';
+import { getInitials } from '../../utils/helpers';
+import { Typography } from '@mui/material';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -54,10 +56,23 @@ export default function ChatAvatar({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant={online ? 'dot' : 'standard'}
       >
-        <Avatar
-          alt={user?.firstName + ' ' + user?.lastName}
-          src={user?.profilePicture}
-        />
+        {user?.profilePicture !== '' ? (
+          <Avatar
+            // sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
+            alt={user?.firstName + ' ' + user?.lastName}
+            src={user?.profilePicture}
+          />
+        ) : (
+          <Avatar
+            // sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
+            alt={user?.firstName + ' ' + user?.lastName}
+            src={user?.profilePicture}
+          >
+            <Typography variant="body1">
+              {getInitials(user?.firstName, user?.lastName)}
+            </Typography>
+          </Avatar>
+        )}
       </StyledBadge>
     </Stack>
   );

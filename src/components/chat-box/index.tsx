@@ -19,6 +19,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { auth } from '../../utils/firebase';
 import useGermanStore from '../../store';
+import { getInitials } from '../../utils/helpers';
 
 const ChatBox = ({
   chat,
@@ -194,11 +195,23 @@ const ChatBox = ({
             gap={mobile ? 2 : 3}
             mt={mobile ? 3 : 0}
           >
-            <Avatar
-              alt={userData?.firstName + ' ' + userData?.lastName}
-              src={userData?.profilePicture}
-              sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
-            />
+            {userData?.profilePicture !== '' ? (
+              <Avatar
+                sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
+                alt={userData?.firstName + ' ' + userData?.lastName}
+                src={userData?.profilePicture}
+              />
+            ) : (
+              <Avatar
+                sx={{ width: mobile ? 50 : 75, height: mobile ? 50 : 75 }}
+                alt={userData?.firstName + ' ' + userData?.lastName}
+                src={userData?.profilePicture}
+              >
+                <Typography variant="h5">
+                  {getInitials(userData?.firstName, userData?.lastName)}
+                </Typography>
+              </Avatar>
+            )}
             <Box
               display={'flex'}
               flexDirection={'column'}
