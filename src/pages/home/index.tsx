@@ -52,7 +52,6 @@ export default function Home() {
     dictionary: nounsWithMultipleTranslations.length,
     // dictionary: 3,
   };
-  console.log(totalLength['verbs']);
   const pages = [
     {
       name: 'Verbs',
