@@ -9,12 +9,25 @@ interface Props {
   left?: string | undefined;
   right?: string | undefined;
   options?: Option[];
+  justify?: string;
 }
 
-const CustomSwitch = ({ value, onChange, left, right, options }: Props) => {
+const CustomSwitch = ({
+  value,
+  onChange,
+  left,
+  right,
+  options,
+  justify,
+}: Props) => {
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
-      <Typography>{left}</Typography>
+    <Stack
+      direction="row"
+      spacing={1}
+      alignItems="center"
+      justifyContent={justify}
+    >
+      {left && <Typography>{left}</Typography>}
       <AntSwitch
         checked={!!value}
         // defaultChecked
@@ -22,7 +35,7 @@ const CustomSwitch = ({ value, onChange, left, right, options }: Props) => {
         value={value}
         onChange={onChange}
       />
-      <Typography>{right}</Typography>
+      {right && <Typography>{right}</Typography>}
       {options && <CustomTooltip options={options} />}
     </Stack>
   );

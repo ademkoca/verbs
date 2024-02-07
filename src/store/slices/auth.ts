@@ -1,22 +1,31 @@
 import { Progress } from '../../types/interfaces';
 
 export type IUser = {
-  _id: string;
-  username: string;
-  email: string;
-  profilePicture: string;
-  isAdmin: boolean;
-  firstName: string;
-  lastName: string;
-  phone: string;
   address: string;
   country: string;
-  state: string;
-  zip: string;
-  progress: Progress[];
   createdAt: string;
+  email: string;
+  firstName: string;
+  isAdmin: boolean;
+  lastName: string;
+  milestones: {
+    five: boolean;
+    twenty: boolean;
+    fifty: boolean;
+  };
+  phone: string;
+  profilePicture: string;
+  progress: Progress[];
+  state: string;
+  subscribed: {
+    weeklyNewsletter: boolean;
+    productUpdates: boolean;
+  };
   updatedAt: string;
+  username: string;
+  zip: string;
   __v: number;
+  _id: string;
 } | null;
 
 const initialAuthState = {

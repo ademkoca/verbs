@@ -12,6 +12,7 @@ import Profile from './pages/profile/index.tsx';
 import Chat from './pages/chat/index.tsx';
 import Home from './pages/home/index.tsx';
 import SendFeedback from './pages/send-feedback/index.tsx';
+import Unsubscribe from './pages/unsubscribe/index.tsx';
 
 const router = createHashRouter([
   {
@@ -107,6 +108,14 @@ const router = createHashRouter([
     element: (
       <Layout>
         <SendFeedback />
+      </Layout>
+    ),
+  },
+  {
+    path: '/unsubscribe/:id',
+    element: (
+      <Layout>
+        <Unsubscribe />
       </Layout>
     ),
   },
