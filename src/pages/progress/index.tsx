@@ -7,9 +7,11 @@ import { useQuery } from 'react-query';
 import { Progress as ProgressType } from '../../types/interfaces';
 import { IUser } from '../../store/slices/auth';
 import BasicTable from '../../components/table';
+import { useTranslation } from 'react-i18next';
 
 const Progress = () => {
   const store = useGermanStore();
+  const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState<IUser>(null);
   const getUser = async () => {
@@ -164,7 +166,7 @@ const Progress = () => {
               textDecoration: 'none',
             }}
           >
-            MY PROGRESS
+            {t('my_progress').toUpperCase()}
           </Typography>
         </Box>
 

@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import { Progress } from '../../types/interfaces';
 import { Button } from '@mui/material';
 import { getFirstLetterCapitalized } from '../../utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 function createData(name: string, progress: string) {
   return { name, progress };
@@ -28,6 +29,7 @@ export default function BasicTable({
   progress: Progress[];
   onReset: (name: string) => void;
 }) {
+  const { t } = useTranslation();
   const rows = progress?.map((p) =>
     createData(
       p.name,
@@ -40,12 +42,12 @@ export default function BasicTable({
       <Table sx={{ minWidth: 250 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>Module</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>{t('module')}</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }} align="right">
-              Correct / Guessed
+              {t('correct_vs_guessed')}
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold' }} align="center">
-              Reset
+              {t('reset')}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -56,7 +58,7 @@ export default function BasicTable({
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {getFirstLetterCapitalized(row.name)}
+                {getFirstLetterCapitalized(t(row.name))}
               </TableCell>
               <TableCell align="right">{row.progress}</TableCell>
               <TableCell align="right">
@@ -66,7 +68,7 @@ export default function BasicTable({
                   onClick={() => onReset(row.name)}
                   sx={{ color: 'white' }}
                 >
-                  Reset
+                  {t('reset')}
                 </Button>
               </TableCell>
             </TableRow>

@@ -37,5 +37,9 @@
   "product_updates": "Obaveštenja o proizvodima",
   "update": "Ažuriraj",
   "user_successfully_updated": "Podaci uspešno ažurirani",
-  "error_updating_user": "Greška prilikom ažuriranja"
+  "error_updating_user": "Greška prilikom ažuriranja",
+  "my_progress": "Moj Progress",
+  "module": "Modul",
+  "correct_vs_guessed": "Tačno / Ukupno pokušaja",
+  "reset": "Resetuj"
 }

@@ -37,5 +37,9 @@
   "product_updates": "Product Updates",
   "update": "Update",
   "user_successfully_updated": "User successfully updated",
-  "error_updating_user": "Error updating user"
+  "error_updating_user": "Error updating user",
+  "my_progress": "My Progress",
+  "module": "Module",
+  "correct_vs_guessed": "Correct / Guessed",
+  "reset": "Reset"
 }
