@@ -1,10 +1,12 @@
 import { Link, Typography } from '@mui/material';
-import React from 'react';
+
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
+      {`${t('copyright')} © `}
       <Link color="primary" href="https://ademkoca.netlify.app" target="_blank">
         Adem Koca
       </Link>{' '}

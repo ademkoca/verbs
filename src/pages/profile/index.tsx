@@ -20,9 +20,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { getInitials } from '../../utils/helpers';
 import CustomSwitch from '../../components/switch';
 import Divider from '@mui/material/Divider';
+import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
   const store = useGermanStore();
+  const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState<IUser | null>(null);
   const [image, setImage] = useState<File | null>(null);
@@ -79,12 +81,12 @@ const Profile = () => {
         });
         if (response.status === 200) {
           const res = await response.json();
-          toast.success('User successfully updated');
+          toast.success(t('user_successfully_updated'));
           store.updateUser(res.data);
           token && store.updateToken(token);
-        } else toast.error('Error updating user');
+        } else toast.error(t('error_updating_user'));
       } catch (error) {
-        toast.error('Error updating user');
+        toast.error(t('error_updating_user'));
       }
     }
   };
@@ -146,7 +148,7 @@ const Profile = () => {
               textDecoration: 'none',
             }}
           >
-            MY PROFILE
+            {t('my_profile').toUpperCase()}
           </Typography>
         </Box>
 
@@ -207,7 +209,7 @@ const Profile = () => {
                   startIcon={<CloudUploadIcon />}
                   onClick={() => uploadButtonRef?.current?.click()}
                 >
-                  CHOOSE IMAGE
+                  {t('choose_image').toUpperCase()}
                 </Button>
               ) : (
                 <Button
@@ -216,7 +218,7 @@ const Profile = () => {
                   startIcon={<CloudUploadIcon />}
                   onClick={handleUploadImage}
                 >
-                  Click to upload
+                  {t('upload_image').toUpperCase()}
                 </Button>
               )}
               {!image && user?.profilePicture !== '' && (
@@ -226,7 +228,7 @@ const Profile = () => {
                   startIcon={<DeleteIcon />}
                   onClick={handleRemoveImage}
                 >
-                  Remove
+                  {t('remove_image').toUpperCase()}
                 </Button>
               )}
               <input
@@ -249,7 +251,7 @@ const Profile = () => {
             <TextField
               required
               id="cardName"
-              label={'Email Address'}
+              label={t('email_address')}
               fullWidth
               autoComplete="cc-name"
               variant="standard"
@@ -261,7 +263,7 @@ const Profile = () => {
             <TextField
               required
               id="cardNumber"
-              label="Username"
+              label={t('username')}
               fullWidth
               autoComplete="cc-number"
               variant="standard"
@@ -273,7 +275,7 @@ const Profile = () => {
             <TextField
               required
               id="cardNumber"
-              label="First Name"
+              label={t('first_name')}
               fullWidth
               autoComplete="cc-number"
               variant="standard"
@@ -285,7 +287,7 @@ const Profile = () => {
             <TextField
               required
               id="cardNumber"
-              label="Last Name"
+              label={t('last_name')}
               fullWidth
               autoComplete="cc-number"
               variant="standard"
@@ -296,7 +298,7 @@ const Profile = () => {
           <Grid item xs={12} md={6}>
             <TextField
               id="cardNumber"
-              label="Address"
+              label={t('address')}
               fullWidth
               autoComplete="cc-number"
               variant="standard"
@@ -307,7 +309,7 @@ const Profile = () => {
           <Grid item xs={12} md={6}>
             <TextField
               id="cardNumber"
-              label="Country"
+              label={t('country')}
               fullWidth
               autoComplete="cc-number"
               variant="standard"
@@ -318,7 +320,7 @@ const Profile = () => {
           <Grid item xs={12} md={6}>
             <TextField
               id="cardNumber"
-              label="ZIP"
+              label={t('zip')}
               fullWidth
               autoComplete="cc-number"
               variant="standard"
@@ -329,7 +331,7 @@ const Profile = () => {
 
           <Grid item xs={12} display={'flex'} flexDirection={'column'} mt={2}>
             <Typography variant="body2" mb={1}>
-              Email Subscription:
+              {t('email_subscription')}:
             </Typography>
             <Grid
               item
@@ -342,7 +344,7 @@ const Profile = () => {
               <CustomSwitch
                 justify="space-between"
                 value={user?.subscribed.weeklyNewsletter}
-                left="Weekly newsletter"
+                left={t('weekly_newsletter')}
                 onChange={() =>
                   setUser((prevUser: IUser) => ({
                     ...prevUser!,
@@ -356,7 +358,7 @@ const Profile = () => {
               <CustomSwitch
                 justify="space-between"
                 value={user?.subscribed.productUpdates}
-                left="Product updates"
+                left={t('product_updates')}
                 onChange={() =>
                   setUser((prevUser: IUser) => ({
                     ...prevUser!,
@@ -377,7 +379,7 @@ const Profile = () => {
               fullWidth
               onClick={handleUpdateProfile}
             >
-              Update
+              {t('update')}
             </Button>
             <ToastContainer
               autoClose={3000}

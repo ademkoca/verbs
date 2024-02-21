@@ -13,6 +13,7 @@ import Chat from './pages/chat/index.tsx';
 import Home from './pages/home/index.tsx';
 import SendFeedback from './pages/send-feedback/index.tsx';
 import Unsubscribe from './pages/unsubscribe/index.tsx';
+import './i18n';
 
 const router = createHashRouter([
   {

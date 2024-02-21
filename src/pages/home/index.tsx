@@ -18,9 +18,11 @@ import { sentencesWithoutParts } from '../../../sentences';
 import nounsWithMultipleTranslations from '../../../dictionary';
 import nounsWithTranslation from '../../../nouns';
 import { ButtonColors } from '../../types/interfaces';
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
   const store = useGermanStore();
+  const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [greeting, setGreeting] = React.useState('Hello');
 
@@ -54,27 +56,28 @@ export default function Home() {
   };
   const pages = [
     {
-      name: 'Verbs',
+      name: 'verbs',
       url: '/verbs',
       description:
         'Guess the correct preterite and participle for the given verb',
     },
     {
-      name: 'Articles',
+      name: 'articles',
       url: '/articles',
       description: 'Select the appropriate article for the given word',
     },
     {
-      name: 'Sentences',
+      name: 'sentences',
       url: '/sentences',
       description: 'Put the words in the correct order to form a sentence',
     },
     {
-      name: 'Dictionary',
+      name: 'dictionary',
       url: '/dictionary',
       description: 'Guess the correct translation of the given word',
     },
   ];
+
   if (!store.user)
     return (
       <Container component="main" maxWidth="lg" sx={{ minHeight: '73dvh' }}>
@@ -91,7 +94,7 @@ export default function Home() {
             <HomeIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {greeting}
+            {t(greeting)}
           </Typography>
           <Typography component="h2" variant="h6" mt={2}>
             Let's start learning German.
@@ -126,7 +129,8 @@ export default function Home() {
                   }}
                 >
                   <Typography variant="h5" sx={{ mb: 3 }}>
-                    {getFirstLetterCapitalized(page.name)}
+                    {getFirstLetterCapitalized(t(page.name))}
+                    {/* {getFirstLetterCapitalized(page.name)} */}
                   </Typography>
                   <Typography variant="body1">{page.description}</Typography>
                   <Button
@@ -171,10 +175,10 @@ export default function Home() {
           <HomeIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {greeting}, {store.user?.firstName}
+          {t(greeting)}, {store.user?.firstName}
         </Typography>
         <Typography component="h2" variant="h6">
-          Here is your current progress:
+          {t('here_current_progress')}:
         </Typography>
         <Box
           mt={4}
@@ -198,7 +202,7 @@ export default function Home() {
               >
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography variant="h5" sx={{ mb: 3 }}>
-                    {getFirstLetterCapitalized(p.name)}
+                    {getFirstLetterCapitalized(t(p.name))}
                   </Typography>
                   <Box position={'relative'}>
                     {/* Filled portion */}
@@ -235,8 +239,8 @@ export default function Home() {
                     {solvedPercentage === 100
                       ? 'Reset progress'
                       : solvedPercentage === 0
-                      ? 'Start practicing'
-                      : 'Continue practicing'}
+                      ? t('start_practicing')
+                      : t('continue_practicing')}
                   </Button>
                 </CardContent>
               </Card>

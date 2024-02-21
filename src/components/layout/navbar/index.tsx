@@ -9,7 +9,17 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
-import { Avatar, Button, Tooltip, Drawer } from '@mui/material';
+import {
+  Avatar,
+  Button,
+  Tooltip,
+  Drawer,
+  Autocomplete,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+} from '@mui/material';
 import useGermanStore from '../../../store';
 import { auth } from '../../../utils/firebase';
 import { signOut } from 'firebase/auth';
@@ -27,36 +37,53 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import FeedbackOutlinedIcon from '@mui/icons-material/FeedbackOutlined';
+import LanguageIcon from '@mui/icons-material/Language';
 import HomeIcon from '@mui/icons-material/Home';
 import Divider from '@mui/material/Divider';
 import CustomSwitch from '../../switch';
-import { getInitials } from '../../../utils/helpers';
+import { getFirstLetterCapitalized, getInitials } from '../../../utils/helpers';
+import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const pages = [
   {
-    name: 'Home',
+    name: 'home',
     url: '/',
     icon: <HomeIcon sx={{ marginRight: 1 }} />,
   },
   {
-    name: 'Verbs',
+    name: 'verbs',
     url: '/verbs',
     icon: <DescriptionIcon sx={{ marginRight: 1 }} />,
   },
   {
-    name: 'Articles',
+    name: 'articles',
     url: '/articles',
     icon: <MenuBookIcon sx={{ marginRight: 1 }} />,
   },
   {
-    name: 'Sentences',
+    name: 'sentences',
     url: '/sentences',
     icon: <SubtitlesIcon sx={{ marginRight: 1 }} />,
   },
   {
-    name: 'Dictionary',
+    name: 'dictionary',
     url: '/dictionary',
     icon: <TranslateIcon sx={{ marginRight: 1 }} />,
+  },
+];
+interface ILang {
+  name: string;
+  symbol: string;
+}
+const languages: ILang[] = [
+  {
+    name: 'English',
+    symbol: 'en',
+  },
+  {
+    name: 'Srpski',
+    symbol: 'rs',
   },
 ];
 
@@ -70,7 +97,9 @@ interface ISettings {
 function Navbar() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const store = useGermanStore();
+  const { t } = useTranslation();
   const [darkMode, setDarkMode] = React.useState<boolean>(store.darkMode);
+  const [displayLanguage, setDisplayLanguage] = React.useState<string>('en');
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const logoutHandler = () => {
@@ -95,7 +124,7 @@ function Navbar() {
   const settings: ISettings[] = [
     {
       type: 'route',
-      label: 'Profile',
+      label: 'profile',
       handler: () => routeHandler('profile'),
       icon: darkMode ? (
         <Person2Icon sx={{ marginRight: 1 }} />
@@ -105,13 +134,13 @@ function Navbar() {
     },
     {
       type: 'route',
-      label: 'Progress',
+      label: 'progress',
       handler: () => routeHandler('progress'),
       icon: <TrendingUpIcon sx={{ marginRight: 1 }} />,
     },
     {
       type: 'route',
-      label: 'Messages',
+      label: 'messages',
       handler: () => routeHandler('chat'),
       icon: darkMode ? (
         <ChatIcon sx={{ marginRight: 1 }} />
@@ -138,7 +167,7 @@ function Navbar() {
     // },
     {
       type: 'setting',
-      label: 'Logout',
+      label: 'signOut',
       handler: logoutHandler,
       icon: <LogoutIcon sx={{ marginRight: 1 }} />,
     },
@@ -179,12 +208,17 @@ function Navbar() {
   const handleToggleDarkMode = () => {
     setDarkMode((prev) => !prev);
   };
+
   React.useEffect(() => {
     store.setDarkMode(darkMode);
   }, [darkMode]);
   React.useEffect(() => {
     setDarkMode(store.darkMode);
   }, [store.darkMode]);
+
+  React.useEffect(() => {
+    i18n.changeLanguage(displayLanguage);
+  }, [displayLanguage]);
 
   return (
     <AppBar position="static">
@@ -254,7 +288,7 @@ function Navbar() {
               >
                 <Box padding={0}>
                   <Typography variant="h6" marginBottom={2} ml={2}>
-                    Jump to:{' '}
+                    {t('jump to')}:{' '}
                   </Typography>
                   {pages.map((page) => {
                     return (
@@ -292,7 +326,7 @@ function Navbar() {
                             color={'white'}
                             // textAlign="center"
                           >
-                            {page.name}
+                            {t(page.name)}
                           </Typography>
                         </Button>
                       </MenuItem>
@@ -302,9 +336,28 @@ function Navbar() {
                 <Box>
                   <Divider sx={{ mb: 2 }} />
                   <Box>
+                    <Box ml={1} my={3}>
+                      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                        <InputLabel id="demo-select-small-label">
+                          {t('lang')}
+                        </InputLabel>
+                        <Select
+                          labelId="demo-select-small-label"
+                          id="demo-select-small"
+                          value={displayLanguage}
+                          label="Age"
+                          onChange={(e) => {
+                            setDisplayLanguage(e.target.value);
+                          }}
+                        >
+                          <MenuItem value={'en'}>English</MenuItem>
+                          <MenuItem value={'rs'}>Srpski</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
                     <Box ml={2} my={3}>
                       <CustomSwitch
-                        left={'Dark mode'}
+                        left={t('dark mode')}
                         value={darkMode}
                         onChange={handleToggleDarkMode}
                       />
@@ -331,7 +384,7 @@ function Navbar() {
                           color={'white'}
                           // textAlign="center"
                         >
-                          Send feedback
+                          {t('send feedback')}
                         </Typography>
                       </Button>
                     </MenuItem>
@@ -352,7 +405,7 @@ function Navbar() {
             }}
           >
             {pages.map((page) => {
-              if (page.name !== 'Home')
+              if (page.name !== 'home')
                 return (
                   <Link
                     key={page.name}
@@ -361,7 +414,7 @@ function Navbar() {
                     // sx={{ my: 2, color: 'white', display: 'block' }}
                   >
                     <Typography textAlign="center" color={'white'} mt={1}>
-                      {page.name}
+                      {getFirstLetterCapitalized(t(page.name))}
                     </Typography>
                   </Link>
                 );
@@ -382,6 +435,33 @@ function Navbar() {
               mr={2}
               mt={1}
             >
+              {/* <Box onClick={handleToggleLanguage} style={{ color: 'white' }}>
+                <LanguageIcon />
+              </Box> */}
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small-label">
+                  {t('lang')}
+                </InputLabel>
+                <Select
+                  labelId="demo-select-small-label"
+                  id="demo-select-small"
+                  value={displayLanguage}
+                  label="Age"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setDisplayLanguage(e.target.value);
+                  }}
+                >
+                  <MenuItem value={'en'}>English</MenuItem>
+                  <MenuItem value={'rs'}>Srpski</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <Box
+              sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
+              mr={2}
+              mt={1}
+            >
               <Box onClick={handleToggleDarkMode} style={{ color: 'white' }}>
                 {darkMode ? (
                   <NightlightRoundIcon />
@@ -390,6 +470,7 @@ function Navbar() {
                 )}
               </Box>
             </Box>
+
             <Box
               sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
               mr={2}
@@ -401,7 +482,7 @@ function Navbar() {
             </Box>
             {store.user && (
               <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
+                <Tooltip title={t('open settings')}>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     {store.user?.profilePicture !== '' ? (
                       <Avatar
@@ -443,7 +524,7 @@ function Navbar() {
                         <MenuItem key={setting.label} onClick={setting.handler}>
                           {setting.icon}
                           <Typography textAlign="center">
-                            {setting.label}
+                            {t(setting.label)}
                           </Typography>
                         </MenuItem>
                       );
@@ -458,7 +539,7 @@ function Navbar() {
                           >
                             {setting.icon}
                             <Typography textAlign="center">
-                              {setting.label}
+                              {t(setting.label)}
                             </Typography>
                           </MenuItem>
                         </>
@@ -470,7 +551,7 @@ function Navbar() {
             {store.user === null && (
               <Box sx={{ flexGrow: 0 }}>
                 <Button variant="outlined" color="inherit" href="/#/sign-in">
-                  Sign in
+                  {t('signIn')}
                 </Button>
               </Box>
             )}
