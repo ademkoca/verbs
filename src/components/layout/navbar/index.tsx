@@ -14,8 +14,6 @@ import {
   Button,
   Tooltip,
   Drawer,
-  Autocomplete,
-  TextField,
   FormControl,
   InputLabel,
   Select,
@@ -99,7 +97,9 @@ function Navbar() {
   const store = useGermanStore();
   const { t } = useTranslation();
   const [darkMode, setDarkMode] = React.useState<boolean>(store.darkMode);
-  const [displayLanguage, setDisplayLanguage] = React.useState<string>('en');
+  const [displayLanguage, setDisplayLanguage] = React.useState<string>(
+    store.locale
+  );
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
   const logoutHandler = () => {
@@ -209,6 +209,11 @@ function Navbar() {
     setDarkMode((prev) => !prev);
   };
 
+  const handleChangeLocale = (e: any) => {
+    setDisplayLanguage(e.target.value);
+    store.setLocale(e.target.value);
+  };
+
   React.useEffect(() => {
     store.setDarkMode(darkMode);
   }, [darkMode]);
@@ -217,8 +222,8 @@ function Navbar() {
   }, [store.darkMode]);
 
   React.useEffect(() => {
-    i18n.changeLanguage(displayLanguage);
-  }, [displayLanguage]);
+    i18n.changeLanguage(store.locale);
+  }, [store.locale]);
 
   return (
     <AppBar position="static">
@@ -345,10 +350,8 @@ function Navbar() {
                           labelId="demo-select-small-label"
                           id="demo-select-small"
                           value={displayLanguage}
-                          label="Age"
-                          onChange={(e) => {
-                            setDisplayLanguage(e.target.value);
-                          }}
+                          label="language"
+                          onChange={handleChangeLocale}
                         >
                           <MenuItem value={'en'}>English</MenuItem>
                           <MenuItem value={'rs'}>Srpski</MenuItem>
@@ -384,7 +387,7 @@ function Navbar() {
                           color={'white'}
                           // textAlign="center"
                         >
-                          {t('send feedback')}
+                          {t('send_feedback')}
                         </Typography>
                       </Button>
                     </MenuItem>
@@ -447,10 +450,7 @@ function Navbar() {
                   id="demo-select-small"
                   value={displayLanguage}
                   label="Age"
-                  onChange={(e) => {
-                    console.log(e.target.value);
-                    setDisplayLanguage(e.target.value);
-                  }}
+                  onChange={handleChangeLocale}
                 >
                   <MenuItem value={'en'}>English</MenuItem>
                   <MenuItem value={'rs'}>Srpski</MenuItem>

@@ -3,7 +3,6 @@
   "lang": "jezik",
   "jump to": "Idi na",
   "dark mode": "Tamna tema",
-  "send feedback": "Oceni nas",
   "open settings": "Podešavanja",
   "profile": "Profil",
   "progress": "Progres",
@@ -46,5 +45,15 @@
   "start_conversation": "Započni razgovor",
   "typing": "Piše",
   "chat_options": "Opcije",
-  "delete": "Obriši"
+  "delete": "Obriši",
+  "send_feedback": "Vaše mišljenje",
+  "feedback_text": "Cenimo Vaš doprinos! Vaše mišljenje je od ključne važnosti za poboljšanje Vašeg iskustva sa našom aplikacijom. Bilo da ste naišli na grešku, imate predlog za poboljšanje ili želite da podelite svoje pozitivno iskustvo, srećni smo da čujemo Vaše mišljenje!",
+  "your_email": "Vaš email",
+  "full_name_optional": "Puno ime (opciono)",
+  "your_feedback": "Vaše mišljenje",
+  "please_wait": "Molimo sačekajte",
+  "send": "Pošalji",
+  "please_enter_email_and_feedback": "Molimo Vas unesite Vaše ime i mišljenje",
+  "error_occurred": "Došlo je do greške",
+  "Thank you for your feedback!": "Hvala za vaše mišljenje!"
 }

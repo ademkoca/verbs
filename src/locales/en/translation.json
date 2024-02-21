@@ -3,7 +3,6 @@
   "lang": "language",
   "jump to": "Jump to",
   "dark mode": "Dark mode",
-  "send feedback": "Send feedback",
   "open settings": "Open settings",
   "profile": "Profile",
   "progress": "Progress",
@@ -46,5 +45,15 @@
   "start_conversation": "Start a conversation",
   "typing": "Typing",
   "chat_options": "Chat Options",
-  "delete": "Delete"
+  "delete": "Delete",
+  "send_feedback": "Send Feedback",
+  "feedback_text": "We value your input! Your feedback is crucial in helping us enhance your experience with our app. Whether you've encountered a bug, have a suggestion for improvement, or want to share your positive experience, we're happy to hear from you!",
+  "your_email": "Your email",
+  "full_name_optional": "Full name (optional)",
+  "your_feedback": "Your feedback",
+  "please_wait": "Please wait",
+  "send": "Send",
+  "please_enter_email_and_feedback": "Please enter email and feedback text",
+  "error_occurred": "An error occurred",
+  "Thank you for your feedback!": "Thank you for your feedback!"
 }

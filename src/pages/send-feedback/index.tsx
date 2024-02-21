@@ -9,10 +9,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ToastContainer, toast } from 'react-toastify';
 import useGermanStore from '../../store';
+import { useTranslation } from 'react-i18next';
 
 export default function SendFeedback() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const store = useGermanStore();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = React.useState(false);
   const [fullName, setFullName] = useState(
     store.user ? store.user?.firstName + ' ' + store.user?.lastName : ''
@@ -43,7 +45,7 @@ export default function SendFeedback() {
           });
           if (res.ok) {
             const msg = await res.text();
-            toast.success(msg);
+            toast.success(t(msg));
             setTimeout(() => {
               window.location.href = '/';
             }, 3000);
@@ -57,7 +59,7 @@ export default function SendFeedback() {
       } finally {
         setIsLoading(false);
       }
-    } else toast.error('Please enter email and feedback text');
+    } else toast.error(t('please_enter_email_and_feedback'));
   };
 
   React.useEffect(() => {
@@ -82,13 +84,10 @@ export default function SendFeedback() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Send feedback
+          {t('send_feedback')}
         </Typography>
         <Typography component="h1" variant="body1" mt={2}>
-          We value your input! Your feedback is crucial in helping us enhance
-          your experience with our app. Whether you've encountered a bug, have a
-          suggestion for improvement, or want to share your positive experience,
-          we're happy to hear from you!
+          {t('feedback_text')}
         </Typography>
 
         <Box
@@ -103,7 +102,7 @@ export default function SendFeedback() {
             required
             fullWidth
             id="email"
-            label="Your email"
+            label={t('your_email')}
             name="email"
             autoComplete="email"
             autoFocus
@@ -115,7 +114,7 @@ export default function SendFeedback() {
             margin="normal"
             fullWidth
             name="full-name"
-            label="Full name (optional)"
+            label={t('full_name_optional')}
             type="text"
             id="full-name"
             autoComplete="full-name"
@@ -129,7 +128,7 @@ export default function SendFeedback() {
             minRows={4}
             required
             name="feedback"
-            label="Your feedback"
+            label={t('your_feedback')}
             type="text"
             id="feedback"
             autoComplete="feedback"
@@ -143,7 +142,7 @@ export default function SendFeedback() {
             sx={{ mt: 3, mb: 2 }}
             disabled={isLoading}
           >
-            {isLoading ? 'Please wait...' : 'Send'}
+            {isLoading ? `${t('please_wait')}...` : t('send')}
           </Button>
 
           <ToastContainer

@@ -32,19 +32,21 @@ const initialAuthState = {
   user: null,
   token: null,
   darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+  locale: 'en',
 };
 
 interface IState {
   user: IUser;
   token: string | null;
   darkMode: boolean;
+  locale: string;
 }
 type SetFunction<T> = (updater: (prev: T) => T) => void;
 export const authSlice = (set: SetFunction<IState>) => ({
   ...initialAuthState,
-  login: (user: IUser, token: string) =>
+  login: (user: IUser, token: string, locale: string) =>
     set(() => {
-      return { ...initialAuthState, user, token };
+      return { ...initialAuthState, user, token, locale };
     }),
   updateToken: (token: string) => {
     set((state: IState) => ({ ...state, token: token }));
@@ -61,5 +63,9 @@ export const authSlice = (set: SetFunction<IState>) => ({
   setDarkMode: (darkMode: boolean) =>
     set((state: IState) => {
       return { ...state, darkMode };
+    }),
+  setLocale: (locale: string) =>
+    set((state: IState) => {
+      return { ...state, locale };
     }),
 });
