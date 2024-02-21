@@ -20,6 +20,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { auth } from '../../utils/firebase';
 import useGermanStore from '../../store';
 import { getInitials } from '../../utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 const ChatBox = ({
   chat,
@@ -46,6 +47,7 @@ const ChatBox = ({
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const store = useGermanStore();
+  const { t } = useTranslation();
 
   const [userData, setUserData] = useState<IUser | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -57,7 +59,7 @@ const ChatBox = ({
   }
 
   const chatOptions: IChatOptions[] = [
-    { label: 'Delete', handler: (id: string) => handleDeleteChat(id) },
+    { label: t('delete'), handler: (id: string) => handleDeleteChat(id) },
   ];
   const handleChange = (newMessage: string) => {
     setNewMessage(newMessage);
@@ -222,14 +224,14 @@ const ChatBox = ({
               </Typography>
               {showIsTyping && (
                 <Typography variant="body2" color="GrayText">
-                  Typing...
+                  {t('typing')}...
                 </Typography>
               )}
             </Box>
           </Box>
         </Box>
         <Box sx={{ flexGrow: 0, marginTop: 4 }}>
-          <Tooltip title="Chat options">
+          <Tooltip title={t('chat_options')}>
             <IconButton
               size="large"
               aria-label="chat options"

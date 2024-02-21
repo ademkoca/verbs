@@ -41,5 +41,10 @@
   "my_progress": "Moj Progress",
   "module": "Modul",
   "correct_vs_guessed": "Tačno / Ukupno pokušaja",
-  "reset": "Resetuj"
+  "reset": "Resetuj",
+  "search_users": "Pretraži korisnike",
+  "start_conversation": "Započni razgovor",
+  "typing": "Piše",
+  "chat_options": "Opcije",
+  "delete": "Obriši"
 }

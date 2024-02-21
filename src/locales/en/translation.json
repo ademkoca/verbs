@@ -41,5 +41,10 @@
   "my_progress": "My Progress",
   "module": "Module",
   "correct_vs_guessed": "Correct / Guessed",
-  "reset": "Reset"
+  "reset": "Reset",
+  "search_users": "Search users",
+  "start_conversation": "Start a conversation",
+  "typing": "Typing",
+  "chat_options": "Chat Options",
+  "delete": "Delete"
 }

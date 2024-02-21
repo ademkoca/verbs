@@ -15,9 +15,11 @@ import { Autocomplete, Drawer, Menu, TextField } from '@mui/material';
 import { IUser } from '../../store/slices/auth';
 import { auth } from '../../utils/firebase';
 import { getInitials } from '../../utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 export default function Chat() {
   const store = useGermanStore();
+  const { t } = useTranslation();
   const apiUrl = import.meta.env.VITE_API_URL;
   const socketUrl = import.meta.env.VITE_SOCKET_URL;
 
@@ -231,7 +233,7 @@ export default function Chat() {
                   textDecoration: 'none',
                 }}
               >
-                MESSAGES
+                {t('messages').toUpperCase()}
               </Typography>
               <Autocomplete
                 fullWidth
@@ -273,7 +275,7 @@ export default function Chat() {
                 )}
                 // sx={{ width: 300, mt: 2, mb: 3 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Search users.." />
+                  <TextField {...params} label={t('search_users')} />
                 )}
               />
 
@@ -324,7 +326,7 @@ export default function Chat() {
                     color="primary"
                     onClick={() => setIsDrawerOpen(true)}
                   >
-                    Start a conversation
+                    {t('start_conversation')}
                   </Button>
                 </Box>
               )}
@@ -360,7 +362,7 @@ export default function Chat() {
                 textDecoration: 'none',
               }}
             >
-              MESSAGES
+              {t('messages').toUpperCase()}
             </Typography>
             <Autocomplete
               sx={{ width: '100%', mt: 2, mb: 3 }}
@@ -402,7 +404,7 @@ export default function Chat() {
               )}
               // sx={{ width: 300, mt: 2, mb: 3 }}
               renderInput={(params) => (
-                <TextField {...params} label="Search users.." />
+                <TextField {...params} label={t('search_users')} />
               )}
             />
             {store.user &&
