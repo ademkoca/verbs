@@ -13,9 +13,11 @@ import CustomSwitch from '../../components/switch';
 import useGermanStore from '../../store';
 import { auth } from '../../utils/firebase';
 import { Alert } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 export default function Verbs() {
   const store = useGermanStore();
+  const { t } = useTranslation();
   const verbsProgress = store.user?.progress?.find((p) => p.name === 'verbs');
   // console.log('user: ', store.user);
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -92,7 +94,7 @@ export default function Verbs() {
       ) {
         setMessageClass('success');
         setCorrectGuesses((prev: number) => prev + 1);
-        setSuccessMsg(`${userInputParticiple} is correct`);
+        setSuccessMsg(`${userInputParticiple} ${t('is_correct')}`);
         setUserInputParticiple('');
         setTimeout(() => {
           resetInputs();
@@ -101,7 +103,7 @@ export default function Verbs() {
       //if incorrect guess
       else {
         setMessageClass('error');
-        setSuccessMsg(`${userInputParticiple} is incorrect`);
+        setSuccessMsg(`${userInputParticiple} ${t('is_incorrect')}`);
         setUserInputParticiple('');
         setTimeout(() => {
           resetInputs();
@@ -255,10 +257,10 @@ export default function Verbs() {
               textDecoration: 'none',
             }}
           >
-            VERBS
+            {t('verbs').toUpperCase()}
           </Typography>
-          <Typography variant="body2" component="p">
-            Guess the correct preterite and participle for the given verb
+          <Typography variant="body2" textAlign={'center'} component="p">
+            {t('verbs_page_description')}
           </Typography>
         </Box>
         {!isMaxNumberReached ? (
@@ -266,7 +268,7 @@ export default function Verbs() {
             <Box my={2}>
               <Typography>
                 {verbsProgress?.correctGuesses ?? correctGuesses}/
-                {verbsProgress?.totalGuesses ?? totalGuesses} correct
+                {verbsProgress?.totalGuesses ?? totalGuesses} {t('correct')}
               </Typography>
             </Box>
             <Typography component="h5" variant="h5">
@@ -285,7 +287,7 @@ export default function Verbs() {
             )}
             {messageClass !== 'success' && (
               <Typography color="green" sx={{ mt: 2 }}>
-                correct: {isHard && activeVerb?.preterite + ' > '}
+                {t('correct')}: {isHard && activeVerb?.preterite + ' > '}
                 {activeVerb?.pastParticiple}
               </Typography>
             )}
@@ -296,29 +298,29 @@ export default function Verbs() {
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <CustomSwitch
                     value={isHard}
                     onChange={handleToggleLevel}
-                    left={'Easy'}
-                    right={'Hard'}
+                    left={t('easy')}
+                    right={t('hard')}
                     options={[
                       {
-                        title: 'Easy',
-                        description: 'Only past participle',
+                        title: t('easy'),
+                        description: t('only_past_participle'),
                       },
                       {
-                        title: 'Hard',
-                        description: 'Preterite and past participle',
+                        title: t('hard'),
+                        description: t('preterite_and_past_participle'),
                       },
                     ]}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <CustomSwitch
                     value={includeTranslation}
                     onChange={handleToggleIncludeTranslation}
-                    left={'Translation'}
+                    left={t('translation')}
                   />
                 </Grid>
                 {isHard && (
@@ -329,7 +331,7 @@ export default function Verbs() {
                       required
                       fullWidth
                       id="preterite"
-                      label="Preterite"
+                      label={t('preterite')}
                       name="preterite"
                       autoComplete="preterite"
                       value={userInputPreterite}
@@ -346,7 +348,7 @@ export default function Verbs() {
                     required
                     fullWidth
                     id="particip"
-                    label="Participle"
+                    label={t('participle')}
                     name="particip"
                     autoComplete="particip"
                     value={userInputParticiple}
@@ -363,7 +365,7 @@ export default function Verbs() {
                 sx={{ mt: 3, mb: 2 }}
                 disabled={isLoading}
               >
-                Check
+                {t('check')}
               </Button>
               <Button
                 type="button"
@@ -373,24 +375,25 @@ export default function Verbs() {
                 onClick={resetInputs}
                 disabled={isLoading}
               >
-                Skip
+                {t('skip')}
               </Button>
             </Box>
           </Box>
         ) : (
           <Alert severity="success" sx={{ mt: { xs: 0, md: 3 } }}>
             <Typography mb={2}>
-              CONGRATS! You've guessed{' '}
-              {verbsProgress?.correctGuesses ?? correctGuesses} out of{' '}
-              {verbsProgress?.totalGuesses ?? totalGuesses} verbs correct.
+              {t('congrats_you_guessed')}
+              {verbsProgress?.correctGuesses ?? correctGuesses} {t('out_of')}{' '}
+              {verbsProgress?.totalGuesses ?? totalGuesses} {t('verbs_correct')}
+              .
             </Typography>
             <Typography>
               {' '}
-              You can
+              {t('you_can')}
               <Button variant="text" href="/#/progress" size="small">
-                Reset
+                {t('reset1')}
               </Button>
-              your progress and start again
+              {t('your_progress_and_start_again')}
             </Typography>
           </Alert>
         )}
