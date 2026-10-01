@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ToastContainer, toast } from 'react-toastify';
 import useGermanStore from '../../store';
+import { ApiError, apiFetch } from '../../api/client';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function SendFeedback() {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -17,47 +20,40 @@ export default function SendFeedback() {
   const [fullName, setFullName] = useState(
     store.user ? store.user?.firstName + ' ' + store.user?.lastName : ''
   );
-  const [email, setEmail] = useState(store.user?.email);
+  const [email, setEmail] = useState(store.user?.email ?? '');
   const [feedback, setFeedback] = useState('');
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const data = new FormData(event.currentTarget);
-
-    // const email = data.get('email');
-    // const fullName = data.get('full-name');
-    // const feedback = data.get('feedback');
-
-    if (email !== '' && feedback !== '') {
-      try {
-        setIsLoading(true);
-
-        try {
-          const res = await fetch(`${apiUrl}/feedback`, {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify({
-              senderEmail: email,
-              message: feedback,
-              senderName: fullName ?? null,
-            }),
-          });
-          if (res.ok) {
-            const msg = await res.text();
-            toast.success(msg);
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 3000);
-          }
-        } catch (err) {
-          console.log(err);
-          toast.error('Error occurred: ' + err.message);
-        }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    } else toast.error('Please enter email and feedback text');
+    if (isLoading) return;
+    if (!EMAIL_REGEX.test(email.trim()) || feedback.trim() === '') {
+      toast.error('Please enter a valid email and your feedback');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      // signed-in users send their token; the API then uses the account's email
+      const msg = await apiFetch<string>(
+        '/feedback',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            senderEmail: email.trim(),
+            message: feedback,
+            senderName: fullName.trim() || undefined,
+          }),
+        },
+        { auth: 'optional' }
+      );
+      toast.success(msg);
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 3000);
+    } catch (err) {
+      toast.error(
+        err instanceof ApiError ? err.message : 'Could not send your feedback'
+      );
+      setIsLoading(false);
+    }
   };
 
   React.useEffect(() => {
@@ -110,6 +106,8 @@ export default function SendFeedback() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={!!store.user}
+            helperText={store.user ? 'Sent from your account email' : undefined}
           />
           <TextField
             margin="normal"

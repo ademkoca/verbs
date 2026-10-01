@@ -14,6 +14,11 @@ import Home from './pages/home/index.tsx';
 import SendFeedback from './pages/send-feedback/index.tsx';
 import Unsubscribe from './pages/unsubscribe/index.tsx';
 
+// Older newsletters link to /unsubscribe/<id> without the hash the router needs
+if (window.location.pathname.startsWith('/unsubscribe/')) {
+  window.location.replace('/#' + window.location.pathname);
+}
+
 const router = createHashRouter([
   {
     path: '/',
