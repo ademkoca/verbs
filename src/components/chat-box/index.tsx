@@ -17,14 +17,15 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import InputEmoji from 'react-input-emoji';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { auth } from '../../utils/firebase';
+import { apiFetch } from '../../api/client';
 import useGermanStore from '../../store';
 import { getInitials } from '../../utils/helpers';
 
 const ChatBox = ({
   chat,
   currentUser,
-  setSendMessage,
+  sendToSocket,
+  onDeleted,
   receivedMessage,
   setIsTyping,
   showIsTyping,
@@ -34,7 +35,8 @@ const ChatBox = ({
 }: {
   chat: IChat;
   currentUser: string;
-  setSendMessage: (arg0: any) => void;
+  sendToSocket: (message: IMessage & { receiverId: string }) => void;
+  onDeleted: () => void;
   receivedMessage: IMessage | null;
   setIsTyping: (arg0: boolean) => void;
   showIsTyping: boolean;
@@ -44,12 +46,14 @@ const ChatBox = ({
 }) => {
   dayjs.extend(relativeTime);
 
-  const apiUrl = import.meta.env.VITE_API_URL;
   const store = useGermanStore();
+  const partnerId = chat?.members?.find((id: string) => id !== currentUser);
+  const typingTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const [userData, setUserData] = useState<IUser | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
+  const [isSending, setIsSending] = useState<boolean>(false);
   const [chatMenu, setChatMenu] = useState<null | HTMLElement>(null);
   interface IChatOptions {
     label: string;
@@ -70,21 +74,10 @@ const ChatBox = ({
   };
   //delete chat
   const handleDeleteChat = async (id: string) => {
+    handleCloseChatMenu();
     try {
-      const res = await fetch(
-        `${apiUrl}/message/${id}`,
-
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      if (res.status === 200) {
-        alert('Chat deleted successfully');
-        window.location.reload();
-      }
+      await apiFetch(`/message/${id}`, { method: 'DELETE' });
+      onDeleted();
     } catch (error) {
       console.log(error);
     }
@@ -92,16 +85,9 @@ const ChatBox = ({
 
   // fetching data for header
   useEffect(() => {
-    const userId = chat?.members?.find((id: string) => id !== currentUser);
     const getUserData = async () => {
       try {
-        const token = await auth.currentUser?.getIdToken(true);
-        const jwt = token ? token : store.token;
-        const res = await fetch(`${apiUrl}/users/${userId}`, {
-          headers: { Authorization: 'Bearer ' + jwt },
-        });
-        const response = await res.json();
-        setUserData(response);
+        setUserData(await apiFetch<IUser>(`/users/${partnerId}`));
       } catch (error) {
         console.log(error);
       }
@@ -114,9 +100,7 @@ const ChatBox = ({
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`${apiUrl}/message/${chat._id}`);
-        const response = await res.json();
-        setMessages(response);
+        setMessages(await apiFetch<IMessage[]>(`/message/${chat._id}`));
       } catch (error) {
         console.log(error);
       }
@@ -131,41 +115,41 @@ const ChatBox = ({
   }, [messages]);
 
   // Send Message
+  // Save the message first, then tell the receiver through the socket
   const handleSend = async () => {
-    // e.preventDefault();
-    if (newMessage !== '') {
-      const message = {
-        senderId: currentUser,
-        text: newMessage,
-        chatId: chat._id,
-      };
-      const receiverId = chat.members.find((id) => id !== currentUser);
-      // send message to socket server
-      setSendMessage({ ...message, receiverId });
-      // send message to database
-      if (message)
-        try {
-          const res = await fetch(`${apiUrl}/message`, {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify(message),
-          });
-          const response = await res.json();
-          setMessages([...messages, response]);
-          setNewMessage('');
-        } catch {
-          console.log('error');
-        }
+    const text = newMessage.trim();
+    if (text === '' || isSending || !partnerId) return;
+    setIsSending(true);
+    try {
+      const saved = await apiFetch<IMessage>('/message', {
+        method: 'POST',
+        body: JSON.stringify({ chatId: chat._id, text }),
+      });
+      setMessages((prev) => [...prev, saved]);
+      setNewMessage('');
+      sendToSocket({ ...saved, receiverId: partnerId });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSending(false);
     }
   };
 
-  // Receive Message from parent component
+  // Receive message from parent component; only accept it from the chat partner
   useEffect(() => {
-    if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
-      setMessages([...messages, receivedMessage]);
+    if (
+      receivedMessage !== null &&
+      receivedMessage.chatId === chat._id &&
+      receivedMessage.senderId === partnerId
+    ) {
+      setMessages((prev) =>
+        prev.some((m) => m._id === receivedMessage._id)
+          ? prev
+          : [...prev, receivedMessage]
+      );
     }
   }, [receivedMessage]);
-  const scroll = useRef();
+  const scroll = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = document.getElementsByClassName('react-input-emoji--container');
@@ -323,16 +307,15 @@ const ChatBox = ({
           keepOpened
           value={newMessage}
           onChange={handleChange}
-          onKeyDown={(e) => {
+          onKeyDown={(e: KeyboardEvent) => {
             e.key === 'Enter' && handleSend();
             setIsTyping(true);
-            setTimeout(() => {
-              setIsTyping(false);
-            }, 2000);
+            clearTimeout(typingTimer.current);
+            typingTimer.current = setTimeout(() => setIsTyping(false), 2000);
           }}
           //   onBlur={() => setIsTyping(false)}
         />
-        <Button onClick={handleSend} disabled={newMessage === ''}>
+        <Button onClick={handleSend} disabled={newMessage.trim() === '' || isSending}>
           Send
         </Button>
       </Box>

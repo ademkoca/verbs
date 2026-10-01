@@ -5,7 +5,7 @@ import useGermanStore from '../../store';
 import Typography from '@mui/material/Typography';
 import ChatAvatar from '../chat-avatar';
 import { IChat, IMessage } from '../../types/interfaces';
-import { auth } from '../../utils/firebase';
+import { ApiError, apiFetch } from '../../api/client';
 
 const Conversation = ({
   data,
@@ -20,7 +20,6 @@ const Conversation = ({
   currentChat?: IChat | null;
   // preview?: IMessage;
 }) => {
-  const apiUrl = import.meta.env.VITE_API_URL;
   const store = useGermanStore();
   const [userData, setUserData] = useState<IUser | null>(null);
   const [latestMessage, setLatestMessage] = useState<IMessage | null>(null);
@@ -29,9 +28,10 @@ const Conversation = ({
   const getLatestMessage = async (chatId: string) => {
     if (store?.user?._id) {
       try {
-        const res = await fetch(`${apiUrl}/message/latest-message/${chatId}`);
-        const response = await res.json();
-        setLatestMessage(response.data[0]);
+        const response = await apiFetch<{ data: IMessage[] }>(
+          `/message/latest-message/${chatId}`
+        );
+        setLatestMessage(response.data[0] ?? null);
       } catch (error) {
         console.log(error);
       }
@@ -40,35 +40,30 @@ const Conversation = ({
   const checkForUnreadMessages = async (chatId: string) => {
     if (store?.user?._id) {
       try {
-        const res = await fetch(`${apiUrl}/chat/checkUnread/${chatId}`);
-        if (res.status === 200) setUnreadMessages(true);
-        else setUnreadMessages(false);
-        // setLatestMessage(response.data[0]);
+        await apiFetch(`/chat/checkUnread/${chatId}`);
+        setUnreadMessages(true);
       } catch (error) {
-        console.log(error);
+        if (error instanceof ApiError && error.status === 404) {
+          setUnreadMessages(false);
+        } else console.log(error);
       }
     }
   };
   useEffect(() => {
     const getUserData = async () => {
       const userId = data.members.find((id: string) => id !== currentUser);
-      const token = await auth.currentUser?.getIdToken(true);
-      const jwt = token ? token : store.token;
       try {
-        const res = await fetch(`${apiUrl}/users/${userId}`, {
-          headers: { Authorization: 'Bearer ' + jwt },
-        });
-        const response = await res.json();
-        setUserData(response);
-        // store.updateUser(data);
+        setUserData(await apiFetch<IUser>(`/users/${userId}`));
       } catch (error) {
         console.log(error);
       }
     };
     getUserData();
     getLatestMessage(data._id);
-    if (currentChat?._id !== data._id) checkForUnreadMessages(data._id);
-  }, [data]);
+    // the open chat was just marked as read
+    if (currentChat?._id === data._id) setUnreadMessages(false);
+    else checkForUnreadMessages(data._id);
+  }, [data, currentChat?._id]);
 
   return (
     <Box display={'flex'} alignItems={'center'} gap={2} py={2}>

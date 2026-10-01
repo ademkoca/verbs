@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,35 +8,37 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import useGermanStore from '../../store';
 import Conversation from '../../components/conversation';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { IChat, IMessage } from '../../types/interfaces';
 import ChatBox from '../../components/chat-box';
 import { Autocomplete, Drawer, Menu, TextField } from '@mui/material';
 import { IUser } from '../../store/slices/auth';
-import { auth } from '../../utils/firebase';
+import { ApiError, apiFetch } from '../../api/client';
 import { getInitials } from '../../utils/helpers';
 
 export default function Chat() {
   const store = useGermanStore();
-  const apiUrl = import.meta.env.VITE_API_URL;
   const socketUrl = import.meta.env.VITE_SOCKET_URL;
+  const userId = store.user?._id;
 
-  const socket = useRef();
+  const socket = useRef<Socket | null>(null);
 
   type SocketUser = {
     userId: string;
-    socketId: string;
+  };
+  type TypingEvent = {
+    senderId: string;
+    isTyping: boolean;
   };
 
   const [chats, setChats] = useState<IChat[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<SocketUser[]>([]);
   const [users, setUsers] = useState<IUser[]>([]);
   const [currentChat, setCurrentChat] = useState<IChat | null>(null);
-  const [sendMessage, setSendMessage] = useState<any>(null);
   const [receivedMessage, setReceivedMessage] = useState<IMessage | null>(null);
   const [receiver, setReceiver] = useState<IUser | null>(null);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [showIsTyping, setShowIsTyping] = useState<boolean>(false);
+  const [typingEvent, setTypingEvent] = useState<TypingEvent | null>(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -50,7 +52,7 @@ export default function Chat() {
 
   const markChatAsRead = async (chat: IChat) => {
     try {
-      await fetch(`${apiUrl}/chat/markAsRead/${chat._id}`);
+      await apiFetch(`/chat/markAsRead/${chat._id}`, { method: 'POST' });
     } catch (error) {
       console.log(error);
     }
@@ -74,31 +76,21 @@ export default function Chat() {
     }
   }, [currentChat, screenWidth]);
   // Get the chat in chat section
-  const getChats = async () => {
-    if (store?.user?._id) {
-      try {
-        const res = await fetch(`${apiUrl}/chat/${store?.user?._id}`);
-        const response = await res.json();
-        setChats(response.data);
-      } catch (error) {
-        console.log(error);
-      }
+  const getChats = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const response = await apiFetch<{ data: IChat[] }>(`/chat/${userId}`);
+      setChats(response.data);
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }, [userId]);
 
   // Get all users
   const getUsers = async () => {
-    const token = await auth.currentUser?.getIdToken(true);
-    const jwt = token ? token : store.token;
     try {
-      const res = await fetch(`${apiUrl}/users/all`, {
-        headers: { Authorization: 'Bearer ' + jwt },
-      });
-      const response = await res.json();
-      setUsers(
-        response.data.filter((user: IUser) => user?._id !== store.user?._id)
-        // response.data
-      );
+      const response = await apiFetch<{ data: IUser[] }>('/users/all');
+      setUsers(response.data.filter((user: IUser) => user?._id !== userId));
     } catch (error) {
       console.log(error);
     }
@@ -106,47 +98,53 @@ export default function Chat() {
 
   useEffect(() => {
     getChats();
-  }, [store?.user?._id]);
+  }, [getChats]);
   useEffect(() => {
     getUsers();
   }, []);
 
-  // Connect to Socket.io
+  // One socket per signed-in user, closed when leaving the page.
+  // The auth callback fetches a fresh socket token on every (re)connect.
   useEffect(() => {
-    socket.current = io(socketUrl);
-    socket?.current?.emit('new-user-add', store?.user?._id);
-    socket?.current?.on('get-users', (users: string[]) => {
-      setOnlineUsers(users);
+    if (!userId) return;
+    const connection = io(socketUrl, {
+      auth: (cb) => {
+        apiFetch<{ token: string }>('/auth/socket-token')
+          .then(({ token }) => cb({ token }))
+          .catch(() => cb({}));
+      },
     });
-  }, [store.user]);
-
-  // Send Message to socket server
-  useEffect(() => {
-    if (sendMessage !== null) {
-      socket?.current?.emit('send-message', sendMessage);
-    }
-  }, [sendMessage]);
-
-  useEffect(() => {
-    socket?.current?.emit('is-typing', {
-      senderId: store.user?._id,
-      receiverId: currentChat?.members.find((u) => u !== store.user?._id),
-      isTyping: isTyping,
-    });
-  }, [isTyping]);
-
-  // Get the message from socket server
-  useEffect(() => {
-    socket?.current?.on('recieve-message', (data) => {
+    connection.on('get-users', (users: SocketUser[]) => setOnlineUsers(users));
+    connection.on('recieve-message', (data: IMessage) => {
       setReceivedMessage(data);
       getChats();
     });
-  }, []);
+    connection.on('receive-is-typing', (data: TypingEvent) => setTypingEvent(data));
+    socket.current = connection;
+    return () => {
+      connection.disconnect();
+      socket.current = null;
+    };
+  }, [userId, socketUrl, getChats]);
+
+  const partnerId = currentChat?.members.find((u) => u !== userId);
+  const showIsTyping =
+    !!typingEvent?.isTyping && typingEvent.senderId === partnerId;
+
+  // Send a message that is already saved in the database to the receiver
+  const sendToSocket = (message: IMessage & { receiverId: string }) => {
+    socket.current?.emit('send-message', message);
+  };
+
   useEffect(() => {
-    socket?.current?.on('receive-is-typing', (data) => {
-      setShowIsTyping(data);
-    });
-  }, []);
+    if (!partnerId) return;
+    socket.current?.emit('is-typing', { receiverId: partnerId, isTyping });
+  }, [isTyping]);
+
+  const handleChatDeleted = () => {
+    setCurrentChat(null);
+    getChats();
+  };
 
   const checkOnlineStatus = (chat: IChat) => {
     const chatMember = chat.members.find(
@@ -156,34 +154,24 @@ export default function Chat() {
     return online ? true : false;
   };
 
-  const handleSelectUser = async (user: IUser) => {
-    //find if the chat with these two users exists
-    const chatRes = await fetch(
-      `${apiUrl}/chat/find/${user?._id}/${store.user?._id}`
-    );
-    //if exists, set it as current chat
-    if (chatRes.status === 200) {
-      const chat = await chatRes.json();
-
-      setCurrentChat(chat.data);
+  const handleSelectUser = async (user: IUser | null) => {
+    if (!user) return;
+    try {
+      //find if the chat with these two users exists
+      const chat = await apiFetch<{ data: IChat }>(
+        `/chat/find/${user._id}/${userId}`
+      );
+      handleOpenChat(chat.data);
+    } catch (error) {
       //if not, create a new chat and set it as current
-    } else if (chatRes.status === 404) {
-      const newChat = {
-        senderId: store.user?._id,
-        receiverId: user?._id,
-      };
-      const chatRes = await fetch(`${apiUrl}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newChat),
-      });
-      if (chatRes.status === 201) {
-        const chat = await chatRes.json();
-        if (chat) {
-          setCurrentChat(chat.data);
-          getChats();
-        }
-      }
+      if (error instanceof ApiError && error.status === 404) {
+        const chat = await apiFetch<{ data: IChat }>('/chat', {
+          method: 'POST',
+          body: JSON.stringify({ receiverId: user._id }),
+        });
+        setCurrentChat(chat.data);
+        getChats();
+      } else console.log(error);
     }
     // if (isDrawerOpen) {
     //   setisDrawerOpen(false);
@@ -291,8 +279,6 @@ export default function Chat() {
                       // }}
                     >
                       <Conversation
-                        // preview={getLatestMessage(chat._id) ?? ''}
-                        key={chat._id}
                         data={chat}
                         currentUser={store?.user?._id}
                         online={checkOnlineStatus(chat)}
@@ -311,7 +297,8 @@ export default function Chat() {
                   setIsDrawerOpen={setIsDrawerOpen}
                   chat={currentChat}
                   currentUser={store?.user?._id}
-                  setSendMessage={setSendMessage}
+                  sendToSocket={sendToSocket}
+                  onDeleted={handleChatDeleted}
                   receivedMessage={receivedMessage}
                   setIsTyping={setIsTyping}
                   showIsTyping={showIsTyping}
@@ -408,17 +395,15 @@ export default function Chat() {
             {store.user &&
               chats?.map((chat) => (
                 <MenuItem
-                  onClick={() => setCurrentChat(chat)}
-                  sx={{
-                    backgroundColor:
-                      chat._id === currentChat?._id ? 'primary' : 'dark',
-                  }}
+                  key={chat._id}
+                  onClick={() => handleOpenChat(chat)}
+                  selected={chat._id === currentChat?._id}
                 >
                   <Conversation
-                    key={chat._id}
                     data={chat}
                     currentUser={store?.user?._id}
                     online={checkOnlineStatus(chat)}
+                    currentChat={currentChat}
                   />
                 </MenuItem>
               ))}
@@ -430,7 +415,8 @@ export default function Chat() {
                 <ChatBox
                   chat={currentChat}
                   currentUser={store?.user?._id}
-                  setSendMessage={setSendMessage}
+                  sendToSocket={sendToSocket}
+                  onDeleted={handleChatDeleted}
                   receivedMessage={receivedMessage}
                   setIsTyping={setIsTyping}
                   showIsTyping={showIsTyping}
