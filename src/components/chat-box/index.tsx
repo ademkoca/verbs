@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, MouseEvent } from 'react';
+import { useState, useEffect, useRef, MouseEvent } from 'react';
 import {
   Container,
   Box,
@@ -29,7 +29,6 @@ const ChatBox = ({
   receivedMessage,
   setIsTyping,
   showIsTyping,
-  users,
   mobile,
   setIsDrawerOpen,
 }: {
@@ -40,7 +39,6 @@ const ChatBox = ({
   receivedMessage: IMessage | null;
   setIsTyping: (arg0: boolean) => void;
   showIsTyping: boolean;
-  users: IUser[];
   mobile?: boolean;
   setIsDrawerOpen?: (arg0: boolean) => void;
 }) => {
@@ -57,7 +55,7 @@ const ChatBox = ({
   const [chatMenu, setChatMenu] = useState<null | HTMLElement>(null);
   interface IChatOptions {
     label: string;
-    handler?: (arg0: string) => void | null;
+    handler: (chatId: string) => void;
   }
 
   const chatOptions: IChatOptions[] = [
@@ -94,7 +92,7 @@ const ChatBox = ({
     };
 
     if (chat !== null) getUserData();
-  }, [chat, currentUser]);
+  }, [chat, partnerId]);
 
   // fetch messages
   useEffect(() => {
@@ -148,15 +146,15 @@ const ChatBox = ({
           : [...prev, receivedMessage]
       );
     }
-  }, [receivedMessage]);
+  }, [receivedMessage, chat._id, partnerId]);
   const scroll = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = document.getElementsByClassName('react-input-emoji--container');
-    // el?.style.backgroundColor = '#FF0000';
-    if (el.length > 0) {
-      el[0].style.backgroundColor = store.darkMode ? '#121212' : '';
-      el[0].style.color = store.darkMode ? '#F1F1F1' : '';
+    // react-input-emoji has no dark theme for its container
+    const el = document.querySelector<HTMLElement>('.react-input-emoji--container');
+    if (el) {
+      el.style.backgroundColor = store.darkMode ? '#121212' : '';
+      el.style.color = store.darkMode ? '#F1F1F1' : '';
     }
   }, [store.darkMode]);
 
@@ -167,7 +165,7 @@ const ChatBox = ({
         <Box display={'flex'} alignItems={'center'}>
           {mobile && (
             <Button
-              onClick={() => setIsDrawerOpen(true)}
+              onClick={() => setIsDrawerOpen?.(true)}
               sx={{ marginTop: 3, marginX: 0 }}
             >
               <KeyboardArrowLeftIcon />{' '}
@@ -289,16 +287,6 @@ const ChatBox = ({
             </Box>
           );
         })}
-        {/* {showIsTyping && (
-          <Typography variant="body2" color="GrayText">
-            {
-              users.find(
-                (u) => u?._id === chat.members.find((m) => m !== currentUser)
-              )?.username
-            }{' '}
-            is typing...
-          </Typography>
-        )} */}
       </Box>
       {/* message input */}
       <Box display={'flex'}>

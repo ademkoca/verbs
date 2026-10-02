@@ -4,7 +4,6 @@ import {
   Button,
   CircularProgress,
   Container,
-  CssBaseline,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -37,7 +36,6 @@ const Unsubscribe = () => {
 
   return (
     <Container component="main" maxWidth="md" sx={{ minHeight: '80dvh' }}>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,

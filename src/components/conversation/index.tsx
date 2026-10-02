@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Avatar } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box } from '@mui/material';
 import { IUser } from '../../store/slices/auth';
-import useGermanStore from '../../store';
 import Typography from '@mui/material/Typography';
 import ChatAvatar from '../chat-avatar';
 import { IChat, IMessage } from '../../types/interfaces';
@@ -12,43 +11,16 @@ const Conversation = ({
   currentUser,
   online,
   currentChat,
-}: // preview,
-{
-  data: any;
+}: {
+  data: IChat;
   currentUser: string | undefined;
   online: boolean;
   currentChat?: IChat | null;
-  // preview?: IMessage;
 }) => {
-  const store = useGermanStore();
   const [userData, setUserData] = useState<IUser | null>(null);
   const [latestMessage, setLatestMessage] = useState<IMessage | null>(null);
   const [unreadMessages, setUnreadMessages] = useState<boolean>(false);
-  // Get the most recent message in a chat
-  const getLatestMessage = async (chatId: string) => {
-    if (store?.user?._id) {
-      try {
-        const response = await apiFetch<{ data: IMessage[] }>(
-          `/message/latest-message/${chatId}`
-        );
-        setLatestMessage(response.data[0] ?? null);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-  const checkForUnreadMessages = async (chatId: string) => {
-    if (store?.user?._id) {
-      try {
-        await apiFetch(`/chat/checkUnread/${chatId}`);
-        setUnreadMessages(true);
-      } catch (error) {
-        if (error instanceof ApiError && error.status === 404) {
-          setUnreadMessages(false);
-        } else console.log(error);
-      }
-    }
-  };
+
   useEffect(() => {
     const getUserData = async () => {
       const userId = data.members.find((id: string) => id !== currentUser);
@@ -58,12 +30,33 @@ const Conversation = ({
         console.log(error);
       }
     };
+    // Get the most recent message in a chat
+    const getLatestMessage = async () => {
+      try {
+        const response = await apiFetch<{ data: IMessage[] }>(
+          `/message/latest-message/${data._id}`
+        );
+        setLatestMessage(response.data[0] ?? null);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const checkForUnreadMessages = async () => {
+      try {
+        await apiFetch(`/chat/checkUnread/${data._id}`);
+        setUnreadMessages(true);
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) {
+          setUnreadMessages(false);
+        } else console.log(error);
+      }
+    };
     getUserData();
-    getLatestMessage(data._id);
+    getLatestMessage();
     // the open chat was just marked as read
     if (currentChat?._id === data._id) setUnreadMessages(false);
-    else checkForUnreadMessages(data._id);
-  }, [data, currentChat?._id]);
+    else checkForUnreadMessages();
+  }, [data, currentUser, currentChat?._id]);
 
   return (
     <Box display={'flex'} alignItems={'center'} gap={2} py={2}>

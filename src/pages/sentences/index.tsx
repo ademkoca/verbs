@@ -1,386 +1,163 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { sentencesWithoutParts } from '../../../sentences';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import useGermanStore from '../../store';
-import { auth } from '../../utils/firebase';
-import { Alert } from '@mui/material';
+import sentences from '../../../sentences';
+import QuizLayout from '../../components/quiz-layout';
+import { useQuiz } from '../../hooks/useQuiz';
+import { useProgress } from '../../hooks/useProgress';
+import { shuffle } from '../../utils/shuffle';
+import { Sentence } from '../../types/interfaces';
+
+// Tiles are tracked by their position in the sentence, so repeated words stay separate
+interface Tile {
+  id: number;
+  word: string;
+}
+
+const keyOf = (sentence: Sentence) => sentence.original;
+
+const toShuffledTiles = (sentence: Sentence | null): Tile[] =>
+  sentence ? shuffle(sentence.original.split(' ').map((word, id) => ({ id, word }))) : [];
+
+const tileRowProps = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  flexWrap: 'wrap',
+  gap: 2,
+} as const;
 
 export default function Sentences() {
-  const store = useGermanStore();
-  const apiUrl = import.meta.env.VITE_API_URL;
-  interface Sentence {
-    original: string;
-    translation?: string;
-  }
-  //   const data = verbs;
-  const sentencesProgress = store.user?.progress?.find(
-    (p) => p.name === 'sentences'
-  );
-  const removeItemsInSecondArray = (arr1: Sentence[], arr2: string[]) => {
-    if (arr2?.length > 0) {
-      // Use filter to create a new array with items from arr1 that are not in arr2
-      const result = arr1.filter((item) => arr2.indexOf(item.original) === -1);
-      return result;
-    } else return arr1;
+  const { progress, isSignedIn, record } = useProgress('sentences');
+  const quiz = useQuiz(sentences, keyOf, progress?.used);
+  const sentence = quiz.current;
+  const [pool, setPool] = useState<Tile[]>(() => toShuffledTiles(sentence));
+  const [picked, setPicked] = useState<Tile[]>([]);
+  const isWrongAnswer = quiz.feedback?.correct === false;
+
+  const loadBoard = (next: Sentence | null) => {
+    setPool(toShuffledTiles(next));
+    setPicked([]);
   };
-  const data = sentencesProgress
-    ? removeItemsInSecondArray(sentencesWithoutParts, sentencesProgress?.used)
-    : sentencesWithoutParts;
-  const totalSentences = data.length;
-  const [activeSentence, setActiveSentence] = useState<Sentence>({
-    original: '',
-    translation: '',
-  });
-  const [activeSentenceCopy, setActiveSentenceCopy] =
-    useState<Sentence>(activeSentence);
-  // const [userInput, setUserInput] = useState<string>('');
-  const [correctGuesses, setCorrectGuesses] = useState(0);
-  const [totalGuesses, setTotalGuesses] = useState(0);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [messageClass, setMessageClass] = useState('success');
-  const [usedItems] = useState<string[]>([]);
-  // const [isHard, setIsHard] = useState<boolean>(false);
-  const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
-  const [userInput, setUserInput] = useState<string[] | null>(null);
-  const [shuffled, setShuffled] = useState<string[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isWrongAnswer, setIsWrongAnswer] = useState<boolean>(false);
-  const [isMaxNumberReached, setIsMaxNumberReached] = useState<boolean>(false);
+
+  const goToNextSentence = () => loadBoard(quiz.next());
+  const restart = () => loadBoard(quiz.restart());
+
+  const pickTile = (tile: Tile) => {
+    setPool((prev) => prev.filter((t) => t.id !== tile.id));
+    setPicked((prev) => [...prev, tile]);
+  };
+
+  const unpickTile = (tile: Tile) => {
+    setPicked((prev) => prev.filter((t) => t.id !== tile.id));
+    setPool((prev) => [...prev, tile]);
+  };
 
   const checkUserInput = () => {
-    if (shuffled?.length === 0) {
-      if (userInput?.join(' ') === activeSentence.original) {
-        setMessageClass('success');
-        setCorrectGuesses((prev: number) => prev + 1);
-        setSuccessMsg(`Correct! ${activeSentence.original}`);
-        setUserInput(null);
-        setTimeout(() => {
-          resetInputs();
-        }, 3000);
-      } else {
-        setMessageClass('error');
-        setSuccessMsg(`Incorrect: ${userInput?.join(' ')}`);
-        // setUserInput(null);
-        setIsWrongAnswer(true);
-
-        // setTimeout(() => {
-        //   resetInputs();
-        // }, 3000);
-      }
-      //anyway
-      setTotalGuesses((prev: number) => prev + 1);
-      //if user is logged in
-      if (store.user) {
-        // const progress = store.user?.progress?.find(
-        //   (p: Progress) => p.name === 'verbs'
-        // );
-        updateProgress(
-          'sentences',
-          activeSentence?.original,
-          userInput?.join(' ') === activeSentence.original
-        );
-      }
-    }
-  };
-  const updateProgress = (name: string, guess: string, correct: boolean) => {
-    const updatedProgress = store.user?.progress.map((item) => {
-      if (item.name === name) {
-        return {
-          ...item,
-          used: [...item.used, guess],
-          totalGuesses: item.totalGuesses + 1,
-          correctGuesses: correct
-            ? item.correctGuesses + 1
-            : item.correctGuesses,
-        };
-      }
-      return item;
-    });
-    const _user = { ...store.user, progress: updatedProgress };
-    store.updateUser(_user);
-  };
-  const updateUser = async () => {
-    const token = await auth.currentUser?.getIdToken(true);
-    const jwt = token ? token : store.token;
-    try {
-      const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
-        method: 'PUT',
-        body: JSON.stringify(store?.user),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + jwt,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    if (!sentence || quiz.busy || pool.length > 0) return;
+    const attempt = picked.map((t) => t.word).join(' ');
+    const correct = attempt === sentence.original;
+    const message = correct ? `Correct! ${sentence.original}` : `Incorrect: ${attempt}`;
+    if (!quiz.answer(correct, message, sentence.original)) return;
+    record(sentence.original, correct);
+    if (correct) quiz.schedule(goToNextSentence);
   };
 
-  const proceed = () => {
-    setIsWrongAnswer(false);
-    resetInputs();
-  };
-
-  useEffect(() => {
-    generateNewArticle();
-  }, []);
-  const generateNewArticle = () => {
-    if (usedItems.length !== totalSentences) {
-      const random = Math.floor(
-        Math.random() * (totalSentences - usedItems.length)
-      );
-      try {
-        if (!usedItems.includes(data[random].original)) {
-          setActiveSentence(data[random]);
-          setActiveSentenceCopy(data[random]);
-          setShuffled(shuffleArray(data[random].original.split(' ')));
-
-          usedItems.push(data[random].original);
-        } else generateNewArticle();
-      } catch (e) {
-        setIsMaxNumberReached(true);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (store.user) updateUser();
-  }, [sentencesProgress?.used.length]);
-
-  const resetInputs = () => {
-    setSuccessMsg(null);
-    generateNewArticle();
-    setMessageClass('success');
-    setUserInput(null);
-    // textRef?.current?.focus();
-    setIsLoading(false);
-  };
-
-  const reset = (): void => {
-    setActiveSentenceCopy(activeSentence);
-    setShuffled(shuffleArray(activeSentenceCopy.original.split(' ')));
-    setUserInput([]);
-  };
-
-  const shuffleArray = (arr: string[]) => {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
-  const handleUserInputClick = (i: string) => {
-    const _userInput = userInput ? [...userInput] : [];
-    setUserInput(_userInput.filter((u) => u !== i));
-    const _shuffled = shuffled ? [...shuffled] : [];
-    _shuffled.push(i);
-    setShuffled(_shuffled);
-  };
-  const handleActiveSentenceClick = (e: string) => {
-    // e.preventDefault();
-    if (shuffled?.length > 0) {
-      const _userInput = userInput ? [...userInput] : [];
-      _userInput.push(e);
-      setUserInput(_userInput);
-      const _shuffled = shuffled ? [...shuffled] : [];
-
-      setShuffled(_shuffled.filter((s) => s !== e));
-    }
-  };
+  const score = progress
+    ? { correct: progress.correctGuesses, total: progress.totalGuesses }
+    : quiz.score;
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            textAlign={'center'}
-            // href="/"
-            sx={{
-              // maxWidth: 400,
-              mb: 2,
-              flexGrow: 1,
-              // fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            SENTENCE <br /> CONSTRUCTION
-          </Typography>
-          <Typography variant="body2" component="p">
-            Put the words in the correct order to form a sentence
-          </Typography>
-        </Box>
-        {!isMaxNumberReached ? (
-          <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-            <Box my={2}>
-              <Typography>
-                {sentencesProgress?.correctGuesses ?? correctGuesses}/
-                {sentencesProgress?.totalGuesses ?? totalGuesses} correct
-              </Typography>
-            </Box>
-            <Typography component="h5" variant="h5">
-              {activeSentence?.translation}
-            </Typography>
-            <Box
-              maxWidth={'sm'}
-              flexDirection={'column'}
-              rowGap={5}
-              minWidth={'100%'}
-            >
-              <Box
-                display={'flex'}
-                flexDirection={'row'}
-                justifyContent={'center'}
-                flexWrap={'wrap'}
-                my={5}
-                gap={2}
-              >
-                {userInput?.map((i) => (
-                  <Button
-                    style={{ textTransform: 'none' }}
-                    key={i}
-                    variant="contained"
-                    onClick={() => handleUserInputClick(i)}
-                  >
-                    {i}
-                  </Button>
-                ))}
-              </Box>
-              <Box
-                display={'flex'}
-                flexDirection={'row'}
-                gap={2}
-                justifyContent={'center'}
-                flexWrap={'wrap'}
-                mb={2}
-              >
-                {shuffled?.map((p) => (
-                  <Button
-                    style={{ textTransform: 'none' }}
-                    key={p}
-                    variant="outlined"
-                    onClick={() => handleActiveSentenceClick(p)}
-                  >
-                    {p}
-                  </Button>
-                ))}
-              </Box>
-            </Box>
-            {successMsg && (
-              <Typography
-                mb={2}
-                component="h6"
-                variant="h6"
-                color={messageClass === 'success' ? 'green' : 'error'}
-              >
-                {successMsg}
-              </Typography>
-            )}
-            {messageClass !== 'success' && (
-              <Typography component="h6" variant="h6" color="green">
-                correct: {activeSentence?.original}
-              </Typography>
-            )}
-            <Box
-              component="form"
-              noValidate
-              // onSubmit={checkUserInput}
-              sx={{ mt: 3 }}
-            >
-              {/* <Grid container spacing={2}>
-              <Grid item xs={6} sm={6}>
-                <CustomSwitch
-                  value={includeTranslation}
-                  onChange={handleToggleIncludeTranslation}
-                  left={'Translation'}
-                />
-              </Grid>
-            </Grid> */}
-              {!isWrongAnswer && (
-                <Button
-                  type="button"
-                  onClick={checkUserInput}
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  disabled={shuffled?.length > 0}
-                >
-                  Check
-                </Button>
-              )}
-              {isWrongAnswer && (
-                <Button
-                  type="button"
-                  onClick={proceed}
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Continue
-                </Button>
-              )}
+    <QuizLayout
+      title={
+        <>
+          SENTENCE <br /> CONSTRUCTION
+        </>
+      }
+      description="Put the words in the correct order to form a sentence"
+      itemLabel="sentences"
+      score={score}
+      completed={quiz.completed}
+      onRestart={isSignedIn ? undefined : restart}
+      feedback={quiz.feedback}
+      prompt={sentence?.translation}
+      board={
+        <Box maxWidth="sm" minWidth="100%">
+          <Box {...tileRowProps} my={5}>
+            {picked.map((tile) => (
               <Button
-                startIcon={<RefreshIcon />}
-                type="button"
-                fullWidth
-                variant="outlined"
-                sx={{ mt: 0, mb: 2 }}
-                onClick={reset}
-                disabled={isLoading || isWrongAnswer}
+                style={{ textTransform: 'none' }}
+                key={tile.id}
+                variant="contained"
+                disabled={quiz.busy}
+                onClick={() => unpickTile(tile)}
               >
-                Reset
+                {tile.word}
               </Button>
-              <Button
-                type="button"
-                fullWidth
-                variant="outlined"
-                sx={{ mt: 0, mb: 2 }}
-                onClick={resetInputs}
-                disabled={isLoading || isWrongAnswer}
-              >
-                Skip
-              </Button>
-            </Box>
+            ))}
           </Box>
-        ) : (
-          <Alert severity="success" sx={{ mt: 10 }}>
-            <Typography mb={2}>
-              CONGRATS! You've guessed{' '}
-              {sentencesProgress?.correctGuesses ?? correctGuesses} out of{' '}
-              {sentencesProgress?.totalGuesses ?? totalGuesses} sentences
-              correct.
-            </Typography>
-            <Typography>
-              {' '}
-              You can
-              <Button variant="text" href="/#/progress" size="small">
-                Reset
+          <Box {...tileRowProps} mb={2}>
+            {pool.map((tile) => (
+              <Button
+                style={{ textTransform: 'none' }}
+                key={tile.id}
+                variant="outlined"
+                disabled={quiz.busy}
+                onClick={() => pickTile(tile)}
+              >
+                {tile.word}
               </Button>
-              your progress and start again
-            </Typography>
-          </Alert>
+            ))}
+          </Box>
+        </Box>
+      }
+    >
+      <Box sx={{ mt: 3, width: '100%' }}>
+        {isWrongAnswer ? (
+          <Button
+            type="button"
+            onClick={goToNextSentence}
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Continue
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            onClick={checkUserInput}
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            disabled={quiz.busy || pool.length > 0}
+          >
+            Check
+          </Button>
         )}
+        <Button
+          startIcon={<RefreshIcon />}
+          type="button"
+          fullWidth
+          variant="outlined"
+          sx={{ mt: 0, mb: 2 }}
+          onClick={() => loadBoard(sentence)}
+          disabled={quiz.busy}
+        >
+          Reset
+        </Button>
+        <Button
+          type="button"
+          fullWidth
+          variant="outlined"
+          sx={{ mt: 0, mb: 2 }}
+          onClick={goToNextSentence}
+          disabled={quiz.busy}
+        >
+          Skip
+        </Button>
       </Box>
-    </Container>
+    </QuizLayout>
   );
 }

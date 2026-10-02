@@ -1,88 +1,6 @@
-const sentences = [
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Auto', 'ist', 'blau', 'und', 'ich', 'liebe', 'ihn'],
-    original: 'Mein Auto ist blau und ich liebe ihn',
-    translation: 'My car is blue and I love it',
-  },
-  {
-    parts: ['Mein', 'Name', 'ist', 'Peter'],
-    original: 'Mein Name ist Peter',
-    translation: 'My name is Peter',
-  },
-  {
-    parts: ['Mein', 'Name', 'ist', 'Peter'],
-    original: 'Mein Name ist Peter',
-    translation: 'My name is Peter',
-  },
-  {
-    parts: ['Mein', 'Name', 'ist', 'Peter'],
-    original: 'Mein Name ist Peter',
-    translation: 'My name is Peter',
-  },
-  {
-    parts: ['Mein', 'Name', 'ist', 'Peter'],
-    original: 'Mein Name ist Peter',
-    translation: 'My name is Peter',
-  },
-  {
-    parts: ['Mein', 'Name', 'ist', 'Peter'],
-    original: 'Mein Name ist Peter',
-    translation: 'My name is Peter',
-  },
-  {
-    parts: ['Mein', 'Name', 'ist', 'Peter'],
-    original: 'Mein Name ist Peter',
-    translation: 'My name is Peter',
-  },
-  {
-    parts: ['Mein', 'Name', 'ist', 'Peter'],
-    original: 'Mein Name ist Peter',
-    translation: 'My name is Peter',
-  },
-];
-export default sentences;
+import { Sentence } from './src/types/interfaces';
 
-export const sentencesWithoutParts = [
+const sentences: Sentence[] = [
   {
     original:
       'Meine Eltern haben gestern einen neuen Fernseher gekauft, der sehr groß ist.',
@@ -147,6 +65,11 @@ export const sentencesWithoutParts = [
       'The vacation in Italy was beautiful; we visited many historical places.',
   },
   {
+    original:
+      'Ich arbeite hart, um meine Ziele zu erreichen und erfolgreich zu sein.',
+    translation: 'I work hard to achieve my goals and be successful.',
+  },
+  {
     original: 'Im Winter trage ich gerne warme Pullover und trinke heißen Tee.',
     translation: 'In winter, I like to wear warm sweaters and drink hot tea.',
   },
@@ -160,6 +83,12 @@ export const sentencesWithoutParts = [
       'Der Flug nach Paris dauert ungefähr zwei Stunden, und dann erkunden wir die Stadt.',
     translation:
       'The flight to Paris takes about two hours, and then we explore the city.',
+  },
+  {
+    original:
+      'In der Bibliothek finde ich immer interessante Bücher, die ich lesen möchte.',
+    translation:
+      'I always find interesting books in the library that I want to read.',
   },
   {
     original:
@@ -190,6 +119,12 @@ export const sentencesWithoutParts = [
   },
   {
     original:
+      'Wir planen eine Reise in die Berge, um die Natur zu genießen und zu wandern.',
+    translation:
+      'We are planning a trip to the mountains to enjoy nature and hike.',
+  },
+  {
+    original:
       'Der neue Film im Kino hat positive Kritiken bekommen, also werden wir ihn sehen.',
     translation:
       'The new movie in the cinema has received positive reviews, so we will watch it.',
@@ -212,6 +147,11 @@ export const sentencesWithoutParts = [
   },
   {
     original:
+      'Es ist wichtig, regelmäßig Sport zu treiben, um gesund zu bleiben.',
+    translation: 'It is important to exercise regularly to stay healthy.',
+  },
+  {
+    original:
       'Das Restaurant, in dem wir gestern gegessen haben, hatte köstliches Essen.',
     translation: 'The restaurant where we ate yesterday had delicious food.',
   },
@@ -231,6 +171,11 @@ export const sentencesWithoutParts = [
   },
   {
     original:
+      'Meine Schwester und ich teilen uns ein Zimmer, aber wir verstehen uns gut.',
+    translation: 'My sister and I share a room, but we get along well.',
+  },
+  {
+    original:
       'Ich höre gerne Musik aus verschiedenen Genres, um meinen Musikgeschmack zu erweitern.',
     translation:
       'I like to listen to music from various genres to broaden my musical taste.',
@@ -243,6 +188,12 @@ export const sentencesWithoutParts = [
   {
     original: 'Der Sonnenuntergang am Strand ist immer atemberaubend schön.',
     translation: 'The sunset at the beach is always breathtakingly beautiful.',
+  },
+  {
+    original:
+      'In meiner Freizeit male ich gerne, um meiner kreativen Seite Ausdruck zu verleihen.',
+    translation:
+      'In my free time, I like to paint to express my creative side.',
   },
   {
     original:
@@ -261,6 +212,12 @@ export const sentencesWithoutParts = [
       'Der Film, den ich gestern gesehen habe, war sehr traurig, aber auch berührend.',
     translation:
       'The movie I watched yesterday was very sad but also touching.',
+  },
+  {
+    original:
+      'Im Frühling blühen die Blumen, und die Luft riecht nach frischem Grün.',
+    translation:
+      'In spring, the flowers bloom, and the air smells of fresh greenery.',
   },
   {
     original:
@@ -297,6 +254,12 @@ export const sentencesWithoutParts = [
       'Wir haben gestern eine neue Wanderroute entdeckt, die durch einen malerischen Wald führt.',
     translation:
       'Yesterday, we discovered a new hiking trail that leads through a picturesque forest.',
+  },
+  {
+    original:
+      'Im Sommer gehe ich gerne campen, um die Natur zu erleben und am Lagerfeuer zu sitzen.',
+    translation:
+      'In the summer, I like to go camping to experience nature and sit by the campfire.',
   },
   {
     original:
@@ -351,6 +314,12 @@ export const sentencesWithoutParts = [
       'Mein Lieblingshobby ist Fotografie, weil sie Momente einfängt und Erinnerungen bewahrt.',
     translation:
       'My favorite hobby is photography because it captures moments and preserves memories.',
+  },
+  {
+    original:
+      'Die Aussicht vom Gipfel des Berges ist atemberaubend und belohnt die Anstrengungen des Aufstiegs.',
+    translation:
+      'The view from the summit of the mountain is breathtaking and rewards the efforts of the climb.',
   },
   {
     original:
@@ -430,7 +399,12 @@ export const sentencesWithoutParts = [
     translation:
       'The Saturday market offers fresh fruits, vegetables, and handmade products from local farmers.',
   },
-
+  {
+    original:
+      'In der Pause zwischen den Vorlesungen treffe ich mich oft mit Freunden in der Cafeteria der Universität.',
+    translation:
+      'During the break between lectures, I often meet up with friends in the university cafeteria.',
+  },
   {
     original:
       'Die Sommerferien verbringen wir dieses Jahr in einem idyllischen Ferienhaus an der Küste.',
@@ -473,7 +447,12 @@ export const sentencesWithoutParts = [
     translation:
       'The library near my place is a quiet space where I enjoy reading and studying.',
   },
-
+  {
+    original:
+      'Im Frühjahr blühen die Kirschbäume in meiner Nachbarschaft, und die Blüten sehen wunderschön aus.',
+    translation:
+      'In spring, the cherry trees in my neighborhood blossom, and the flowers look beautiful.',
+  },
   {
     original:
       'Mein Lieblingsurlaubsort ist ein abgelegener Strand, wo das Wasser kristallklar und der Sand fein ist.',
@@ -504,7 +483,12 @@ export const sentencesWithoutParts = [
     translation:
       'The view from my balcony over the city at sunset is simply enchanting.',
   },
-
+  {
+    original:
+      'Ich habe kürzlich angefangen, Yoga zu praktizieren, um meine Flexibilität und Entspannung zu fördern.',
+    translation:
+      'I recently started practicing yoga to enhance my flexibility and relaxation.',
+  },
   {
     original:
       'In meiner Jugend habe ich an einem Schüleraustausch teilgenommen und viele internationale Freundschaften geschlossen.',
@@ -547,7 +531,12 @@ export const sentencesWithoutParts = [
     translation:
       'I have a collection of nostalgic vinyl records that I play on my old turntable.',
   },
-
+  {
+    original:
+      'Das jährliche Stadtfest zieht viele Besucher an und bietet eine Vielzahl von Aktivitäten und Unterhaltung.',
+    translation:
+      'The annual city festival attracts many visitors and offers a variety of activities and entertainment.',
+  },
   {
     original:
       'In meiner Kindheit habe ich gerne im Garten Verstecken gespielt und die Natur erkundet.',
@@ -568,6 +557,12 @@ export const sentencesWithoutParts = [
   },
   {
     original:
+      'Das historische Schloss, das hoch auf dem Hügel thront, bietet eine beeindruckende Aussicht auf das Tal.',
+    translation:
+      'The historic castle, perched high on the hill, offers an impressive view of the valley.',
+  },
+  {
+    original:
       'Die Fahrt mit dem Heißluftballon ermöglichte uns einen einzigartigen Blick auf die malerische Landschaft.',
     translation:
       'The hot air balloon ride gave us a unique view of the picturesque landscape.',
@@ -584,12 +579,35 @@ export const sentencesWithoutParts = [
     translation:
       'The narrow streets in the old town are adorned with flowers and have a picturesque charm.',
   },
-
+  {
+    original:
+      'Die Teilnahme am Marathon war eine Herausforderung, aber das Gefühl, das Ziel zu erreichen, war unbezahlbar.',
+    translation:
+      'Participating in the marathon was a challenge, but the feeling of reaching the finish line was priceless.',
+  },
+  {
+    original:
+      'In der Bibliothek gibt es einen ruhigen Lesesaal, der perfekt für konzentriertes Studieren ist.',
+    translation:
+      'In the library, there is a quiet reading room that is perfect for focused studying.',
+  },
   {
     original:
       'Die jährliche Kunstausstellung präsentiert Werke lokaler Künstler und zieht Kunstliebhaber aus der ganzen Region an.',
     translation:
       'The annual art exhibition showcases works by local artists and attracts art enthusiasts from the entire region.',
+  },
+  {
+    original:
+      'Mein Lieblingsplatz in der Natur ist ein abgelegener See, der von dichten Wäldern umgeben ist.',
+    translation:
+      'My favorite spot in nature is a secluded lake surrounded by dense forests.',
+  },
+  {
+    original:
+      'Die Fahrradtour durch die Weinberge bot eine herrliche Aussicht auf die Rebstöcke und das umliegende Tal.',
+    translation:
+      'The bike tour through the vineyards offered a splendid view of the grapevines and the surrounding valley.',
   },
   {
     original:
@@ -609,7 +627,12 @@ export const sentencesWithoutParts = [
     translation:
       'The starry skies in rural areas are particularly clear, and one can identify many constellations.',
   },
-
+  {
+    original:
+      'Die Wanderung durch den Nationalpark führte uns zu einem idyllischen Wasserfall, der in der Sonne glitzerte.',
+    translation:
+      'The hike through the national park led us to an idyllic waterfall that glistened in the sun.',
+  },
   {
     original:
       'In der Stadt gibt es ein altes Schloss, das als Museum dient und eine beeindruckende Sammlung beherbergt.',
@@ -665,3 +688,5 @@ export const sentencesWithoutParts = [
       'The artful windows in the church tell biblical stories through colorful stained glass images.',
   },
 ];
+
+export default sentences;

@@ -1,76 +1,77 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { Navigate, Link as RouterLink, useNavigate } from 'react-router-dom';
+import { FirebaseError } from 'firebase/app';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { toast } from 'react-toastify';
 import { auth } from '../../../utils/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import useGermanStore from '../../../store';
-import { ToastContainer, toast } from 'react-toastify';
+import { User } from '../../../store/slices/auth';
+import { ApiError, apiFetch } from '../../../api/client';
+
+const signInErrorMessage = (err: unknown): string => {
+  if (err instanceof ApiError && err.status === 404) {
+    return 'No Glasklar account exists for this email';
+  }
+  if (err instanceof FirebaseError) {
+    switch (err.code) {
+      case 'auth/invalid-credential':
+      case 'auth/wrong-password':
+      case 'auth/user-not-found':
+        return 'Wrong email or password';
+      case 'auth/invalid-email':
+        return 'Please enter a valid email';
+      case 'auth/too-many-requests':
+        return 'Too many attempts. Please wait a moment and try again';
+      case 'auth/network-request-failed':
+        return 'Network error. Please check your connection';
+    }
+  }
+  return 'Could not sign in. Please try again';
+};
 
 export default function SignIn() {
-  const store = useGermanStore();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const isSignedIn = useGermanStore((s) => !!s.user);
+  const login = useGermanStore((s) => s.login);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isLoading) return;
     const data = new FormData(event.currentTarget);
-
-    const email = data.get('email');
-    const password = data.get('password');
-    if (email !== '' && password !== '') {
-      try {
-        setIsLoading(true);
-        const firebaseLogin = signInWithEmailAndPassword(auth, email, password);
-        const user = (await firebaseLogin).user;
-        const { accessToken } = user;
-        const token = await auth.currentUser?.getIdToken(true);
-
-        if (accessToken) {
-          try {
-            const res = await fetch(`${apiUrl}/auth/signin`, {
-              headers: { Authorization: 'Bearer ' + token },
-            });
-            const response = await res.json();
-            token && store.login(response.data, token);
-            window.location.href = '/';
-          } catch (err) {
-            console.log(err);
-            toast.error('Error occurred: ' + err.message);
-          }
-        }
-      } catch (err) {
-        if (err.code === 'auth/wrong-password') {
-          toast.error('Wrong password');
-        }
-        if (err.code === 'auth/user-not-found') {
-          toast.error('User not found');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    } else toast.error('Please enter email and password');
+    const email = String(data.get('email') ?? '').trim();
+    const password = String(data.get('password') ?? '');
+    if (!email || !password) {
+      toast.error('Please enter email and password');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      const response = await apiFetch<{ data: User }>('/auth/signin');
+      login(response.data);
+      navigate('/');
+    } catch (err) {
+      // don't keep a Firebase session without a usable account
+      if (auth.currentUser) await signOut(auth).catch(() => {});
+      toast.error(signInErrorMessage(err));
+      setIsLoading(false);
+    }
   };
 
-  React.useEffect(() => {
-    if (store.user) window.location.href = '/#/progress';
-    const pingAPI = async () => {
-      await fetch(`${apiUrl}/ping`);
-    };
-    pingAPI();
-  }, []);
+  if (isSignedIn) return <Navigate to="/progress" replace />;
 
   return (
     <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -107,10 +108,6 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth
@@ -121,28 +118,12 @@ export default function SignIn() {
             {isLoading ? 'Please wait...' : 'Sign In'}
           </Button>
           <Grid container>
-            {/* <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid> */}
             <Grid item>
-              <Link href="/#/sign-up" variant="body2">
+              <Link component={RouterLink} to="/sign-up" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
-          <ToastContainer
-            autoClose={3000}
-            hideProgressBar={true}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable={false}
-            pauseOnHover
-            theme="light"
-          />
         </Box>
       </Box>
     </Container>

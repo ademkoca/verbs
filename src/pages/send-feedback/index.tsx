@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import useGermanStore from '../../store';
 import { ApiError, apiFetch } from '../../api/client';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function SendFeedback() {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const store = useGermanStore();
+  const user = useGermanStore((s) => s.user);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(false);
   const [fullName, setFullName] = useState(
-    store.user ? store.user?.firstName + ' ' + store.user?.lastName : ''
+    user ? user?.firstName + ' ' + user?.lastName : ''
   );
-  const [email, setEmail] = useState(store.user?.email ?? '');
+  const [email, setEmail] = useState(user?.email ?? '');
   const [feedback, setFeedback] = useState('');
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,7 +46,7 @@ export default function SendFeedback() {
       );
       toast.success(msg);
       setTimeout(() => {
-        window.location.href = '/';
+        navigate('/');
       }, 3000);
     } catch (err) {
       toast.error(
@@ -56,16 +56,8 @@ export default function SendFeedback() {
     }
   };
 
-  React.useEffect(() => {
-    const pingAPI = async () => {
-      await fetch(`${apiUrl}/ping`);
-    };
-    pingAPI();
-  }, []);
-
   return (
     <Container component="main" maxWidth="md" sx={{ minHeight: '73dvh' }}>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -106,8 +98,8 @@ export default function SendFeedback() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={!!store.user}
-            helperText={store.user ? 'Sent from your account email' : undefined}
+            disabled={!!user}
+            helperText={user ? 'Sent from your account email' : undefined}
           />
           <TextField
             margin="normal"
@@ -144,17 +136,6 @@ export default function SendFeedback() {
             {isLoading ? 'Please wait...' : 'Send'}
           </Button>
 
-          <ToastContainer
-            autoClose={3000}
-            hideProgressBar={true}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable={false}
-            pauseOnHover
-            theme="light"
-          />
         </Box>
       </Box>
     </Container>

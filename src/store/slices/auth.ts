@@ -1,6 +1,6 @@
 import { Progress } from '../../types/interfaces';
 
-export type IUser = {
+export type User = {
   address: string;
   country: string;
   createdAt: string;
@@ -26,40 +26,28 @@ export type IUser = {
   zip: string;
   __v: number;
   _id: string;
-} | null;
-
-const initialAuthState = {
-  user: null,
-  token: null,
-  darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
 };
+export type IUser = User | null;
 
-interface IState {
+export interface AuthState {
   user: IUser;
-  token: string | null;
   darkMode: boolean;
 }
-type SetFunction<T> = (updater: (prev: T) => T) => void;
-export const authSlice = (set: SetFunction<IState>) => ({
-  ...initialAuthState,
-  login: (user: IUser, token: string) =>
-    set(() => {
-      return { ...initialAuthState, user, token };
-    }),
-  updateToken: (token: string) => {
-    set((state: IState) => ({ ...state, token: token }));
-  },
 
-  logout: () =>
-    set((state: IState) => {
-      return { ...state, user: null, token: null };
-    }),
+export interface AuthActions {
+  login: (user: User) => void;
+  logout: () => void;
+  updateUser: (user: User) => void;
+  setDarkMode: (value: boolean) => void;
+}
 
-  updateUser: (user: IUser) => {
-    set((state: IState) => ({ ...state, user }));
-  },
-  setDarkMode: (darkMode: boolean) =>
-    set((state: IState) => {
-      return { ...state, darkMode };
-    }),
+type SetFunction = (updater: (prev: AuthState) => Partial<AuthState>) => void;
+
+export const authSlice = (set: SetFunction): AuthState & AuthActions => ({
+  user: null,
+  darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+  login: (user) => set(() => ({ user })),
+  logout: () => set(() => ({ user: null })),
+  updateUser: (user) => set(() => ({ user })),
+  setDarkMode: (darkMode) => set(() => ({ darkMode })),
 });

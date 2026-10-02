@@ -3,6 +3,7 @@ import { RouterProvider, createHashRouter } from 'react-router-dom';
 import Verbs from './pages/verbs/index.tsx';
 import Articles from './pages/articles/index.tsx';
 import Layout from './components/layout/index.tsx';
+import RequireAuth from './components/require-auth/index.tsx';
 import Dictionary from './pages/dictionary/index.tsx';
 import SignUp from './pages/auth/sign-up/index.tsx';
 import SignIn from './pages/auth/sign-in/index.tsx';
@@ -22,115 +23,24 @@ if (window.location.pathname.startsWith('/unsubscribe/')) {
 const router = createHashRouter([
   {
     path: '/',
-    element: (
-      <Layout>
-        <Home />
-      </Layout>
-    ),
-  },
-  {
-    path: '/verbs',
-    element: (
-      <Layout>
-        <Verbs />
-      </Layout>
-    ),
-    // loader: rootLoader,
+    element: <Layout />,
     children: [
-      // {
-      //   path: 'team',
-      //   element: <Team />,
-      //   // loader: teamLoader,
-      // },
+      { index: true, element: <Home /> },
+      { path: 'verbs', element: <Verbs /> },
+      { path: 'articles', element: <Articles /> },
+      { path: 'dictionary', element: <Dictionary /> },
+      { path: 'sentences', element: <Sentences /> },
+      { path: 'sign-up', element: <SignUp /> },
+      { path: 'sign-in', element: <SignIn /> },
+      { path: 'send-feedback', element: <SendFeedback /> },
+      { path: 'unsubscribe/:id', element: <Unsubscribe /> },
+      { path: 'progress', element: <RequireAuth><Progress /></RequireAuth> },
+      { path: 'profile', element: <RequireAuth><Profile /></RequireAuth> },
+      { path: 'chat', element: <RequireAuth><Chat /></RequireAuth> },
     ],
-  },
-  {
-    path: '/sign-up',
-    element: (
-      <Layout>
-        <SignUp />
-      </Layout>
-    ),
-  },
-  {
-    path: '/sign-in',
-    element: (
-      <Layout>
-        <SignIn />
-      </Layout>
-    ),
-  },
-  {
-    path: '/articles',
-    element: (
-      <Layout>
-        <Articles />
-      </Layout>
-    ),
-  },
-  {
-    path: '/dictionary',
-    element: (
-      <Layout>
-        <Dictionary />
-      </Layout>
-    ),
-  },
-  {
-    path: '/sentences',
-    element: (
-      <Layout>
-        <Sentences />
-      </Layout>
-    ),
-  },
-  {
-    path: '/progress',
-    element: (
-      <Layout>
-        <Progress />
-      </Layout>
-    ),
-  },
-  {
-    path: '/profile',
-    element: (
-      <Layout>
-        <Profile />
-      </Layout>
-    ),
-  },
-  {
-    path: '/chat',
-    element: (
-      <Layout>
-        <Chat />
-      </Layout>
-    ),
-  },
-  {
-    path: '/send-feedback',
-    element: (
-      <Layout>
-        <SendFeedback />
-      </Layout>
-    ),
-  },
-  {
-    path: '/unsubscribe/:id',
-    element: (
-      <Layout>
-        <Unsubscribe />
-      </Layout>
-    ),
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <RouterProvider router={router} />
 );
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>
-// );

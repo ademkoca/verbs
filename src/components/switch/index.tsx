@@ -4,10 +4,10 @@ import Stack from '@mui/material/Stack';
 import CustomTooltip from '../tooltip';
 import { Option } from '../../types/interfaces';
 interface Props {
-  value: any;
-  onChange: any;
-  left?: string | undefined;
-  right?: string | undefined;
+  value: boolean;
+  onChange: () => void;
+  left?: string;
+  right?: string;
   options?: Option[];
   justify?: string;
 }
@@ -29,10 +29,8 @@ const CustomSwitch = ({
     >
       {left && <Typography>{left}</Typography>}
       <AntSwitch
-        checked={!!value}
-        // defaultChecked
-        inputProps={{ 'aria-label': 'ant design' }}
-        value={value}
+        checked={value}
+        inputProps={{ 'aria-label': [left, right].filter(Boolean).join(' / ') }}
         onChange={onChange}
       />
       {right && <Typography>{right}</Typography>}

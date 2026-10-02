@@ -1,4 +1,6 @@
-const verbsWithTranslation = [
+import { Verb } from './src/types/interfaces';
+
+const verbsWithTranslation: Verb[] = [
   {
     original: 'machen',
     preterite: 'machte',
@@ -73,8 +75,8 @@ const verbsWithTranslation = [
   },
   {
     original: 'möchten',
-    preterite: 'mochte',
-    pastParticiple: 'gemocht',
+    preterite: 'wollte',
+    pastParticiple: 'gewollt',
     translation: 'would like',
   },
   {
@@ -351,19 +353,13 @@ const verbsWithTranslation = [
     original: 'ziehen',
     preterite: 'zog',
     pastParticiple: 'gezogen',
-    translation: 'to pull',
+    translation: 'to pull / to draw',
   },
   {
     original: 'schieben',
     preterite: 'schob',
     pastParticiple: 'geschoben',
     translation: 'to push',
-  },
-  {
-    original: 'ziehen',
-    preterite: 'zog',
-    pastParticiple: 'gezogen',
-    translation: 'to draw',
   },
   {
     original: 'stoßen',

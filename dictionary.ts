@@ -1,4 +1,6 @@
-const nounsWithMultipleTranslations = [
+import { DictionaryWord } from './src/types/interfaces';
+
+const nounsWithMultipleTranslations: DictionaryWord[] = [
   {
     article: 'der',
     original: 'Mann',
@@ -13,7 +15,7 @@ const nounsWithMultipleTranslations = [
     original: 'Frau',
     translation: [
       { possibleTranslation: 'Girl', isCorrectTranslation: false },
-      { possibleTranslation: 'Wife', isCorrectTranslation: false },
+      { possibleTranslation: 'Sister', isCorrectTranslation: false },
       { possibleTranslation: 'Woman', isCorrectTranslation: true },
     ],
   },
@@ -21,7 +23,7 @@ const nounsWithMultipleTranslations = [
     article: 'das',
     original: 'Kind',
     translation: [
-      { possibleTranslation: 'Kid', isCorrectTranslation: false },
+      { possibleTranslation: 'Teenager', isCorrectTranslation: false },
       { possibleTranslation: 'Child', isCorrectTranslation: true },
       { possibleTranslation: 'Baby', isCorrectTranslation: false },
     ],
@@ -57,7 +59,7 @@ const nounsWithMultipleTranslations = [
     article: 'die',
     original: 'Tasche',
     translation: [
-      { possibleTranslation: 'Pocket', isCorrectTranslation: false },
+      { possibleTranslation: 'Wallet', isCorrectTranslation: false },
       { possibleTranslation: 'Bag', isCorrectTranslation: true },
       { possibleTranslation: 'Suitcase', isCorrectTranslation: false },
     ],
@@ -94,7 +96,7 @@ const nounsWithMultipleTranslations = [
     original: 'Glück',
     translation: [
       { possibleTranslation: 'Luck', isCorrectTranslation: true },
-      { possibleTranslation: 'Happiness', isCorrectTranslation: false },
+      { possibleTranslation: 'Courage', isCorrectTranslation: false },
       { possibleTranslation: 'Misfortune', isCorrectTranslation: false },
     ],
   },
@@ -113,7 +115,7 @@ const nounsWithMultipleTranslations = [
     translation: [
       { possibleTranslation: 'Pillow', isCorrectTranslation: true },
       { possibleTranslation: 'Blanket', isCorrectTranslation: false },
-      { possibleTranslation: 'Cushion', isCorrectTranslation: false },
+      { possibleTranslation: 'Mattress', isCorrectTranslation: false },
     ],
   },
   {
@@ -126,7 +128,7 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'das',
+    article: 'der',
     original: 'Apfel',
     translation: [
       { possibleTranslation: 'Banana', isCorrectTranslation: false },
@@ -139,7 +141,7 @@ const nounsWithMultipleTranslations = [
     original: 'Weg',
     translation: [
       { possibleTranslation: 'Street', isCorrectTranslation: false },
-      { possibleTranslation: 'Path', isCorrectTranslation: false },
+      { possibleTranslation: 'Wall', isCorrectTranslation: false },
       { possibleTranslation: 'Way', isCorrectTranslation: true },
     ],
   },
@@ -147,7 +149,7 @@ const nounsWithMultipleTranslations = [
     article: 'die',
     original: 'Arbeit',
     translation: [
-      { possibleTranslation: 'Job', isCorrectTranslation: false },
+      { possibleTranslation: 'Rest', isCorrectTranslation: false },
       { possibleTranslation: 'Work', isCorrectTranslation: true },
       { possibleTranslation: 'Task', isCorrectTranslation: false },
     ],
@@ -166,7 +168,7 @@ const nounsWithMultipleTranslations = [
     article: 'der',
     original: 'Urlaub',
     translation: [
-      { possibleTranslation: 'Holiday', isCorrectTranslation: false },
+      { possibleTranslation: 'Weekend', isCorrectTranslation: false },
       { possibleTranslation: 'Break', isCorrectTranslation: false },
       { possibleTranslation: 'Vacation', isCorrectTranslation: true },
     ],
@@ -190,7 +192,7 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'die',
+    article: 'der',
     original: 'Ball',
     translation: [
       { possibleTranslation: 'Ball', isCorrectTranslation: true },
@@ -230,8 +232,8 @@ const nounsWithMultipleTranslations = [
     original: 'Leben',
     translation: [
       { possibleTranslation: 'Life', isCorrectTranslation: true },
-      { possibleTranslation: 'Existence', isCorrectTranslation: false },
-      { possibleTranslation: 'Living', isCorrectTranslation: false },
+      { possibleTranslation: 'Death', isCorrectTranslation: false },
+      { possibleTranslation: 'Health', isCorrectTranslation: false },
     ],
   },
   {
@@ -275,7 +277,7 @@ const nounsWithMultipleTranslations = [
     original: 'Schildkröte',
     translation: [
       { possibleTranslation: 'Turtle', isCorrectTranslation: true },
-      { possibleTranslation: 'Tortoise', isCorrectTranslation: false },
+      { possibleTranslation: 'Lizard', isCorrectTranslation: false },
       { possibleTranslation: 'Snake', isCorrectTranslation: false },
     ],
   },
@@ -310,7 +312,7 @@ const nounsWithMultipleTranslations = [
     article: 'der',
     original: 'Teppich',
     translation: [
-      { possibleTranslation: 'Rug', isCorrectTranslation: false },
+      { possibleTranslation: 'Curtain', isCorrectTranslation: false },
       { possibleTranslation: 'Carpet', isCorrectTranslation: true },
       { possibleTranslation: 'Flooring', isCorrectTranslation: false },
     ],
@@ -325,7 +327,7 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'der',
+    article: 'das',
     original: 'Geld',
     translation: [
       { possibleTranslation: 'Money', isCorrectTranslation: true },
@@ -356,8 +358,8 @@ const nounsWithMultipleTranslations = [
     original: 'Erde',
     translation: [
       { possibleTranslation: 'Earth', isCorrectTranslation: true },
-      { possibleTranslation: 'Soil', isCorrectTranslation: false },
-      { possibleTranslation: 'World', isCorrectTranslation: false },
+      { possibleTranslation: 'Stone', isCorrectTranslation: false },
+      { possibleTranslation: 'Sky', isCorrectTranslation: false },
     ],
   },
   {
@@ -463,7 +465,7 @@ const nounsWithMultipleTranslations = [
     article: 'das',
     original: 'Tier',
     translation: [
-      { possibleTranslation: 'Creature', isCorrectTranslation: false },
+      { possibleTranslation: 'Plant', isCorrectTranslation: false },
       { possibleTranslation: 'Animal', isCorrectTranslation: true },
       { possibleTranslation: 'Mammal', isCorrectTranslation: false },
     ],
@@ -472,19 +474,16 @@ const nounsWithMultipleTranslations = [
     article: 'der',
     original: 'Vogel',
     translation: [
-      {
-        possibleTranslation: 'Feathered Creature',
-        isCorrectTranslation: false,
-      },
+      { possibleTranslation: 'Bat', isCorrectTranslation: false },
       { possibleTranslation: 'Bird', isCorrectTranslation: true },
-      { possibleTranslation: 'Avian', isCorrectTranslation: false },
+      { possibleTranslation: 'Butterfly', isCorrectTranslation: false },
     ],
   },
   {
     article: 'das',
     original: 'Zimmer',
     translation: [
-      { possibleTranslation: 'Chamber', isCorrectTranslation: false },
+      { possibleTranslation: 'Hallway', isCorrectTranslation: false },
       { possibleTranslation: 'Space', isCorrectTranslation: false },
       { possibleTranslation: 'Room', isCorrectTranslation: true },
     ],
@@ -509,28 +508,10 @@ const nounsWithMultipleTranslations = [
   },
   {
     article: 'das',
-    original: 'Kissen',
-    translation: [
-      { possibleTranslation: 'Pillow', isCorrectTranslation: true },
-      { possibleTranslation: 'Blanket', isCorrectTranslation: false },
-      { possibleTranslation: 'Cushion', isCorrectTranslation: false },
-    ],
-  },
-  {
-    article: 'der',
-    original: 'Kühlschrank',
-    translation: [
-      { possibleTranslation: 'Freezer', isCorrectTranslation: false },
-      { possibleTranslation: 'Oven', isCorrectTranslation: false },
-      { possibleTranslation: 'Refrigerator', isCorrectTranslation: true },
-    ],
-  },
-  {
-    article: 'die',
     original: 'Geschenk',
     translation: [
       { possibleTranslation: 'Gift', isCorrectTranslation: true },
-      { possibleTranslation: 'Present', isCorrectTranslation: false },
+      { possibleTranslation: 'Parcel', isCorrectTranslation: false },
       { possibleTranslation: 'Surprise', isCorrectTranslation: false },
     ],
   },
@@ -538,7 +519,7 @@ const nounsWithMultipleTranslations = [
     article: 'das',
     original: 'Handy',
     translation: [
-      { possibleTranslation: 'Smartphone', isCorrectTranslation: false },
+      { possibleTranslation: 'Laptop', isCorrectTranslation: false },
       { possibleTranslation: 'Tablet', isCorrectTranslation: false },
       { possibleTranslation: 'Mobile phone', isCorrectTranslation: true },
     ],
@@ -619,7 +600,7 @@ const nounsWithMultipleTranslations = [
     article: 'der',
     original: 'Keks',
     translation: [
-      { possibleTranslation: 'Biscuit', isCorrectTranslation: false },
+      { possibleTranslation: 'Cake', isCorrectTranslation: false },
       { possibleTranslation: 'Cookie', isCorrectTranslation: true },
       { possibleTranslation: 'Cracker', isCorrectTranslation: false },
     ],
@@ -643,7 +624,7 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'die',
+    article: 'der',
     original: 'Wolkenkratzer',
     translation: [
       { possibleTranslation: 'Tower', isCorrectTranslation: false },
@@ -683,7 +664,7 @@ const nounsWithMultipleTranslations = [
     original: 'Kino',
     translation: [
       { possibleTranslation: 'Cinema', isCorrectTranslation: true },
-      { possibleTranslation: 'Movie theater', isCorrectTranslation: false },
+      { possibleTranslation: 'Theater', isCorrectTranslation: false },
       { possibleTranslation: 'Film', isCorrectTranslation: false },
     ],
   },
@@ -693,7 +674,7 @@ const nounsWithMultipleTranslations = [
     translation: [
       { possibleTranslation: 'Cactus', isCorrectTranslation: true },
       { possibleTranslation: 'Succulent', isCorrectTranslation: false },
-      { possibleTranslation: 'Plant', isCorrectTranslation: false },
+      { possibleTranslation: 'Palm tree', isCorrectTranslation: false },
     ],
   },
   {
@@ -711,7 +692,7 @@ const nounsWithMultipleTranslations = [
     translation: [
       { possibleTranslation: 'Band', isCorrectTranslation: false },
       { possibleTranslation: 'Orchestra', isCorrectTranslation: true },
-      { possibleTranslation: 'Music ensemble', isCorrectTranslation: false },
+      { possibleTranslation: 'Choir', isCorrectTranslation: false },
     ],
   },
   {
@@ -724,7 +705,7 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'die',
+    article: 'das',
     original: 'Krokodil',
     translation: [
       { possibleTranslation: 'Crocodile', isCorrectTranslation: true },
@@ -733,7 +714,7 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'das',
+    article: 'der',
     original: 'Sturm',
     translation: [
       { possibleTranslation: 'Wind', isCorrectTranslation: false },
@@ -787,7 +768,7 @@ const nounsWithMultipleTranslations = [
     ],
   },
   {
-    article: 'der',
+    article: 'die',
     original: 'Stimme',
     translation: [
       { possibleTranslation: 'Voice', isCorrectTranslation: true },
@@ -800,7 +781,7 @@ const nounsWithMultipleTranslations = [
     original: 'Versteck',
     translation: [
       { possibleTranslation: 'Shelter', isCorrectTranslation: false },
-      { possibleTranslation: 'Secret place', isCorrectTranslation: false },
+      { possibleTranslation: 'Prison', isCorrectTranslation: false },
       { possibleTranslation: 'Hideout', isCorrectTranslation: true },
     ],
   },
@@ -819,7 +800,7 @@ const nounsWithMultipleTranslations = [
     translation: [
       { possibleTranslation: 'Puppy', isCorrectTranslation: false },
       { possibleTranslation: 'Dog', isCorrectTranslation: true },
-      { possibleTranslation: 'Hound', isCorrectTranslation: false },
+      { possibleTranslation: 'Wolf', isCorrectTranslation: false },
     ],
   },
   {
@@ -836,8 +817,8 @@ const nounsWithMultipleTranslations = [
     original: 'Rätsel',
     translation: [
       { possibleTranslation: 'Riddle', isCorrectTranslation: true },
-      { possibleTranslation: 'Puzzle', isCorrectTranslation: false },
-      { possibleTranslation: 'Enigma', isCorrectTranslation: false },
+      { possibleTranslation: 'Joke', isCorrectTranslation: false },
+      { possibleTranslation: 'Question', isCorrectTranslation: false },
     ],
   },
   {
@@ -927,14 +908,14 @@ const nounsWithMultipleTranslations = [
     translation: [
       { possibleTranslation: 'Thumb', isCorrectTranslation: false },
       { possibleTranslation: 'Finger', isCorrectTranslation: true },
-      { possibleTranslation: 'Digit', isCorrectTranslation: false },
+      { possibleTranslation: 'Toe', isCorrectTranslation: false },
     ],
   },
   {
     article: 'die',
     original: 'Karte',
     translation: [
-      { possibleTranslation: 'Card', isCorrectTranslation: false },
+      { possibleTranslation: 'Book', isCorrectTranslation: false },
       { possibleTranslation: 'Chart', isCorrectTranslation: false },
       { possibleTranslation: 'Map', isCorrectTranslation: true },
     ],
@@ -943,7 +924,7 @@ const nounsWithMultipleTranslations = [
     article: 'das',
     original: 'Puzzle',
     translation: [
-      { possibleTranslation: 'Jigsaw', isCorrectTranslation: false },
+      { possibleTranslation: 'Board game', isCorrectTranslation: false },
       { possibleTranslation: 'Puzzle', isCorrectTranslation: true },
       { possibleTranslation: 'Enigma', isCorrectTranslation: false },
     ],
@@ -954,15 +935,15 @@ const nounsWithMultipleTranslations = [
     translation: [
       { possibleTranslation: 'Frog', isCorrectTranslation: true },
       { possibleTranslation: 'Toad', isCorrectTranslation: false },
-      { possibleTranslation: 'Amphibian', isCorrectTranslation: false },
+      { possibleTranslation: 'Lizard', isCorrectTranslation: false },
     ],
   },
   {
     article: 'das',
     original: 'Gesicht',
     translation: [
-      { possibleTranslation: 'Visage', isCorrectTranslation: false },
-      { possibleTranslation: 'Countenance', isCorrectTranslation: false },
+      { possibleTranslation: 'Head', isCorrectTranslation: false },
+      { possibleTranslation: 'Neck', isCorrectTranslation: false },
       { possibleTranslation: 'Face', isCorrectTranslation: true },
     ],
   },
@@ -970,8 +951,8 @@ const nounsWithMultipleTranslations = [
     article: 'die',
     original: 'Handtasche',
     translation: [
-      { possibleTranslation: 'Purse', isCorrectTranslation: false },
-      { possibleTranslation: 'Clutch', isCorrectTranslation: false },
+      { possibleTranslation: 'Backpack', isCorrectTranslation: false },
+      { possibleTranslation: 'Wallet', isCorrectTranslation: false },
       { possibleTranslation: 'Handbag', isCorrectTranslation: true },
     ],
   },
@@ -979,27 +960,27 @@ const nounsWithMultipleTranslations = [
     article: 'die',
     original: 'Giraffe',
     translation: [
-      { possibleTranslation: 'Neck horse', isCorrectTranslation: false },
+      { possibleTranslation: 'Zebra', isCorrectTranslation: false },
       { possibleTranslation: 'Giraffe', isCorrectTranslation: true },
-      { possibleTranslation: 'Tall mammal', isCorrectTranslation: false },
+      { possibleTranslation: 'Camel', isCorrectTranslation: false },
     ],
   },
   {
     article: 'der',
     original: 'Hirsch',
     translation: [
-      { possibleTranslation: 'Stag', isCorrectTranslation: false },
+      { possibleTranslation: 'Moose', isCorrectTranslation: false },
       { possibleTranslation: 'Deer', isCorrectTranslation: true },
-      { possibleTranslation: 'Buck', isCorrectTranslation: false },
+      { possibleTranslation: 'Goat', isCorrectTranslation: false },
     ],
   },
   {
     article: 'die',
     original: 'Wunderlampe',
     translation: [
-      { possibleTranslation: 'Genie lamp', isCorrectTranslation: false },
+      { possibleTranslation: 'Flashlight', isCorrectTranslation: false },
       { possibleTranslation: 'Magic lamp', isCorrectTranslation: true },
-      { possibleTranslation: 'Enchanted lamp', isCorrectTranslation: false },
+      { possibleTranslation: 'Candle', isCorrectTranslation: false },
     ],
   },
   {
@@ -1015,17 +996,17 @@ const nounsWithMultipleTranslations = [
     article: 'die',
     original: 'Brille',
     translation: [
-      { possibleTranslation: 'Eyewear', isCorrectTranslation: false },
+      { possibleTranslation: 'Contact lenses', isCorrectTranslation: false },
       { possibleTranslation: 'Glasses', isCorrectTranslation: true },
-      { possibleTranslation: 'Spectacles', isCorrectTranslation: false },
+      { possibleTranslation: 'Binoculars', isCorrectTranslation: false },
     ],
   },
   {
     article: 'das',
     original: 'Fahrrad',
     translation: [
-      { possibleTranslation: 'Bike', isCorrectTranslation: false },
-      { possibleTranslation: 'Cycling', isCorrectTranslation: false },
+      { possibleTranslation: 'Scooter', isCorrectTranslation: false },
+      { possibleTranslation: 'Skateboard', isCorrectTranslation: false },
       { possibleTranslation: 'Bicycle', isCorrectTranslation: true },
     ],
   },
@@ -1033,8 +1014,8 @@ const nounsWithMultipleTranslations = [
     article: 'die',
     original: 'Kirsche',
     translation: [
-      { possibleTranslation: 'Berry', isCorrectTranslation: false },
-      { possibleTranslation: 'Fruit', isCorrectTranslation: false },
+      { possibleTranslation: 'Plum', isCorrectTranslation: false },
+      { possibleTranslation: 'Strawberry', isCorrectTranslation: false },
       { possibleTranslation: 'Cherry', isCorrectTranslation: true },
     ],
   },
@@ -1042,9 +1023,9 @@ const nounsWithMultipleTranslations = [
     article: 'der',
     original: 'Tiger',
     translation: [
-      { possibleTranslation: 'Wildcat', isCorrectTranslation: false },
+      { possibleTranslation: 'Leopard', isCorrectTranslation: false },
       { possibleTranslation: 'Tiger', isCorrectTranslation: true },
-      { possibleTranslation: 'Feline', isCorrectTranslation: false },
+      { possibleTranslation: 'Cheetah', isCorrectTranslation: false },
     ],
   },
   {

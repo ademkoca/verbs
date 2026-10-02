@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -12,23 +11,15 @@ import CardContent from '@mui/material/CardContent';
 import useGermanStore from '../../store';
 import { Alert, CircularProgress } from '@mui/material';
 import { getFirstLetterCapitalized } from '../../utils/helpers';
-import verbsWithTranslation from '../../../verbsWithTranslation';
 
-import { sentencesWithoutParts } from '../../../sentences';
-import nounsWithMultipleTranslations from '../../../dictionary';
-import nounsWithTranslation from '../../../nouns';
-import { ButtonColors } from '../../types/interfaces';
+import { Link as RouterLink } from 'react-router-dom';
+import { completionPercentage } from '../../utils/progress';
 
 export default function Home() {
   const store = useGermanStore();
-  const apiUrl = import.meta.env.VITE_API_URL;
   const [greeting, setGreeting] = React.useState('Hello');
 
   React.useEffect(() => {
-    const pingAPI = async () => {
-      await fetch(`${apiUrl}/ping`);
-    };
-    pingAPI();
     const currentTime = new Date().getHours();
 
     if (currentTime >= 5 && currentTime < 12) {
@@ -39,20 +30,7 @@ export default function Home() {
       setGreeting('Good evening');
     }
   }, []);
-  type Lengths = {
-    [key: string]: number;
-  };
-  const totalLength: Lengths = {
-    verbs: verbsWithTranslation.length,
-    // verbs: 2.5,
-    articles: nounsWithTranslation.length,
-    // articles: 4,
-    sentences: sentencesWithoutParts.length,
-    // sentences: 3,
-    dictionary: nounsWithMultipleTranslations.length,
-    // dictionary: 3,
-  };
-  const pages = [
+  const pages: { name: 'Verbs' | 'Articles' | 'Sentences' | 'Dictionary'; url: string; description: string }[] = [
     {
       name: 'Verbs',
       url: '/verbs',
@@ -78,7 +56,6 @@ export default function Home() {
   if (!store.user)
     return (
       <Container component="main" maxWidth="lg" sx={{ minHeight: '73dvh' }}>
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -109,6 +86,7 @@ export default function Home() {
           >
             {pages.map((page) => (
               <Card
+                key={page.name}
                 variant="elevation"
                 sx={{
                   width: { xs: '100%', sm: '45%', md: '23%' },
@@ -130,9 +108,10 @@ export default function Home() {
                   </Typography>
                   <Typography variant="body1">{page.description}</Typography>
                   <Button
-                    color={page.name.toLowerCase() as ButtonColors}
+                    color={page.name.toLowerCase() as Lowercase<typeof page.name>}
                     variant="contained"
-                    href={`/#${page.url}`}
+                    component={RouterLink}
+                    to={page.url}
                     sx={{ color: 'white', marginTop: 4 }}
                   >
                     Start practicing
@@ -143,11 +122,11 @@ export default function Home() {
             <Alert severity="error" sx={{ mt: { xs: 0, md: 3 } }}>
               <Typography lineHeight={'-5'}>
                 Please note that your progress will not be saved unless you{' '}
-                <Button variant="text" href="/#/sign-up" size="small">
+                <Button variant="text" component={RouterLink} to="/sign-up" size="small">
                   Sign up
                 </Button>
                 or
-                <Button variant="text" href="/#/sign-in" size="small">
+                <Button variant="text" component={RouterLink} to="/sign-in" size="small">
                   Sign in
                 </Button>
               </Typography>
@@ -158,7 +137,6 @@ export default function Home() {
     );
   return (
     <Container component="main" maxWidth="lg" sx={{ minHeight: '73dvh' }}>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -185,8 +163,7 @@ export default function Home() {
           width={'100%'}
         >
           {store.user?.progress.map((p) => {
-            const solvedPercentage =
-              (p.used.length / totalLength[p.name]) * 100;
+            const solvedPercentage = completionPercentage(p.name, p.used);
             return (
               <Card
                 key={p.name}
@@ -218,18 +195,15 @@ export default function Home() {
                       value={solvedPercentage}
                       size={150}
                       thickness={7}
-                      sx={{ color: p.name as ButtonColors, zIndex: 100 }}
+                      sx={{ color: `${p.name}.main`, zIndex: 100 }}
                     />
                   </Box>
-                  <Typography variant="h6">{`${solvedPercentage.toFixed(
-                    0
-                  )}%`}</Typography>
+                  <Typography variant="h6">{`${solvedPercentage}%`}</Typography>
                   <Button
-                    color={p.name as ButtonColors}
+                    color={p.name}
                     variant="contained"
-                    href={`/#/${
-                      solvedPercentage === 100 ? 'progress' : p.name
-                    }`}
+                    component={RouterLink}
+                    to={solvedPercentage === 100 ? '/progress' : `/${p.name}`}
                     sx={{ color: 'white', marginTop: 2 }}
                   >
                     {solvedPercentage === 100

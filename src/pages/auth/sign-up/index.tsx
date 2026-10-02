@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,79 +10,74 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { ApiError, apiFetch } from '../../../api/client';
 
 export default function SignUp() {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const isStrongPassword = (password: FormDataEntryValue) => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const isStrongPassword = (password: string) => {
     const regex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,}$/;
-    return regex.test(password as string);
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}[\]:;<>,.?~\\-]).{8,}$/;
+    return regex.test(password);
   };
-  const isValidEmail = (email: FormDataEntryValue) => {
+  const isValidEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email as string);
+    return regex.test(email);
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isLoading) return;
     const data = new FormData(event.currentTarget);
+    const field = (name: string) => String(data.get(name) ?? '').trim();
+    const firstName = field('firstName');
+    const lastName = field('lastName');
+    const username = field('username');
+    const email = field('email');
+    const password = String(data.get('password') ?? '');
 
-    const firstName = data.get('firstName');
-    const lastName = data.get('lastName');
-    const username = data.get('username');
-    const email = data.get('email');
-    const password = data.get('password');
-
-    const userData = { firstName, lastName, username, email, password };
-    if (
-      firstName !== '' &&
-      lastName !== '' &&
-      username !== '' &&
-      email !== '' &&
-      password !== ''
-    ) {
-      if (isValidEmail(email)) {
-        if (password && isStrongPassword(password)) {
-          try {
-            const res = await fetch(`${apiUrl}/auth/signup`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(userData),
-            });
-            if (res.status === 200) {
-              toast.success(
-                'Signup successful! You will be redirected to the sign in page'
-              );
-              setTimeout(() => {
-                window.location.href = '/#/sign-in';
-              }, 3000);
-              // const response = await res.json();
-              // console.log(response.data);
-            } else if (res.status === 403) {
-              const response = await res.text();
-              toast.error(response);
-            }
-          } catch (err) {
-            console.log(err);
-          }
-        } else
-          toast.error(
-            'The password should be at least 8 characters long and include at least: 1 letter, 1 number, 1 uppercase and 1 special character'
-          );
-      } else toast.error('Invalid email format');
-    } else toast.error('Please enter all required fields');
+    if (!firstName || !lastName || !username || !email || !password) {
+      toast.error('Please enter all required fields');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      toast.error('Invalid email format');
+      return;
+    }
+    if (!isStrongPassword(password)) {
+      toast.error(
+        'The password should be at least 8 characters long and include at least: 1 letter, 1 number, 1 uppercase and 1 special character'
+      );
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await apiFetch(
+        '/auth/signup',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
+            allowExtraEmails: data.get('allowExtraEmails') === 'on',
+          }),
+        },
+        { auth: 'none' }
+      );
+      toast.success('Signup successful! You will be redirected to the sign in page');
+      setTimeout(() => navigate('/sign-in'), 3000);
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : 'Could not sign up. Please try again');
+      setIsLoading(false);
+    }
   };
-
-  React.useEffect(() => {
-    const pingAPI = async () => {
-      await fetch(`${apiUrl}/ping`);
-    };
-    pingAPI();
-  }, []);
 
   return (
     <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -154,7 +148,7 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
+                control={<Checkbox name="allowExtraEmails" color="primary" />}
                 label="I want to receive inspiration, marketing promotions and updates via email."
               />
             </Grid>
@@ -164,27 +158,17 @@ export default function SignUp() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={isLoading}
           >
-            Sign Up
+            {isLoading ? 'Please wait...' : 'Sign Up'}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="/#/sign-in" variant="body2">
+              <Link component={RouterLink} to="/sign-in" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
           </Grid>
-          <ToastContainer
-            autoClose={3000}
-            hideProgressBar={true}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable={false}
-            pauseOnHover
-            theme="light"
-          />
         </Box>
       </Box>
     </Container>

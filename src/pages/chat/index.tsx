@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState, useRef } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,8 +10,8 @@ import Conversation from '../../components/conversation';
 import { io, Socket } from 'socket.io-client';
 import { IChat, IMessage } from '../../types/interfaces';
 import ChatBox from '../../components/chat-box';
-import { Autocomplete, Drawer, Menu, TextField } from '@mui/material';
-import { IUser } from '../../store/slices/auth';
+import { Autocomplete, Drawer, TextField } from '@mui/material';
+import { User } from '../../store/slices/auth';
 import { ApiError, apiFetch } from '../../api/client';
 import { getInitials } from '../../utils/helpers';
 
@@ -33,10 +32,10 @@ export default function Chat() {
 
   const [chats, setChats] = useState<IChat[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<SocketUser[]>([]);
-  const [users, setUsers] = useState<IUser[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [currentChat, setCurrentChat] = useState<IChat | null>(null);
   const [receivedMessage, setReceivedMessage] = useState<IMessage | null>(null);
-  const [receiver, setReceiver] = useState<IUser | null>(null);
+  const receiver = null;
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [typingEvent, setTypingEvent] = useState<TypingEvent | null>(null);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -86,22 +85,15 @@ export default function Chat() {
     }
   }, [userId]);
 
-  // Get all users
-  const getUsers = async () => {
-    try {
-      const response = await apiFetch<{ data: IUser[] }>('/users/all');
-      setUsers(response.data.filter((user: IUser) => user?._id !== userId));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     getChats();
   }, [getChats]);
+  // Get all users for the search
   useEffect(() => {
-    getUsers();
-  }, []);
+    apiFetch<{ data: User[] }>('/users/all')
+      .then((response) => setUsers(response.data.filter((user) => user._id !== userId)))
+      .catch(console.log);
+  }, [userId]);
 
   // One socket per signed-in user, closed when leaving the page.
   // The auth callback fetches a fresh socket token on every (re)connect.
@@ -139,7 +131,7 @@ export default function Chat() {
   useEffect(() => {
     if (!partnerId) return;
     socket.current?.emit('is-typing', { receiverId: partnerId, isTyping });
-  }, [isTyping]);
+  }, [isTyping, partnerId]);
 
   const handleChatDeleted = () => {
     setCurrentChat(null);
@@ -154,7 +146,7 @@ export default function Chat() {
     return online ? true : false;
   };
 
-  const handleSelectUser = async (user: IUser | null) => {
+  const handleSelectUser = async (user: User | null) => {
     if (!user) return;
     try {
       //find if the chat with these two users exists
@@ -178,9 +170,6 @@ export default function Chat() {
     // }
   };
 
-  if (!store.user) {
-    window.location.href = '/#/sign-in';
-  }
 
   return (
     <Container
@@ -192,7 +181,6 @@ export default function Chat() {
         paddingLeft: screenWidth > 1200 ? 2 : 0,
       }}
     >
-      <CssBaseline />
 
       {screenWidth < 1200 ? (
         //mobile view
@@ -227,11 +215,11 @@ export default function Chat() {
                 disablePortal
                 id="combo-box-demo"
                 value={receiver}
-                onChange={(event: any, newValue: IUser | null) => {
+                onChange={(_event, newValue: User | null) => {
                   handleSelectUser(newValue);
                 }}
-                options={users} // Assuming users is an array of objects with a 'username' property
-                getOptionLabel={(user: IUser) => user?.username} // Specify how to get the display label for each option
+                options={users}
+                getOptionLabel={(user: User) => user.username}
                 renderOption={(props, option) => (
                   <Box
                     component="li"
@@ -302,7 +290,6 @@ export default function Chat() {
                   receivedMessage={receivedMessage}
                   setIsTyping={setIsTyping}
                   showIsTyping={showIsTyping}
-                  users={users}
                 />
               ) : (
                 <Box m={10} display={'flex'} justifyContent={'center'}>
@@ -355,11 +342,11 @@ export default function Chat() {
               disablePortal
               id="combo-box-demo"
               value={receiver}
-              onChange={(event: any, newValue: IUser | null) => {
+              onChange={(_event, newValue: User | null) => {
                 handleSelectUser(newValue);
               }}
-              options={users} // Assuming users is an array of objects with a 'username' property
-              getOptionLabel={(user: IUser) => user?.username} // Specify how to get the display label for each option
+              options={users}
+              getOptionLabel={(user: User) => user.username}
               renderOption={(props, option) => (
                 <Box
                   component="li"
@@ -420,7 +407,6 @@ export default function Chat() {
                   receivedMessage={receivedMessage}
                   setIsTyping={setIsTyping}
                   showIsTyping={showIsTyping}
-                  users={users}
                 />
               ) : (
                 <Typography variant="h5">

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
@@ -34,12 +33,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
       opacity: 0,
     },
   },
-}));
-
-const SmallAvatar = styled(Avatar)(({ theme }) => ({
-  width: 22,
-  height: 22,
-  border: `2px solid ${theme.palette.background.paper}`,
 }));
 
 export default function ChatAvatar({

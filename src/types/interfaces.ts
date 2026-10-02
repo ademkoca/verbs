@@ -3,8 +3,41 @@ export interface Option {
   description: string;
 }
 
+export type Article = 'der' | 'die' | 'das';
+
+export interface Verb {
+  original: string;
+  preterite: string;
+  pastParticiple: string;
+  translation: string;
+}
+
+export interface Noun {
+  article: Article;
+  original: string;
+  translation: string;
+}
+
+export interface PossibleTranslation {
+  possibleTranslation: string;
+  isCorrectTranslation: boolean;
+}
+
+export interface DictionaryWord {
+  article: Article;
+  original: string;
+  translation: PossibleTranslation[];
+}
+
+export interface Sentence {
+  original: string;
+  translation: string;
+}
+
+export type ProgressName = 'verbs' | 'articles' | 'sentences' | 'dictionary';
+
 export interface Progress {
-  name: string;
+  name: ProgressName;
   used: string[];
   totalGuesses: number;
   correctGuesses: number;

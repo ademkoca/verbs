@@ -1,25 +1,22 @@
-import { Container, ThemeProvider, createTheme } from '@mui/material';
-import { ReactNode, useEffect, useState } from 'react';
+import { useMemo } from 'react';
+import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { Outlet } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './navbar';
 import Footer from './footer';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import AuthSync from '../auth-sync';
 import useGermanStore from '../../store';
 
-const Layout = ({ children }: { children: ReactNode }) => {
-  const store = useGermanStore();
-  const [darkMode, setDarkMode] = useState<boolean>(store.darkMode);
+const queryClient = new QueryClient();
 
-  useEffect(() => {
-    setDarkMode(store.darkMode);
-  }, [store.darkMode]);
-  const defaultTheme = createTheme({
+const buildTheme = (darkMode: boolean) =>
+  createTheme({
     components: {
-      // Name of the component
       MuiButton: {
         styleOverrides: {
-          // Name of the slot
           root: {
-            // Some CSS
             fontSize: '1rem',
           },
         },
@@ -29,21 +26,15 @@ const Layout = ({ children }: { children: ReactNode }) => {
       mode: darkMode ? 'dark' : 'light',
       primary: {
         main: '#006d77',
-        // light: will be calculated from palette.primary.main,
-        // dark: will be calculated from palette.primary.main,
-        // contrastText: will be calculated to contrast with palette.primary.main
       },
       secondary: {
         main: '#F1F1F1',
         light: '#F5EBFF',
-        // dark: will be calculated from palette.secondary.main,
         contrastText: '#47008F',
       },
       error: {
-        // main: '#d90429',
         main: '#f95738',
       },
-      //@ts-expect-error MUI color errors
       home: { main: '#090909' },
       verbs: { main: '#006D77' },
       articles: { main: '#DB7006' },
@@ -51,21 +42,34 @@ const Layout = ({ children }: { children: ReactNode }) => {
       dictionary: { main: '#022550' },
     },
   });
-  const queryClient = new QueryClient();
+
+const Layout = () => {
+  const darkMode = useGermanStore((s) => s.darkMode);
+  const theme = useMemo(() => buildTheme(darkMode), [darkMode]);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AuthSync />
         <Container component="header" maxWidth="xl" sx={{ paddingX: 0 }}>
           <Navbar />
         </Container>
-        {children}
-        <Container
-          component="footer"
-          maxWidth="xl"
-          sx={{ marginBottom: 2, marginTop: 5 }}
-        >
+        <Outlet />
+        <Container component="footer" maxWidth="xl" sx={{ marginBottom: 2, marginTop: 5 }}>
           <Footer />
         </Container>
+        <ToastContainer
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover
+          theme={darkMode ? 'dark' : 'light'}
+        />
       </ThemeProvider>
     </QueryClientProvider>
   );

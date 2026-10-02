@@ -1,313 +1,101 @@
-import { useEffect, useState, useRef } from 'react';
-import Avatar from '@mui/material/Avatar';
+import { MouseEvent, useState } from 'react';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import MarkChatReadOutlinedIcon from '@mui/icons-material/MarkChatReadOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import nouns from '../../../nouns';
-import CustomSwitch from '../../components/switch';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { auth } from '../../utils/firebase';
-import useGermanStore from '../../store';
-import { Alert } from '@mui/material';
+import nouns from '../../../nouns';
+import CustomSwitch from '../../components/switch';
+import QuizLayout from '../../components/quiz-layout';
+import { useQuiz } from '../../hooks/useQuiz';
+import { useProgress } from '../../hooks/useProgress';
+import { Article, Noun } from '../../types/interfaces';
+
+const ARTICLES: Article[] = ['der', 'die', 'das'];
+const keyOf = (noun: Noun) => noun.original;
 
 export default function Articles() {
-  const store = useGermanStore();
-  const textRef = useRef();
-  interface Noun {
-    article: string;
-    original: string;
-    translation?: string;
-  }
-  const articlesProgress = store.user?.progress?.find(
-    (p) => p.name === 'articles'
-  );
-  const apiUrl = import.meta.env.VITE_API_URL;
-  //   const data = verbs;
-  const removeItemsInSecondArray = (arr1: Noun[], arr2: string[]) => {
-    if (arr2?.length > 0) {
-      // Use filter to create a new array with items from arr1 that are not in arr2
-      const result = arr1.filter((item) => arr2.indexOf(item.original) === -1);
-      return result;
-    } else return arr1;
-  };
-  const data = articlesProgress
-    ? removeItemsInSecondArray(nouns, articlesProgress?.used)
-    : nouns;
-  const totalNouns = data.length;
-  const [activeNoun, setActiveNoun] = useState<Noun>({
-    article: 'der',
-    original: '',
-    translation: '',
-  });
-  // const [userInput, setUserInput] = useState<string>('');
-  const [correctGuesses, setCorrectGuesses] = useState(0);
-  const [totalGuesses, setTotalGuesses] = useState(0);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [messageClass, setMessageClass] = useState('success');
-  const [usedItems] = useState<string[]>([]);
-  // const [isHard, setIsHard] = useState<boolean>(false);
-  const [includeTranslation, setIncludeTranslation] = useState<boolean>(false);
-  const [userInput, setUserInput] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isMaxNumberReached, setIsMaxNumberReached] = useState<boolean>(false);
+  const { progress, isSignedIn, record } = useProgress('articles');
+  const quiz = useQuiz(nouns, keyOf, progress?.used);
+  const noun = quiz.current;
+  const [userInput, setUserInput] = useState<Article | null>(null);
+  const [includeTranslation, setIncludeTranslation] = useState(false);
 
-  const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newValue: string
-  ) => {
-    setUserInput(newValue);
-  };
-
-  useEffect(() => {
-    if (userInput) {
-      setIsLoading(true);
-      //if correct guess
-      if (activeNoun?.article.toLowerCase() === userInput?.toLowerCase()) {
-        setMessageClass('success');
-        setCorrectGuesses((prev: number) => prev + 1);
-        setSuccessMsg(`${userInput} ${activeNoun?.original} is correct`);
-        // setUserInput(null);
-        setTimeout(() => {
-          resetInputs();
-        }, 3000);
-      }
-      //if incorrect guess
-      else {
-        setMessageClass('error');
-        setSuccessMsg(`${userInput} ${activeNoun?.original} is incorrect`);
-        // setUserInput(null);
-        setTimeout(() => {
-          resetInputs();
-        }, 3000);
-      }
-      //anyway
-      setTotalGuesses((prev: number) => prev + 1);
-      if (store.user) {
-        // const progress = store.user?.progress?.find(
-        //   (p: Progress) => p.name === 'verbs'
-        // );
-        updateProgress(
-          'articles',
-          activeNoun?.original,
-          activeNoun?.article.toLowerCase() === userInput?.toLowerCase()
-        );
-      }
-    }
-  }, [userInput]);
-  const updateProgress = (name: string, guess: string, correct: boolean) => {
-    const updatedProgress = store.user?.progress.map((item) => {
-      if (item.name === name) {
-        return {
-          ...item,
-          used: [...item.used, guess],
-          totalGuesses: item.totalGuesses + 1,
-          correctGuesses: correct
-            ? item.correctGuesses + 1
-            : item.correctGuesses,
-        };
-      }
-      return item;
-    });
-    const _user = { ...store.user, progress: updatedProgress };
-    store.updateUser(_user);
-  };
-  const updateUser = async () => {
-    const token = await auth.currentUser?.getIdToken(true);
-    const jwt = token ? token : store.token;
-    try {
-      const res = await fetch(`${apiUrl}/users/${store.user?._id}`, {
-        method: 'PUT',
-        body: JSON.stringify(store?.user),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + jwt,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    generateNewArticle();
-  }, []);
-  useEffect(() => {
-    if (store.user) updateUser();
-  }, [articlesProgress?.used.length]);
-  const generateNewArticle = () => {
-    if (usedItems.length !== totalNouns) {
-      const random = Math.floor(
-        Math.random() * (totalNouns - usedItems.length)
-      );
-      try {
-        if (!usedItems.includes(data[random].original)) {
-          setActiveNoun(data[random]);
-          usedItems.push(data[random].original);
-        } else generateNewArticle();
-      } catch (e) {
-        setIsMaxNumberReached(true);
-      }
-    }
-  };
-
-  const resetInputs = () => {
-    setSuccessMsg(null);
-    generateNewArticle();
-    setMessageClass('success');
+  const goToNextNoun = () => {
     setUserInput(null);
-    textRef?.current?.focus();
-    setIsLoading(false);
+    quiz.next();
   };
 
-  const handleToggleIncludeTranslation = () => {
-    setIncludeTranslation((prev) => !prev);
+  const handleChange = (_event: MouseEvent<HTMLElement>, article: Article | null) => {
+    if (!noun || !article || quiz.busy) return;
+    const correct = article === noun.article;
+    const solution = `${noun.article} ${noun.original}`;
+    const message = correct
+      ? `${solution} is correct`
+      : `${article} ${noun.original} is incorrect`;
+    if (!quiz.answer(correct, message, solution)) return;
+    setUserInput(article);
+    record(noun.original, correct);
+    quiz.schedule(goToNextNoun);
   };
+
+  const score = progress
+    ? { correct: progress.correctGuesses, total: progress.totalGuesses }
+    : quiz.score;
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ minHeight: '73dvh' }}>
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          // alignItems: 'center',
-          justifyContent: 'space-between',
-          height: !isMaxNumberReached ? '70dvh' : '50dvh',
-        }}
-      >
-        <Box
-          display={'flex'}
-          flexDirection={'column'}
-          alignItems={'center'}
-          // mb={10}
-        >
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            // href="/"
-            sx={{
-              mb: 2,
-              flexGrow: 1,
-              // fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            ARTICLES
-          </Typography>
-          <Typography variant="body2" component="p">
-            Select the appropriate article for the given word
-          </Typography>
-        </Box>
-
-        {!isMaxNumberReached ? (
-          <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-            <Box my={2}>
-              <Typography>
-                {articlesProgress?.correctGuesses ?? correctGuesses}/
-                {articlesProgress?.totalGuesses ?? totalGuesses} correct
-              </Typography>
-            </Box>
-            <Typography component="h5" variant="h5">
-              {activeNoun?.original}{' '}
-              {includeTranslation && `(${activeNoun?.translation})`}
-            </Typography>
-            {successMsg && (
-              <Typography
-                component="h6"
-                variant="h6"
-                color={messageClass === 'success' ? 'green' : 'error'}
-              >
-                {successMsg}
-              </Typography>
-            )}
-            {messageClass !== 'success' && (
-              <Typography color="green">
-                correct: {activeNoun?.article + ' ' + activeNoun?.original}
-              </Typography>
-            )}
-            <Box
-              component="form"
-              noValidate
-              // onSubmit={checkUserInput}
-              sx={{ mt: 3 }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={6} sm={6}>
-                  <CustomSwitch
-                    value={includeTranslation}
-                    onChange={handleToggleIncludeTranslation}
-                    left={'Translation'}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <ToggleButtonGroup
-                    color="primary"
-                    value={userInput}
-                    exclusive
-                    onChange={handleChange}
-                    aria-label="Platform"
-                    fullWidth
-                    sx={{ mb: 3 }}
-                  >
-                    <ToggleButton disabled={isLoading} value="der">
-                      der
-                    </ToggleButton>
-                    <ToggleButton disabled={isLoading} value="die">
-                      die
-                    </ToggleButton>
-                    <ToggleButton disabled={isLoading} value="das">
-                      das
-                    </ToggleButton>
-                  </ToggleButtonGroup>
-                </Grid>
-              </Grid>
-              {/* <Button
-              type="submit"
+    <QuizLayout
+      title="ARTICLES"
+      description="Select the appropriate article for the given word"
+      itemLabel="articles"
+      score={score}
+      completed={quiz.completed}
+      onRestart={isSignedIn ? undefined : quiz.restart}
+      feedback={quiz.feedback}
+      prompt={
+        <>
+          {noun?.original} {includeTranslation && `(${noun?.translation})`}
+        </>
+      }
+    >
+      <Box sx={{ mt: 3, width: '100%' }}>
+        <Grid container spacing={2}>
+          <Grid item xs={6} sm={6}>
+            <CustomSwitch
+              value={includeTranslation}
+              onChange={() => setIncludeTranslation((prev) => !prev)}
+              left={'Translation'}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <ToggleButtonGroup
+              color="primary"
+              value={userInput}
+              exclusive
+              onChange={handleChange}
+              aria-label="Article"
               fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mb: 3 }}
             >
-              Check
-            </Button> */}
-              <Button
-                type="button"
-                fullWidth
-                variant="outlined"
-                sx={{ mt: 0, mb: 2 }}
-                onClick={resetInputs}
-                disabled={isLoading}
-              >
-                Skip
-              </Button>
-            </Box>
-          </Box>
-        ) : (
-          <Alert severity="success" sx={{ mt: { xs: 0, md: 3 } }}>
-            <Typography mb={2}>
-              CONGRATS! You've guessed{' '}
-              {articlesProgress?.correctGuesses ?? correctGuesses} out of{' '}
-              {articlesProgress?.totalGuesses ?? totalGuesses} articles correct.
-            </Typography>
-            <Typography>
-              {' '}
-              You can
-              <Button variant="text" href="/#/progress" size="small">
-                Reset
-              </Button>
-              your progress and start again
-            </Typography>
-          </Alert>
-        )}
+              {ARTICLES.map((article) => (
+                <ToggleButton key={article} disabled={quiz.busy} value={article}>
+                  {article}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+          </Grid>
+        </Grid>
+        <Button
+          type="button"
+          fullWidth
+          variant="outlined"
+          sx={{ mt: 0, mb: 2 }}
+          onClick={goToNextNoun}
+          disabled={quiz.busy}
+        >
+          Skip
+        </Button>
       </Box>
-    </Container>
+    </QuizLayout>
   );
 }
