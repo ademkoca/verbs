@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import nouns from '../../../nouns';
+import nouns from '../../data/nouns';
 import CustomSwitch from '../../components/switch';
 import QuizLayout from '../../components/quiz-layout';
 import { useQuiz } from '../../hooks/useQuiz';

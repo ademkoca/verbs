@@ -23,3 +23,17 @@ export const answerInputProps = {
   autoCorrect: 'off',
   spellCheck: false,
 };
+
+// Returns the accepted version of a sentence that matches the attempt (ignoring
+// capitalisation, which changes when a phrase moves to the front), or null
+export function matchSentence(
+  attempt: string,
+  sentence: { original: string; alternatives?: string[] }
+): string | null {
+  const wanted = attempt.trim().toLowerCase();
+  return (
+    [sentence.original, ...(sentence.alternatives ?? [])].find(
+      (accepted) => accepted.toLowerCase() === wanted
+    ) ?? null
+  );
+}

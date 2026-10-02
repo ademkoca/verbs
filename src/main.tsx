@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import { RouterProvider, createHashRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Verbs from './pages/verbs/index.tsx';
 import Articles from './pages/articles/index.tsx';
 import Layout from './components/layout/index.tsx';
@@ -15,12 +15,12 @@ import Home from './pages/home/index.tsx';
 import SendFeedback from './pages/send-feedback/index.tsx';
 import Unsubscribe from './pages/unsubscribe/index.tsx';
 
-// Older newsletters link to /unsubscribe/<id> without the hash the router needs
-if (window.location.pathname.startsWith('/unsubscribe/')) {
-  window.location.replace('/#' + window.location.pathname);
+// Bookmarks and emails from before clean URLs use /#/<path>; turn them into /<path>
+if (window.location.hash.startsWith('#/')) {
+  window.history.replaceState(null, '', window.location.hash.slice(1));
 }
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,

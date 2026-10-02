@@ -32,6 +32,8 @@ export interface DictionaryWord {
 export interface Sentence {
   original: string;
   translation: string;
+  // other correct word orders built from the same words (capitalisation may differ)
+  alternatives?: string[];
 }
 
 export type ProgressName = 'verbs' | 'articles' | 'sentences' | 'dictionary';

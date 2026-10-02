@@ -1,4 +1,4 @@
-import { Noun } from './src/types/interfaces';
+import { Noun } from '../types/interfaces';
 
 const nounsWithTranslation: Noun[] = [
   { article: 'der', original: 'Mann', translation: 'Man' },

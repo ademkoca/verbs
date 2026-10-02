@@ -1,4 +1,4 @@
-import { Verb } from './src/types/interfaces';
+import { Verb } from '../types/interfaces';
 
 const verbsWithTranslation: Verb[] = [
   {

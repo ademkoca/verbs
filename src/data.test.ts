@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import verbs from '../verbsWithTranslation';
-import nouns from '../nouns';
-import dictionary from '../dictionary';
-import sentences from '../sentences';
+import verbs from './data/verbsWithTranslation';
+import nouns from './data/nouns';
+import dictionary from './data/dictionary';
+import sentences from './data/sentences';
 
 const duplicates = (values: string[]) =>
   values.filter((value, index) => values.indexOf(value) !== index);
@@ -53,6 +53,16 @@ describe('dictionary data', () => {
 describe('sentences data', () => {
   it('has no duplicate sentences', () => {
     expect(duplicates(sentences.map((s) => s.original))).toEqual([]);
+  });
+
+  it('has alternatives that use exactly the same word tiles', () => {
+    const tiles = (text: string) => text.toLowerCase().split(' ').sort().join(' ');
+    for (const sentence of sentences) {
+      for (const alternative of sentence.alternatives ?? []) {
+        expect(tiles(alternative), alternative).toBe(tiles(sentence.original));
+        expect(alternative.toLowerCase(), alternative).not.toBe(sentence.original.toLowerCase());
+      }
+    }
   });
 
   it('splits into words on single spaces only', () => {

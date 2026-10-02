@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isCorrect, normalize } from './answer';
+import { isCorrect, matchSentence, normalize } from './answer';
 
 describe('normalize', () => {
   it('trims, collapses whitespace and lowercases', () => {
@@ -31,5 +31,26 @@ describe('isCorrect', () => {
     expect(isCorrect('gemachen', 'gemacht')).toBe(false);
     expect(isCorrect('', 'gemacht')).toBe(false);
     expect(isCorrect('as', 'aß')).toBe(false);
+  });
+});
+
+describe('matchSentence', () => {
+  const sentence = {
+    original: 'Im Winter trage ich gerne warme Pullover.',
+    alternatives: ['Ich trage im Winter gerne warme Pullover.'],
+  };
+
+  it('accepts the original and alternative orders', () => {
+    expect(matchSentence('Im Winter trage ich gerne warme Pullover.', sentence)).toBe(sentence.original);
+    // tiles keep the original capitalisation when they move
+    expect(matchSentence('ich trage Im Winter gerne warme Pullover.', sentence)).toBe(sentence.alternatives[0]);
+  });
+
+  it('rejects other orders', () => {
+    expect(matchSentence('Ich trage gerne im Winter Pullover warme.', sentence)).toBeNull();
+  });
+
+  it('works for sentences without alternatives', () => {
+    expect(matchSentence('Hallo Welt.', { original: 'Hallo Welt.' })).toBe('Hallo Welt.');
   });
 });

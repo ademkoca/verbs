@@ -1,4 +1,4 @@
-import { DictionaryWord } from './src/types/interfaces';
+import { DictionaryWord } from '../types/interfaces';
 
 const nounsWithMultipleTranslations: DictionaryWord[] = [
   {

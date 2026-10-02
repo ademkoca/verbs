@@ -94,7 +94,7 @@ function Navbar() {
     },
   ];
 
-  const logo = <img src="logo-clear-white-1.png" alt="Logo" width={150} />;
+  const logo = <img src="/logo-clear-white-1.png" alt="Logo" width={150} />;
 
   return (
     <AppBar position="static">

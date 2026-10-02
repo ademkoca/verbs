@@ -2,11 +2,12 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import sentences from '../../../sentences';
+import sentences from '../../data/sentences';
 import QuizLayout from '../../components/quiz-layout';
 import { useQuiz } from '../../hooks/useQuiz';
 import { useProgress } from '../../hooks/useProgress';
 import { shuffle } from '../../utils/shuffle';
+import { matchSentence } from '../../utils/answer';
 import { Sentence } from '../../types/interfaces';
 
 // Tiles are tracked by their position in the sentence, so repeated words stay separate
@@ -57,8 +58,9 @@ export default function Sentences() {
   const checkUserInput = () => {
     if (!sentence || quiz.busy || pool.length > 0) return;
     const attempt = picked.map((t) => t.word).join(' ');
-    const correct = attempt === sentence.original;
-    const message = correct ? `Correct! ${sentence.original}` : `Incorrect: ${attempt}`;
+    const match = matchSentence(attempt, sentence);
+    const correct = match !== null;
+    const message = correct ? `Correct! ${match}` : `Incorrect: ${attempt}`;
     if (!quiz.answer(correct, message, sentence.original)) return;
     record(sentence.original, correct);
     if (correct) quiz.schedule(goToNextSentence);

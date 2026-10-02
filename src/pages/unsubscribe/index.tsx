@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { ApiError, apiFetch } from '../../api/client';
 
 type Status = 'loading' | 'done' | 'expired' | 'error';
@@ -29,7 +29,7 @@ const Unsubscribe = () => {
   }, [token]);
 
   const profileLink = (
-    <Button variant="text" href="/#/profile" size="small">
+    <Button variant="text" component={RouterLink} to="/profile" size="small">
       Profile settings
     </Button>
   );

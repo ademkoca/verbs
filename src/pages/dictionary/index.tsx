@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import nounsWithMultipleTranslations from '../../../dictionary';
+import nounsWithMultipleTranslations from '../../data/dictionary';
 import CustomSwitch from '../../components/switch';
 import QuizLayout from '../../components/quiz-layout';
 import { useQuiz } from '../../hooks/useQuiz';

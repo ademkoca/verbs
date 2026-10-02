@@ -4,8 +4,9 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import verbsWithTranslation from '../../../verbsWithTranslation';
+import verbsWithTranslation from '../../data/verbsWithTranslation';
 import CustomSwitch from '../../components/switch';
+import UmlautKeys from '../../components/umlaut-keys';
 import QuizLayout from '../../components/quiz-layout';
 import { useQuiz } from '../../hooks/useQuiz';
 import { useProgress } from '../../hooks/useProgress';
@@ -143,6 +144,15 @@ export default function Verbs() {
               inputProps={answerInputProps}
               value={userInputParticiple}
               onChange={(e) => setUserInputParticiple(e.target.value)}
+            />
+            <UmlautKeys
+              disabled={quiz.busy}
+              targets={[
+                ...(isHard
+                  ? [{ ref: preteriteTextRef, value: userInputPreterite, setValue: setUserInputPreterite }]
+                  : []),
+                { ref: participleTextRef, value: userInputParticiple, setValue: setUserInputParticiple },
+              ]}
             />
           </Grid>
         </Grid>

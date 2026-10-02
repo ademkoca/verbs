@@ -1,4 +1,4 @@
-import { Sentence } from './src/types/interfaces';
+import { Sentence } from '../types/interfaces';
 
 const sentences: Sentence[] = [
   {
@@ -12,16 +12,25 @@ const sentences: Sentence[] = [
       'In der Schule lerne ich viele interessante Dinge über Geschichte und Mathematik.',
     translation:
       'In school, I learn many interesting things about history and mathematics.',
+    alternatives: [
+      'Ich lerne in der Schule viele interessante Dinge über Geschichte und Mathematik.',
+    ],
   },
   {
     original:
-      'Letzten Sommer sind wir in die Berge gereist und haben dort gewandert.',
+      'Letzten Sommer sind wir in die Berge gereist und dort gewandert.',
     translation: 'Last summer, we traveled to the mountains and hiked there.',
+    alternatives: [
+      'Wir sind letzten Sommer in die Berge gereist und dort gewandert.',
+    ],
   },
   {
     original:
       'Meine Schwester und ich haben gestern den ganzen Tag am Strand verbracht.',
     translation: 'My sister and I spent the entire day at the beach yesterday.',
+    alternatives: [
+      'Gestern haben meine Schwester und ich den ganzen Tag am Strand verbracht.',
+    ],
   },
   {
     original:
@@ -39,12 +48,19 @@ const sentences: Sentence[] = [
       'Jedes Jahr feiern wir Weihnachten mit unserer Familie und schmücken den Baum.',
     translation:
       'Every year, we celebrate Christmas with our family and decorate the tree.',
+    alternatives: [
+      'Wir feiern jedes Jahr Weihnachten mit unserer Familie und schmücken den Baum.',
+    ],
   },
   {
     original:
       'Im Supermarkt kaufe ich immer frisches Gemüse und Obst für meine Mahlzeiten.',
     translation:
       'I always buy fresh vegetables and fruits for my meals at the supermarket.',
+    alternatives: [
+      'Ich kaufe im Supermarkt immer frisches Gemüse und Obst für meine Mahlzeiten.',
+      'Ich kaufe immer im Supermarkt frisches Gemüse und Obst für meine Mahlzeiten.',
+    ],
   },
   {
     original:
@@ -57,6 +73,9 @@ const sentences: Sentence[] = [
       'Am Samstagabend gehen wir oft mit Freunden aus und essen in einem Restaurant.',
     translation:
       'On Saturday evenings, we often go out with friends and eat at a restaurant.',
+    alternatives: [
+      'Wir gehen am Samstagabend oft mit Freunden aus und essen in einem Restaurant.',
+    ],
   },
   {
     original:
@@ -72,11 +91,17 @@ const sentences: Sentence[] = [
   {
     original: 'Im Winter trage ich gerne warme Pullover und trinke heißen Tee.',
     translation: 'In winter, I like to wear warm sweaters and drink hot tea.',
+    alternatives: [
+      'Ich trage im Winter gerne warme Pullover und trinke heißen Tee.',
+    ],
   },
   {
     original:
       'Gestern habe ich meinen Geburtstag mit einer großen Party gefeiert.',
     translation: 'Yesterday, I celebrated my birthday with a big party.',
+    alternatives: [
+      'Ich habe gestern meinen Geburtstag mit einer großen Party gefeiert.',
+    ],
   },
   {
     original:
@@ -89,12 +114,18 @@ const sentences: Sentence[] = [
       'In der Bibliothek finde ich immer interessante Bücher, die ich lesen möchte.',
     translation:
       'I always find interesting books in the library that I want to read.',
+    alternatives: [
+      'Ich finde in der Bibliothek immer interessante Bücher, die ich lesen möchte.',
+    ],
   },
   {
     original:
       'Beim Kochen experimentiere ich gerne mit neuen Rezepten und Zutaten.',
     translation:
       'I enjoy experimenting with new recipes and ingredients while cooking.',
+    alternatives: [
+      'Ich experimentiere beim Kochen gerne mit neuen Rezepten und Zutaten.',
+    ],
   },
   {
     original:
@@ -132,18 +163,27 @@ const sentences: Sentence[] = [
   {
     original: 'In der Schule haben wir heute einen Ausflug zum Museum gemacht.',
     translation: 'Today, we went on a school trip to the museum.',
+    alternatives: [
+      'Heute haben wir in der Schule einen Ausflug zum Museum gemacht.',
+    ],
   },
   {
     original:
       'Am Wochenende gehe ich gerne auf den Wochenmarkt, um frisches Gemüse zu kaufen.',
     translation:
       "On the weekends, I like to go to the farmers' market to buy fresh vegetables.",
+    alternatives: [
+      'Ich gehe am Wochenende gerne auf den Wochenmarkt, um frisches Gemüse zu kaufen.',
+    ],
   },
   {
     original:
       'Mein Bruder hat gestern Geburtstag gefeiert und viele Geschenke bekommen.',
     translation:
       'My brother celebrated his birthday yesterday and received many gifts.',
+    alternatives: [
+      'Gestern hat mein Bruder Geburtstag gefeiert und viele Geschenke bekommen.',
+    ],
   },
   {
     original:
@@ -163,6 +203,9 @@ const sentences: Sentence[] = [
   {
     original: 'Im Winter fahre ich gerne Ski, weil es viel Spaß macht.',
     translation: 'In winter, I enjoy skiing because it is a lot of fun.',
+    alternatives: [
+      'Ich fahre im Winter gerne Ski, weil es viel Spaß macht.',
+    ],
   },
   {
     original:
@@ -194,6 +237,9 @@ const sentences: Sentence[] = [
       'In meiner Freizeit male ich gerne, um meiner kreativen Seite Ausdruck zu verleihen.',
     translation:
       'In my free time, I like to paint to express my creative side.',
+    alternatives: [
+      'Ich male in meiner Freizeit gerne, um meiner kreativen Seite Ausdruck zu verleihen.',
+    ],
   },
   {
     original:
@@ -230,6 +276,9 @@ const sentences: Sentence[] = [
       'Wir haben gestern einen Ausflug in den Zoo gemacht und viele Tiere gesehen.',
     translation:
       'Yesterday, we went on a trip to the zoo and saw many animals.',
+    alternatives: [
+      'Gestern haben wir einen Ausflug in den Zoo gemacht und viele Tiere gesehen.',
+    ],
   },
   {
     original:
@@ -242,6 +291,9 @@ const sentences: Sentence[] = [
       'Am Abend lese ich gerne ein Buch, um zu entspannen und in eine andere Welt einzutauchen.',
     translation:
       'In the evening, I like to read a book to relax and immerse myself in another world.',
+    alternatives: [
+      'Ich lese am Abend gerne ein Buch, um zu entspannen und in eine andere Welt einzutauchen.',
+    ],
   },
   {
     original:
@@ -254,12 +306,18 @@ const sentences: Sentence[] = [
       'Wir haben gestern eine neue Wanderroute entdeckt, die durch einen malerischen Wald führt.',
     translation:
       'Yesterday, we discovered a new hiking trail that leads through a picturesque forest.',
+    alternatives: [
+      'Gestern haben wir eine neue Wanderroute entdeckt, die durch einen malerischen Wald führt.',
+    ],
   },
   {
     original:
       'Im Sommer gehe ich gerne campen, um die Natur zu erleben und am Lagerfeuer zu sitzen.',
     translation:
       'In the summer, I like to go camping to experience nature and sit by the campfire.',
+    alternatives: [
+      'Ich gehe im Sommer gerne campen, um die Natur zu erleben und am Lagerfeuer zu sitzen.',
+    ],
   },
   {
     original:
@@ -332,6 +390,9 @@ const sentences: Sentence[] = [
       'Am Wochenende unternehme ich gerne Fahrradtouren, um die Umgebung zu erkunden.',
     translation:
       'On the weekends, I enjoy going on bike rides to explore the surroundings.',
+    alternatives: [
+      'Ich unternehme am Wochenende gerne Fahrradtouren, um die Umgebung zu erkunden.',
+    ],
   },
   {
     original:
@@ -344,6 +405,9 @@ const sentences: Sentence[] = [
       'Im Fitnessstudio trainiere ich regelmäßig, um meine körperliche Fitness zu verbessern.',
     translation:
       'I regularly work out at the gym to improve my physical fitness.',
+    alternatives: [
+      'Ich trainiere im Fitnessstudio regelmäßig, um meine körperliche Fitness zu verbessern.',
+    ],
   },
   {
     original:
@@ -356,12 +420,18 @@ const sentences: Sentence[] = [
       'In der Universität habe ich interessante Vorlesungen über Psychologie und Soziologie besucht.',
     translation:
       'In university, I attended interesting lectures on psychology and sociology.',
+    alternatives: [
+      'Ich habe in der Universität interessante Vorlesungen über Psychologie und Soziologie besucht.',
+    ],
   },
   {
     original:
       'Unsere Familie verbringt jeden Sommer eine Woche in einem gemütlichen Ferienhaus am See.',
     translation:
       'Every summer, our family spends a week in a cozy vacation home by the lake.',
+    alternatives: [
+      'Jeden Sommer verbringt unsere Familie eine Woche in einem gemütlichen Ferienhaus am See.',
+    ],
   },
   {
     original:
@@ -392,6 +462,9 @@ const sentences: Sentence[] = [
       'Am Sonntagmorgen mache ich gerne einen ausgedehnten Spaziergang im Park, um frische Luft zu schnappen.',
     translation:
       'On Sunday mornings, I enjoy taking a leisurely walk in the park to get some fresh air.',
+    alternatives: [
+      'Ich mache am Sonntagmorgen gerne einen ausgedehnten Spaziergang im Park, um frische Luft zu schnappen.',
+    ],
   },
   {
     original:
@@ -404,12 +477,19 @@ const sentences: Sentence[] = [
       'In der Pause zwischen den Vorlesungen treffe ich mich oft mit Freunden in der Cafeteria der Universität.',
     translation:
       'During the break between lectures, I often meet up with friends in the university cafeteria.',
+    alternatives: [
+      'Ich treffe mich in der Pause zwischen den Vorlesungen oft mit Freunden in der Cafeteria der Universität.',
+    ],
   },
   {
     original:
       'Die Sommerferien verbringen wir dieses Jahr in einem idyllischen Ferienhaus an der Küste.',
     translation:
       'This year, we are spending the summer vacation in an idyllic cottage by the coast.',
+    alternatives: [
+      'Wir verbringen die Sommerferien dieses Jahr in einem idyllischen Ferienhaus an der Küste.',
+      'Dieses Jahr verbringen wir die Sommerferien in einem idyllischen Ferienhaus an der Küste.',
+    ],
   },
   {
     original:
@@ -494,6 +574,9 @@ const sentences: Sentence[] = [
       'In meiner Jugend habe ich an einem Schüleraustausch teilgenommen und viele internationale Freundschaften geschlossen.',
     translation:
       'In my youth, I participated in a student exchange and made many international friendships.',
+    alternatives: [
+      'Ich habe in meiner Jugend an einem Schüleraustausch teilgenommen und viele internationale Freundschaften geschlossen.',
+    ],
   },
   {
     original:
@@ -512,6 +595,9 @@ const sentences: Sentence[] = [
       'An regnerischen Tagen lese ich gerne ein Buch, während der Klang des Regens gegen das Fenster prasselt.',
     translation:
       'On rainy days, I like to read a book while the sound of the rain taps against the window.',
+    alternatives: [
+      'Ich lese an regnerischen Tagen gerne ein Buch, während der Klang des Regens gegen das Fenster prasselt.',
+    ],
   },
   {
     original:
@@ -542,6 +628,9 @@ const sentences: Sentence[] = [
       'In meiner Kindheit habe ich gerne im Garten Verstecken gespielt und die Natur erkundet.',
     translation:
       'In my childhood, I enjoyed playing hide and seek in the garden and exploring nature.',
+    alternatives: [
+      'Ich habe in meiner Kindheit gerne im Garten Verstecken gespielt und die Natur erkundet.',
+    ],
   },
   {
     original:
@@ -554,6 +643,9 @@ const sentences: Sentence[] = [
       'Wir haben gestern Abend eine Live-Performance einer lokalen Band im Club gesehen, und sie hat das Publikum begeistert.',
     translation:
       'Last night, we saw a live performance of a local band in the club, and they thrilled the audience.',
+    alternatives: [
+      'Gestern Abend haben wir eine Live-Performance einer lokalen Band im Club gesehen, und sie hat das Publikum begeistert.',
+    ],
   },
   {
     original:
@@ -572,6 +664,9 @@ const sentences: Sentence[] = [
       'Meine Großeltern erzählen oft Geschichten aus ihrer Jugend, die von vergangenen Zeiten handeln.',
     translation:
       'My grandparents often tell stories from their youth that revolve around past times.',
+    alternatives: [
+      'Oft erzählen meine Großeltern Geschichten aus ihrer Jugend, die von vergangenen Zeiten handeln.',
+    ],
   },
   {
     original:
@@ -614,6 +709,9 @@ const sentences: Sentence[] = [
       'Im Winter bauen wir eine Schneefamilie im Garten, und es ist immer ein fröhliches Familienprojekt.',
     translation:
       'In winter, we build a snow family in the garden, and it is always a cheerful family project.',
+    alternatives: [
+      'Wir bauen im Winter eine Schneefamilie im Garten, und es ist immer ein fröhliches Familienprojekt.',
+    ],
   },
   {
     original:

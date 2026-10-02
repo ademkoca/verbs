@@ -1,7 +1,7 @@
-import verbs from '../../verbsWithTranslation';
-import nouns from '../../nouns';
-import sentences from '../../sentences';
-import dictionary from '../../dictionary';
+import verbs from '../data/verbsWithTranslation';
+import nouns from '../data/nouns';
+import sentences from '../data/sentences';
+import dictionary from '../data/dictionary';
 import { Progress, ProgressName } from '../types/interfaces';
 
 // The `used` entries of each module are the items' `original` strings
